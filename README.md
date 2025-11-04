@@ -4,7 +4,7 @@
 
 Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/).
 
-There is a demo on https://vue-crud-nuxt.nuxt.dev/. This online demo does not store changes.
+There is a demo on https://vue-crud-nuxt.nuxt.dev/. This online demo uses Vue instead of HTMX and does not store changes.
 
 You can use this project for learning purposes and demo's.
 Git clone this repostory, or download the source from github.
