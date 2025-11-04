@@ -1,0 +1,25 @@
+{
+  "name": "bun-htmx-crud",
+  "module": "src/index.ts",
+  "type": "module",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "bun run --watch src/index.ts",
+    "introspect": "drizzle-kit introspect --config=drizzle.config.ts",
+    "generate": "drizzle-kit generate --config=drizzle.config.ts",
+    "migrate": "bun run src/db/migrate.ts",
+    "studio": "drizzle-kit studio"
+  },
+  "dependencies": {
+    "@elysiajs/html": "^1.4.0",
+    "drizzle-orm": "^0.44.7",
+    "elysia": "latest"
+  },
+  "devDependencies": {
+    "better-sqlite3": "^12.4.1",
+    "bun-types": "latest",
+    "drizzle-kit": "^0.31.5",
+    "typed-html": "^3.0.1"
+  }
+}
