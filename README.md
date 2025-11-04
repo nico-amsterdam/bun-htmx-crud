@@ -19,6 +19,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 ## Getting Started
 - install Bun
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud
+- run:
 
 ```bash
 bun install
