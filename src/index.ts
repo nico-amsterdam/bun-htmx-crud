@@ -5,7 +5,7 @@ const msg_404 = "Nothing here"
 
 // use aot: false during development
 const app = new Elysia({ aot: false }).onError(({ code, path, error, status }) => {
-  console.log(path + ': ' + code)
+  console.log(path + ': ' + (code || error))
   if (code === 'VALIDATION') return status(400, error.message)
   if (code === 'NOT_FOUND') return status(404, msg_404)
   return status(500, error)

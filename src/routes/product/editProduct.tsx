@@ -3,7 +3,7 @@ import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { isHtmxEnabled } from 'htmx'
 import { db, tables, ModifyProductType } from "db"
-import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
+import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import { gotoProductList } from './productList'
 
 function EditProductForm(page: PageType): JSX.Element {
@@ -50,6 +50,7 @@ export const editProductController = new Elysia({})
     .post('/product/:id/edit', ({ html, request, redirect, set, body: { name, description, price }, params: { id } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
         const page = validateFormAndCreatePage(name, description, price)
+        validateIdAndUpdatePage(page, id)
         let errors = page.form.errors
         if (Object.keys(errors).length > 0) {
             return html(
@@ -66,11 +67,15 @@ export const editProductController = new Elysia({})
             , modifiedAt: new Date()
         }
 
-        const product = db.update(tables.products)
-            .set(modifiedProduct).where(and(
-                eq(tables.products.id, +id)
-            )).returning().get()
-        if (!product) errors["general"] = `Could not update '${modifiedProduct.productName}'`
+        try {
+            const product = db.update(tables.products)
+                .set(modifiedProduct).where(and(
+                    eq(tables.products.id, +id)
+                )).returning().get()
+            if (!product) errors["general"] = `Could not update '${modifiedProduct.productName}'. Removed?`
+        } catch (error) {
+            errors["general"] = `Product '${modifiedProduct.productName}' already exists`
+        }
 
         if (Object.keys(errors).length > 0) {
             return html(

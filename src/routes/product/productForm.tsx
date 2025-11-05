@@ -72,4 +72,13 @@ export function validateFormAndCreatePage(name: string, description: string, pri
   return page
 }
 
+export function validateIdAndUpdatePage(page: PageType, id: string): PageType {
+  page.form.values["id"] = id
+  let errors = page.form.errors
+  if (Number.isNaN(id) || +id !== +id) {
+    errors["general"] = "Missing or incorrect id"
+  }
+  return page
+}
+
 

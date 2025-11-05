@@ -57,10 +57,12 @@ export const addProductController = new Elysia({})
         }
 
         // Insert product
-        const product = db.insert(tables.products).values(newProduct).returning().catch(() => {
+        try {
+            const product = db.insert(tables.products).values(newProduct).returning().get()
+            if (!product) errors["general"] = `Could not create '${newProduct.productName}'`
+        } catch (error) {
             errors["general"] = `Product '${newProduct.productName}' already exists`
-        })
-        if (!product) errors["general"] = `Could not create '${newProduct.productName}'`
+        }
 
         if (Object.keys(errors).length > 0) {
             return html(
