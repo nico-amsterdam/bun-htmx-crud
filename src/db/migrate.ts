@@ -8,7 +8,7 @@ import { Database } from 'bun:sqlite';
 
   console.log('Starting migrations');
 
-  await migrate(db, { migrationsFolder: 'drizzle' });
+  migrate(db, { migrationsFolder: 'drizzle' });
 
   console.log('Migrations complete.');
 })();
