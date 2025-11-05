@@ -1,5 +1,6 @@
 :root {
     --text-color: #333;
+    --text-error-color: red;
     --background: white;
     --btn-border: #dbdbdb;
     --btn-active: #e0e0e0;
@@ -217,6 +218,10 @@ p {
     .container {
         width: 1170px
     }
+}
+
+.error {
+    color: var(--text-error-color)
 }
 
 .row {

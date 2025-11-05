@@ -18,18 +18,18 @@ export type PageType = {
 export function ProductFormFields(page: PageType): JSX.Element {
   return (
     <div>
-      {page.form.errors.general && (<div style="color: red">{page.form.errors.general}</div>)}
+      {page.form.errors.general && (<div class="error">{page.form.errors.general}</div>)}
       <div class="form-group"><label for="edit-name">Name</label><input class="form-control" id="edit-name"
         name="name" required={true} maxlength="20" value={page.form.values.name} autofocus />
-        {page.form.errors.name && (<div style="color: red">{page.form.errors.name}</div>)}
+        {page.form.errors.name && (<div class="error">{page.form.errors.name}</div>)}
       </div>
 
       <div class="form-group"><label for="edit-description">Description</label><textarea class="form-control"
         id="edit-description" name="description" maxlength="300" rows="3">{page.form.values.description}</textarea>
-        {page.form.errors.description && (<div style="color: red">{page.form.errors.description}</div>)}
+        {page.form.errors.description && (<div class="error">{page.form.errors.description}</div>)}
       </div>
       <div class="form-group"><label for="edit-price">Price €</label><input type="number" class="form-control" id="edit-price" name="price" min="0" value={page.form.values.price} />
-        {page.form.errors.price && (<div style="color: red">{page.form.errors.price}</div>)}
+        {page.form.errors.price && (<div class="error">{page.form.errors.price}</div>)}
       </div>
     </div>
   )
