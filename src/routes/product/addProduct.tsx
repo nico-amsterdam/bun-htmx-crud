@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
-import { isHtmxEnabled } from '../../htmx'
-import { db, tables, AddProductType } from "../../db"
+import { isHtmxEnabled } from 'htmx'
+import { db, tables, AddProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 
@@ -49,8 +49,8 @@ export const addProductController = new Elysia({})
         }
 
         const newProduct: AddProductType = {
-            productName: name
-            , description
+            productName: name.trim()
+            , description: description.trimEnd()
             , price: +price * 100
             , createdBy: 'unknown'
             , createdAt: new Date()
@@ -71,8 +71,8 @@ export const addProductController = new Elysia({})
         return html(gotoProductList(set.headers))
     }, { // TypeBox
         body: t.Object({
-            name: t.String(), // { minLength: 1, maxLength: 20 }
-            description: t.String(), // { maxLength: 300 }
-            price: t.String()  // t.Number({ minimum: 0 }) + transform
+            name: t.String(),
+            description: t.String(),
+            price: t.String()
         })
     })

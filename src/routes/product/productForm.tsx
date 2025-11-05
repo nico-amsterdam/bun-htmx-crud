@@ -1,5 +1,5 @@
 import { Html } from '@elysiajs/html'
-import { ProductType } from "../../db"
+import { ProductType } from "db"
 
 export type DataType = {
   products: ProductType[]
@@ -54,7 +54,6 @@ export function newPage(): PageType {
   return page
 }
 
-
 export function validateFormAndCreatePage(name: string, description: string, price: string): PageType {
   const page = newPage()
   page.form.values = {
@@ -64,7 +63,7 @@ export function validateFormAndCreatePage(name: string, description: string, pri
   }
 
   name = name.trim()
-  description = description.trim()
+  description = description.trimEnd()
   let errors = page.form.errors
   if (name.length == 0) errors["name"] = "Name is required"
   if (name.length > 20) errors["name"] = "Name is too long"

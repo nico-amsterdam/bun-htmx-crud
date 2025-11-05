@@ -1,8 +1,8 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
-import { isHtmxEnabled } from '../../htmx'
-import { db, tables, ModifyProductType } from "../../db"
+import { isHtmxEnabled } from 'htmx'
+import { db, tables, ModifyProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 
@@ -59,8 +59,8 @@ export const editProductController = new Elysia({})
 
         const modifiedProduct: ModifyProductType = {
             id: +id
-            , productName: name
-            , description: description
+            , productName: name.trim()
+            , description: description.trimEnd()
             , price: +price * 100
             , modifiedBy: 'unknown'
             , modifiedAt: new Date()
