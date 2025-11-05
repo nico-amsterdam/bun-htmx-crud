@@ -76,7 +76,7 @@ function Main(page: PageType): JSX.Element {
                 <div class="form-group col-sm-3"><label for="search-element">Search product</label><input
                     class="form-control" name="search" id="search-element" autocomplete="off" tabindex="0"
                     autofocus
-                    _="on input show <tbody > tr/> in #search-results when its children[0].textContent.toLowerCase() contains my value.toLowerCase() or its children[1].textContent.toLowerCase() contains my value.toLowerCase() or its children[2].textContent contains my value"
+                    data-script="on input show <tbody > tr/> in #search-results when its children[0].textContent.toLowerCase() contains my value.toLowerCase() or its children[1].textContent.toLowerCase() contains my value.toLowerCase() or its children[2].textContent contains my value"
                 /></div>
             </div>
             <table class="table">
