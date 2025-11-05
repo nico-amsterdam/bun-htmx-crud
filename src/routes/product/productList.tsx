@@ -1,9 +1,9 @@
-import { Elysia, HTTPHeaders, t } from 'elysia'
+import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { asc } from 'drizzle-orm'
+import { HttpHeader, isHtmxEnabled } from '../../htmx'
 import { db, tables, ProductType } from "../../db"
-import { PageType, newPage, isHtmxEnabled } from './productForm'
-import { HttpHeader } from '../../htmx'
+import { PageType, newPage } from './productForm'
 
 const BaseHtml = ({ children }: { children: JSX.Element }) => `
 <!DOCTYPE html>

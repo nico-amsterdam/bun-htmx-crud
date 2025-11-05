@@ -1,7 +1,8 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
+import { isHtmxEnabled } from '../../htmx'
 import { db, tables, AddProductType } from "../../db"
-import { PageType, ProductFormFields, CancelButton, isHtmxEnabled, newPage, validateFormAndCreatePage } from './productForm'
+import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 
 function AddProductForm(page: PageType): JSX.Element {

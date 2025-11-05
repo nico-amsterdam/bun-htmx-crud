@@ -22,3 +22,7 @@ export abstract class HttpHeader {
   static readonly HxTriggerAfterSettle = "HX-Trigger-After-Settle"
   static readonly HxTriggerAfterSwap = "HX-Trigger-After-Swap"
 }
+
+export function isHtmxEnabled(request: Request) {
+  return request.headers.get(HttpHeader.HxRequest) == "true"
+}

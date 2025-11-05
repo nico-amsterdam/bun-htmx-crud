@@ -1,8 +1,9 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
+import { isHtmxEnabled } from '../../htmx'
 import { db, tables, ModifyProductType } from "../../db"
-import { PageType, ProductFormFields, CancelButton, isHtmxEnabled, newPage, validateFormAndCreatePage } from './productForm'
+import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 
 function EditProductForm(page: PageType): JSX.Element {

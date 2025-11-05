@@ -1,5 +1,4 @@
 import { Html } from '@elysiajs/html'
-import { HttpHeader } from '../../htmx'
 import { ProductType } from "../../db"
 
 export type DataType = {
@@ -40,10 +39,6 @@ export function CancelButton(): JSX.Element {
   return (
     <button type="button" hx-get="/product-list" hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-default">Cancel</button>
   )
-}
-
-export function isHtmxEnabled(request: Request) {
-  return request.headers.get(HttpHeader.HxRequest) == "true"
 }
 
 function newFormData(): FormDataType {
