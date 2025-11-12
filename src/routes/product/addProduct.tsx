@@ -49,9 +49,9 @@ export const addProductController = new Elysia({})
         }
 
         const newProduct: AddProductType = {
-            productName: name.trim()
+              name: name.trim()
             , description: description.trimEnd()
-            , price: +price * 100
+            , price: (price === '' ? null : +price * 100)
             , createdBy: 'unknown'
             , createdAt: new Date()
         }
@@ -59,9 +59,9 @@ export const addProductController = new Elysia({})
         // Insert product
         try {
             const product = db.insert(tables.products).values(newProduct).returning().get()
-            if (!product) errors["general"] = `Could not create '${newProduct.productName}'`
+            if (!product) errors["general"] = `Could not create '${newProduct.name}'`
         } catch (error) {
-            errors["general"] = `Product '${newProduct.productName}' already exists`
+            errors["general"] = `Product '${newProduct.name}' already exists`
         }
 
         if (Object.keys(errors).length > 0) {

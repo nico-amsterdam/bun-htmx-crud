@@ -40,14 +40,14 @@ function Body(page: PageType): JSX.Element {
     )
 }
 
-function Product({ id, productName, description, price }: ProductType): JSX.Element {
-    let priceInEuro = price
-    if (price && !Number.isNaN(+price)) priceInEuro = +price / 100
+function Product({ id, name, description, price }: ProductType): JSX.Element {
+    let priceInEuro = ''
+    if (price !== null && Number.isFinite(+price)) priceInEuro = "" + (+price / 100)
     return (
         <tr>
-            <td><a hx-get={`/product/${id}/edit`} hx-push-url="true" hx-trigger="click, keyup[key=='Enter']" hx-target="#main" hx-swap="outerHTML" tabindex="0">{productName}</a></td>
+            <td><a hx-get={`/product/${id}/edit`} hx-push-url="true" hx-trigger="click, keyup[key=='Enter']" hx-target="#main" hx-swap="outerHTML" tabindex="0">{name}</a></td>
             <td>{description}</td>
-            <td>{priceInEuro} €</td>
+            <td>{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
             <td><button type="button" hx-get={`/product/${id}/edit`} hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-warning btn-xs">Edit</button>
                 {" "}<button type="button" hx-get={`/product/${id}/delete`} hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-danger btn-xs">Delete</button></td>
         </tr>
@@ -100,7 +100,7 @@ export function gotoProductList(headers: HTTPHeaders): JSX.Element {
     headers[HttpHeader.HxReswap] = "outerHTML"
 
     const page = newPage()
-    page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.productName)).all()
+    page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.name)).all()
 
     return (
         <Main {...page} />
@@ -115,7 +115,7 @@ export const productListController = new Elysia({})
 
             const page = newPage()
 
-            page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.productName)).all()
+            page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.name)).all()
 
             if (isHtmxEnabled(request)) {
                 return html(

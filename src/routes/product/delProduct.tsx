@@ -37,9 +37,9 @@ export const delProductController = new Elysia({})
 
         if (!product) return redirect('/product-list', 302)
 
-        page.form.values["id"] = id
-        page.form.values["description"] = product.description
-        page.form.values["name"] = product.productName
+        page.form.values.id = id
+        page.form.values.description = product.description
+        page.form.values.name = product.name
         if (product.price) page.form.values["price"] = "" + (product.price / 100)
 
         return html(

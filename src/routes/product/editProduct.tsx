@@ -38,10 +38,10 @@ export const editProductController = new Elysia({})
 
         if (!product) return redirect('/product-list', 302)
 
-        page.form.values["id"] = id
-        page.form.values["description"] = product.description
-        page.form.values["name"] = product.productName
-        if (product.price) page.form.values["price"] = "" + (product.price / 100)
+        page.form.values.id = id
+        page.form.values.description = product.description
+        page.form.values.name = product.name
+        if (product.price !== null) page.form.values.price = "" + (product.price / 100)
 
         return html(
             <EditProduct {...page} />
@@ -60,9 +60,9 @@ export const editProductController = new Elysia({})
 
         const modifiedProduct: ModifyProductType = {
             id: +id
-            , productName: name.trim()
+            , name: name.trim()
             , description: description.trimEnd()
-            , price: +price * 100
+            , price: (price === '' ? null : +price * 100)
             , modifiedBy: 'unknown'
             , modifiedAt: new Date()
         }
@@ -72,9 +72,9 @@ export const editProductController = new Elysia({})
                 .set(modifiedProduct).where(and(
                     eq(tables.products.id, +id)
                 )).returning().get()
-            if (!product) errors["general"] = `Could not update '${modifiedProduct.productName}'. Removed?`
+            if (!product) errors["general"] = `Could not update '${modifiedProduct.name}'. Removed?`
         } catch (error) {
-            errors["general"] = `Product '${modifiedProduct.productName}' already exists`
+            errors["general"] = `Product '${modifiedProduct.name}' already exists`
         }
 
         if (Object.keys(errors).length > 0) {
