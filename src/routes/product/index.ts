@@ -4,7 +4,7 @@ import { editProductController } from './editProduct'
 import { delProductController } from './delProduct'
 import { productListController } from './productList'
 
-export const productController = new Elysia({})
+export const productController = new Elysia({ aot: false })
   .use(addProductController)
   .use(editProductController)
   .use(delProductController)

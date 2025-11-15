@@ -4,22 +4,32 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts",
-    "introspect": "drizzle-kit introspect --config=drizzle.config.ts",
-    "generate": "drizzle-kit generate --config=drizzle.config.ts",
-    "migrate": "bun run src/db/migrate.ts",
-    "studio": "drizzle-kit studio"
+    "generate": "bun drizzle-kit generate",
+    "migrate:dev": "bun wrangler d1 migrations apply bun-htmx-crud --local",
+    "test:db:dev": "bun wrangler d1 execute bun-htmx-crud --local --command \"select * from products\";",
+    "dev": "bun wrangler dev",
+    "migrate": "bun wrangler d1 migrations apply bun-htmx-crud --remote",
+    "test:db": "bun wrangler d1 execute bun-htmx-crud --remote --command \"select * from products\";",
+    "deploy:app": "bun wrangler deploy",
+    "rollback": "bun wrangler rollback",
+    "delete": "bun wrangler delete",
+    "databases": "bun wrangler d1 list",
+    "update:types": "bun wrangler types",
+    "introspect": "bun drizzle-kit introspect",
+    "studio": "bun drizzle-kit studio"
   },
   "dependencies": {
     "@elysiajs/html": "^1.4.0",
     "drizzle-orm": "^0.44.7",
-    "elysia": "latest"
+    "elysia": "latest",
+    "typedi": "^0.10.0"
   },
   "devDependencies": {
     "better-sqlite3": "^12.4.1",
     "bun-types": "latest",
-    "drizzle-kit": "^0.31.5",
-    "typed-html": "^3.0.1"
+    "drizzle-kit": "latest",
+    "typed-html": "^3.0.1",
+    "wrangler": "^4.47.0",
+    "dotenv": "latest"
   }
 }

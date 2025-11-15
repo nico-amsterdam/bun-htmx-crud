@@ -9,7 +9,7 @@ There is a demo on https://vue-crud-nuxt.nuxt.dev/. This online demo uses Vue in
 You can use this project for learning purposes and demo's.
 Git clone this repostory, or download the source from github.
 
-[Sqlite](https://www.sqlite.org/index.html) is the central database.
+[Sqlite](https://www.sqlite.org/index.html) is the central database. More specifically [Cloudflare D1](https://developers.cloudflare.com/d1/worker-api/d1-database/).
 
 Uses [JSX](https://bun.com/docs/runtime/jsx): HTML is embedded in typescript functions (tsx files).
 All HTML is generated server-side.
@@ -23,14 +23,24 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 
 ```bash
 bun install
-bun run generate
-bun run migrate
+bun generate
+bun migrate:dev
+bun test:db:dev
 ```
 
 ## Development
 To start the development server run:
 ```bash
-bun run dev
+bun dev
 ```
 
-Open http://localhost:3000/ with your browser to see the result.
+Open the shown link in your browser to see the result.
+
+## Deploy to Cloudflare
+To start the development server run:
+```bash
+bun migrate
+bun test:db
+bun deploy:app
+```
+

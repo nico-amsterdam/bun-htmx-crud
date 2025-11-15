@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { isHtmxEnabled } from 'htmx'
-import { db, tables, AddProductType } from "db"
+import { getDB, tables, AddProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 
@@ -26,7 +26,7 @@ function AddProduct(page: PageType): JSX.Element {
     )
 }
 
-export const addProductController = new Elysia({})
+export const addProductController = new Elysia({ aot: false })
     .use(html())
     .get(
         '/add-product',
@@ -38,7 +38,7 @@ export const addProductController = new Elysia({})
                 <AddProduct {...page} />
             )
         })
-    .post('/add-product', ({ html, request, redirect, set, body: { name, description, price } }) => {
+    .post('/add-product', async ({ html, request, redirect, set, body: { name, description, price } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
         const page = validateFormAndCreatePage(name, description, price)
         let errors = page.form.errors
@@ -58,7 +58,7 @@ export const addProductController = new Elysia({})
 
         // Insert product
         try {
-            const product = db.insert(tables.products).values(newProduct).returning().get()
+            const product = await getDB().insert(tables.products).values(newProduct).returning().get()
             if (!product) errors["general"] = `Could not create '${newProduct.name}'`
         } catch (error) {
             errors["general"] = `Product '${newProduct.name}' already exists`
@@ -70,7 +70,7 @@ export const addProductController = new Elysia({})
             )
         }
 
-        return html(gotoProductList(set.headers))
+        return html(await gotoProductList(set.headers))
     }, { // TypeBox
         body: t.Object({
             name: t.String(),

@@ -2,7 +2,7 @@ import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { asc } from 'drizzle-orm'
 import { HttpHeader, isHtmxEnabled } from 'htmx'
-import { db, tables, ProductType } from "db"
+import { getDB, tables, ProductType } from "db"
 import { PageType, newPage } from './productForm'
 
 const BaseHtml = ({ children }: { children: JSX.Element }) => `
@@ -94,28 +94,28 @@ function Main(page: PageType): JSX.Element {
     )
 }
 
-export function gotoProductList(headers: HTTPHeaders): JSX.Element {
+export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element> {
     headers[HttpHeader.HxReplaceURL] = "/product-list"
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
     const page = newPage()
-    page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.name)).all()
+    page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name)).all()
 
     return (
         <Main {...page} />
     )
 }
 
-export const productListController = new Elysia({})
+export const productListController = new Elysia({ aot: false })
     .use(html())
     .get(
         '/product-list',
-        ({ html, request }) => {
+        async ({ html, request }) => {
 
             const page = newPage()
 
-            page.data.products = db.select().from(tables.products).orderBy(asc(tables.products.name)).all()
+            page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name)).all()
 
             if (isHtmxEnabled(request)) {
                 return html(

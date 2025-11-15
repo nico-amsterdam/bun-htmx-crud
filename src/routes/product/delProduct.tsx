@@ -2,7 +2,7 @@ import { Elysia } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { isHtmxEnabled } from 'htmx'
-import { db, tables } from "db"
+import { getDB, tables } from "db"
 import { PageType, CancelButton, newPage } from './productForm'
 import { gotoProductList } from './productList'
 
@@ -24,14 +24,14 @@ function DelProduct(page: PageType): JSX.Element {
     )
 }
 
-export const delProductController = new Elysia({})
+export const delProductController = new Elysia({ aot: false })
     .use(html())
-    .get('/product/:id/delete', ({ html, request, redirect, params: { id } }) => {
+    .get('/product/:id/delete', async ({ html, request, redirect, params: { id } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
 
         const page = newPage()
 
-        const product = db.select().from(tables.products).where(and(
+        const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
 
@@ -46,13 +46,13 @@ export const delProductController = new Elysia({})
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', ({ html, request, redirect, set, params: { id } }) => {
+    .post('/product/:id/delete', async ({ html, request, redirect, set, params: { id } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
 
         // Delete product
-        db.delete(tables.products).where(
+        await getDB().delete(tables.products).where(
             eq(tables.products.id, +id)
         ).returning().get()
 
-        return html(gotoProductList(set.headers))
+        return html(await gotoProductList(set.headers))
     })

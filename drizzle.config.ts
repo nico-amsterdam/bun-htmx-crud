@@ -1,10 +1,17 @@
-import { defineConfig } from "drizzle-kit";
+/* eslint-disable node/prefer-global/process */
+import 'dotenv/config'
+import { type Config, defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
-  dialect: 'sqlite',
   schema: './src/db/schema.ts',
-  out: './drizzle',
+  out: './migrations',
+  dialect: 'sqlite',
   dbCredentials: {
-    url: 'file:./sqlite.db',
+    accountId: process.env.ACCOUNT_ID,
+    databaseId: process.env.DB_ID,
+    token: process.env.CF_TOKEN,
   },
-})
+  driver: 'd1-http',
+  verbose: true,
+  strict: true,
+} as Config)

@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { isHtmxEnabled } from 'htmx'
-import { db, tables, ModifyProductType } from "db"
+import { getDB, tables, ModifyProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import { gotoProductList } from './productList'
 
@@ -25,14 +25,14 @@ function EditProduct(page: PageType): JSX.Element {
     )
 }
 
-export const editProductController = new Elysia({})
+export const editProductController = new Elysia({ aot: false })
     .use(html())
-    .get('/product/:id/edit', ({ html, request, redirect, params: { id } }) => {
+    .get('/product/:id/edit', async ({ html, request, redirect, params: { id } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
 
         const page = newPage()
 
-        const product = db.select().from(tables.products).where(and(
+        const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
 
@@ -47,7 +47,7 @@ export const editProductController = new Elysia({})
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', ({ html, request, redirect, set, body: { name, description, price }, params: { id } }) => {
+    .post('/product/:id/edit', async ({ html, request, redirect, set, body: { name, description, price }, params: { id } }) => {
         if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
         const page = validateFormAndCreatePage(name, description, price)
         validateIdAndUpdatePage(page, id)
@@ -68,7 +68,7 @@ export const editProductController = new Elysia({})
         }
 
         try {
-            const product = db.update(tables.products)
+            const product = await getDB().update(tables.products)
                 .set(modifiedProduct).where(and(
                     eq(tables.products.id, +id)
                 )).returning().get()
@@ -83,7 +83,7 @@ export const editProductController = new Elysia({})
             )
         }
 
-        return html(gotoProductList(set.headers))
+        return html(await gotoProductList(set.headers))
     }, { // TypeBox
         body: t.Object({
             name: t.String(),

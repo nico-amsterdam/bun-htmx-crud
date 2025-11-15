@@ -5,8 +5,10 @@
 
 # bun
 /drizzle
+/migrations
 sqlite.db
 **/*.bun
+.env
 
 # misc
 .DS_Store
