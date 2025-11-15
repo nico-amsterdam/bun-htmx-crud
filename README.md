@@ -23,6 +23,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 
 ```bash
 bun install
+bun create:db
 bun generate
 bun migrate:dev
 bun test:db:dev
@@ -43,4 +44,6 @@ bun migrate
 bun test:db
 bun deploy:app
 ```
+
+Open the shown link in your browser to see the result.
 

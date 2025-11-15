@@ -1,9 +1,5 @@
-// when not using cloudflare D1:
-// - import { drizzle } from 'drizzle-orm/bun-sqlite'
-// - import { Database } from 'bun:sqlite'
 import Container from 'typedi'
 import type { DrizzleD1Database } from 'drizzle-orm/d1'
-
 import * as schema from './schema'
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 

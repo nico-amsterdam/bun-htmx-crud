@@ -4,6 +4,7 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
+    "create:db": "bun wrangler d1 create",
     "generate": "bun drizzle-kit generate",
     "migrate:dev": "bun wrangler d1 migrations apply bun-htmx-crud --local",
     "test:db:dev": "bun wrangler d1 execute bun-htmx-crud --local --command \"select * from products\";",
