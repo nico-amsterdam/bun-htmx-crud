@@ -26,8 +26,11 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia({ aot: false })
     .use(html())
-    .get('/product/:id/delete', async ({ html, request, redirect, params: { id } }) => {
-        if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+    .get('/product/:id/delete', async ({ html, request, set, status, params: { id } }) => {
+        if (!isHtmxEnabled(request)) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
 
         const page = newPage()
 
@@ -35,7 +38,10 @@ export const delProductController = new Elysia({ aot: false })
             eq(tables.products.id, +id)
         )).get()
 
-        if (!product) return redirect('/product-list', 302)
+        if (!product) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
 
         page.form.values.id = id
         page.form.values.description = product.description
@@ -46,8 +52,11 @@ export const delProductController = new Elysia({ aot: false })
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ html, request, redirect, set, params: { id } }) => {
-        if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+    .post('/product/:id/delete', async ({ html, request, set, status, params: { id } }) => {
+        if (!isHtmxEnabled(request)) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
 
         // Delete product
         await getDB().delete(tables.products).where(

@@ -12,6 +12,8 @@
     "migrate": "bun wrangler d1 migrations apply bun-htmx-crud --remote",
     "test:db": "bun wrangler d1 execute bun-htmx-crud --remote --command \"select * from products\";",
     "deploy:app": "bun wrangler deploy",
+    "logtail:remote": "bun wrangler tail bun-htmx-crud",
+    "dev:remote": "bun wrangler dev --remote",
     "rollback": "bun wrangler rollback",
     "delete": "bun wrangler delete",
     "databases": "bun wrangler d1 list",

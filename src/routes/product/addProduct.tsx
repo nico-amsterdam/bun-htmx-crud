@@ -30,16 +30,22 @@ export const addProductController = new Elysia({ aot: false })
     .use(html())
     .get(
         '/add-product',
-        ({ html, request, redirect }) => {
-            if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+        ({ html, request, set, status }) => {
+            if (!isHtmxEnabled(request)) {
+                set.headers['Location'] = '/product-list'
+                return status(302)
+            }
 
             const page = newPage()
             return html(
                 <AddProduct {...page} />
             )
         })
-    .post('/add-product', async ({ html, request, redirect, set, body: { name, description, price } }) => {
-        if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+    .post('/add-product', async ({ html, request, set, status, body: { name, description, price } }) => {
+        if (!isHtmxEnabled(request)) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
         const page = validateFormAndCreatePage(name, description, price)
         let errors = page.form.errors
         if (Object.keys(errors).length > 0) {

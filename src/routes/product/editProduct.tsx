@@ -27,8 +27,11 @@ function EditProduct(page: PageType): JSX.Element {
 
 export const editProductController = new Elysia({ aot: false })
     .use(html())
-    .get('/product/:id/edit', async ({ html, request, redirect, params: { id } }) => {
-        if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+    .get('/product/:id/edit', async ({ html, request, set, status, params: { id } }) => {
+        if (!isHtmxEnabled(request)) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
 
         const page = newPage()
 
@@ -36,7 +39,10 @@ export const editProductController = new Elysia({ aot: false })
             eq(tables.products.id, +id)
         )).get()
 
-        if (!product) return redirect('/product-list', 302)
+        if (!product) {
+            set.headers['Location'] = '/product-list'
+            return status(302)
+        }
 
         page.form.values.id = id
         page.form.values.description = product.description
