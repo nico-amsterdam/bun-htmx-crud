@@ -16,7 +16,7 @@ export default {
     // inject db and env as deps
     Container.set('DrizzleDB', db)
     Container.set('env', env)
-    const resp = await new Elysia({ aot: false })
+    const resp = await new Elysia({ aot: false, normalize: false })
       .get('/', ({ set, status }) => { set.headers['Location'] = '/product-list'; return status(302) })
       .get('/health', ({}) => new Response('ok') )
       .use(productController)

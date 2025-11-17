@@ -107,7 +107,7 @@ export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element
     )
 }
 
-export const productListController = new Elysia({ aot: false })
+export const productListController = new Elysia({ aot: false, normalize: false })
     .use(html())
     .get(
         '/product-list',

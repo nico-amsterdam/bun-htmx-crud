@@ -24,7 +24,7 @@ function DelProduct(page: PageType): JSX.Element {
     )
 }
 
-export const delProductController = new Elysia({ aot: false })
+export const delProductController = new Elysia({ aot: false, normalize: false })
     .use(html())
     .get('/product/:id/delete', async ({ html, request, set, status, params: { id } }) => {
         if (!isHtmxEnabled(request)) {

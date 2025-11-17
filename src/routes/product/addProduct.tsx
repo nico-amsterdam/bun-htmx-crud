@@ -26,7 +26,7 @@ function AddProduct(page: PageType): JSX.Element {
     )
 }
 
-export const addProductController = new Elysia({ aot: false })
+export const addProductController = new Elysia({ aot: false, normalize: false })
     .use(html())
     .get(
         '/add-product',

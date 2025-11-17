@@ -25,7 +25,7 @@ function EditProduct(page: PageType): JSX.Element {
     )
 }
 
-export const editProductController = new Elysia({ aot: false })
+export const editProductController = new Elysia({ aot: false, normalize: false })
     .use(html())
     .get('/product/:id/edit', async ({ html, request, set, status, params: { id } }) => {
         if (!isHtmxEnabled(request)) {
