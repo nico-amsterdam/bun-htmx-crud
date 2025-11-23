@@ -9,6 +9,8 @@
 sqlite.db
 **/*.bun
 .env
+.wrangler
+.dev.vars
 
 # misc
 .DS_Store

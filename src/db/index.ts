@@ -3,7 +3,6 @@ import type { DrizzleD1Database } from 'drizzle-orm/d1'
 import * as schema from './schema'
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm'
 
-export const getEnv = () => Container.get<Env>('env')
 export const getDB = () => Container.get<DrizzleD1Database<typeof import('../db/schema')>>('DrizzleDB')
 
 export const tables = schema

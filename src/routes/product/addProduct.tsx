@@ -1,9 +1,11 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
-import { isHtmxEnabled } from 'htmx'
 import { getDB, tables, AddProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
+import { ElysiaSettings } from 'config'
+import { getUser } from '../auth'
+
 
 function AddProductForm(page: PageType): JSX.Element {
     return (
@@ -26,26 +28,17 @@ function AddProduct(page: PageType): JSX.Element {
     )
 }
 
-export const addProductController = new Elysia({ aot: false, normalize: false })
+export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
     .get(
         '/add-product',
-        ({ html, request, set, status }) => {
-            if (!isHtmxEnabled(request)) {
-                set.headers['Location'] = '/product-list'
-                return status(302)
-            }
-
+        ({ html }) => {
             const page = newPage()
             return html(
                 <AddProduct {...page} />
             )
         })
-    .post('/add-product', async ({ html, request, set, status, body: { name, description, price } }) => {
-        if (!isHtmxEnabled(request)) {
-            set.headers['Location'] = '/product-list'
-            return status(302)
-        }
+    .post('/add-product', async ({ html, set, body: { name, description, price } }) => {
         const page = validateFormAndCreatePage(name, description, price)
         let errors = page.form.errors
         if (Object.keys(errors).length > 0) {
@@ -58,7 +51,7 @@ export const addProductController = new Elysia({ aot: false, normalize: false })
               name: name.trim()
             , description: description.trimEnd()
             , price: (price === '' ? null : +price * 100)
-            , createdBy: 'unknown'
+            , createdBy: getUser().login || 'unknown'
             , createdAt: new Date()
         }
 

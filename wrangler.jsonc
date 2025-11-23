@@ -6,10 +6,10 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "bun-htmx-crud",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-11-15",
+	"compatibility_date": "2025-11-08",
 	"compatibility_flags": [
-       "nodejs_compat"
-    ],
+		"nodejs_compat"
+	],
 	"assets": {
 		"binding": "ASSETS",
 		"directory": "./public"
@@ -21,7 +21,7 @@
 		{
 			"binding": "DB",
 			"database_name": "bun-htmx-crud",
-			"database_id": "your db id"
+			"database_id": "<here comes your cloudflare database id>"
 		}
 	]
 	/**
@@ -39,11 +39,15 @@
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
-	// "vars": { "MY_VARIABLE": "production_value" }
+	, "vars": { "GITHUB_CLIENT_ID": "<fill in your GITHUB API token client-id>" },
 	/**
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/
 	 */
+	"keep_vars": true, /* also keep secrets.
+	                      Use this command
+						  'bun wrangler secret put GITHUB_CLIENT_SECRET'
+						  to add the github secret */
 	/**
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/

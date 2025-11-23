@@ -1,10 +1,11 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
-import { isHtmxEnabled } from 'htmx'
 import { getDB, tables, ModifyProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import { gotoProductList } from './productList'
+import { ElysiaSettings } from 'config'
+import { getUser } from '../auth'
 
 function EditProductForm(page: PageType): JSX.Element {
     return (
@@ -25,14 +26,9 @@ function EditProduct(page: PageType): JSX.Element {
     )
 }
 
-export const editProductController = new Elysia({ aot: false, normalize: false })
+export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .get('/product/:id/edit', async ({ html, request, set, status, params: { id } }) => {
-        if (!isHtmxEnabled(request)) {
-            set.headers['Location'] = '/product-list'
-            return status(302)
-        }
-
+    .get('/product/:id/edit', async ({ html, set, status, params: { id } }) => {
         const page = newPage()
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -41,7 +37,7 @@ export const editProductController = new Elysia({ aot: false, normalize: false }
 
         if (!product) {
             set.headers['Location'] = '/product-list'
-            return status(302)
+            return status(307)
         }
 
         page.form.values.id = id
@@ -53,8 +49,7 @@ export const editProductController = new Elysia({ aot: false, normalize: false }
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', async ({ html, request, redirect, set, body: { name, description, price }, params: { id } }) => {
-        if (!isHtmxEnabled(request)) return redirect('/product-list', 302)
+    .post('/product/:id/edit', async ({ html, set, body: { name, description, price }, params: { id } }) => {
         const page = validateFormAndCreatePage(name, description, price)
         validateIdAndUpdatePage(page, id)
         let errors = page.form.errors
@@ -69,7 +64,7 @@ export const editProductController = new Elysia({ aot: false, normalize: false }
             , name: name.trim()
             , description: description.trimEnd()
             , price: (price === '' ? null : +price * 100)
-            , modifiedBy: 'unknown'
+            , modifiedBy: getUser().login || 'unknown'
             , modifiedAt: new Date()
         }
 

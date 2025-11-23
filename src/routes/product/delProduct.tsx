@@ -1,10 +1,11 @@
 import { Elysia } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
-import { isHtmxEnabled } from 'htmx'
 import { getDB, tables } from "db"
 import { PageType, CancelButton, newPage } from './productForm'
 import { gotoProductList } from './productList'
+import { ElysiaSettings } from 'config'
+
 
 function DelProductForm(page: PageType): JSX.Element {
     return (
@@ -24,14 +25,9 @@ function DelProduct(page: PageType): JSX.Element {
     )
 }
 
-export const delProductController = new Elysia({ aot: false, normalize: false })
+export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .get('/product/:id/delete', async ({ html, request, set, status, params: { id } }) => {
-        if (!isHtmxEnabled(request)) {
-            set.headers['Location'] = '/product-list'
-            return status(302)
-        }
-
+    .get('/product/:id/delete', async ({ html, set, status, params: { id } }) => {
         const page = newPage()
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -40,7 +36,7 @@ export const delProductController = new Elysia({ aot: false, normalize: false })
 
         if (!product) {
             set.headers['Location'] = '/product-list'
-            return status(302)
+            return status(307)
         }
 
         page.form.values.id = id
@@ -52,16 +48,11 @@ export const delProductController = new Elysia({ aot: false, normalize: false })
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ html, request, set, status, params: { id } }) => {
-        if (!isHtmxEnabled(request)) {
-            set.headers['Location'] = '/product-list'
-            return status(302)
-        }
-
+    .post('/product/:id/delete', async ({ html, set, params: { id } }) => {
         // Delete product
         await getDB().delete(tables.products).where(
             eq(tables.products.id, +id)
-        ).returning().get()
+        )
 
         return html(await gotoProductList(set.headers))
     })
