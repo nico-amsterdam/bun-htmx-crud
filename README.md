@@ -44,9 +44,13 @@ Open the shown link in your browser to see the result.
 ## Deploy to Cloudflare
 
 In the wrangler.jsonc set your GITHUB_CLIENT_ID
+
+In .env also set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
+
 In .env your account id (hex string of 32 chars)
   curl "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ...."
   The json response contains result.id; that is the account_id.
+
 it is also visible in the url of https://dash.cloudflare.com/ when logged in.
 
 To deploy to cloudflare:
