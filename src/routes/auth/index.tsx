@@ -2,10 +2,10 @@ import { Elysia, t } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import Container from 'typedi'
 import { getEnv, ElysiaSettings } from "config"
+import { createHmac, getRandomValues } from 'crypto'
+import type { HttpHeaders, Schema } from '../../../types.d'
 
-
-// from Lucia auth:
-// https://lucia-auth.com/sessions/basic
+// function from Lucia auth, see https://lucia-auth.com/sessions/basic
 export function generateSecureRandomString(): string {
   // Human readable alphabet (a-z, 0-9 without l, o, 0, 1 to avoid confusion)
   const alphabet = "abcdefghijkmnpqrstuvwxyz23456789";
@@ -13,7 +13,7 @@ export function generateSecureRandomString(): string {
   // Generate 24 bytes = 192 bits of entropy.
   // We're only going to use 5 bits per byte so the total entropy will be 192 * 5 / 8 = 120 bits
   const bytes = new Uint8Array(24);
-  crypto.getRandomValues(bytes);
+  getRandomValues(bytes);
 
   let id = "";
   for (let i = 0; i < bytes.length; i++) {
@@ -33,14 +33,15 @@ type CookieValuesType = {
 
 type User = {
   login: string,
+//  name: string,
   avatar_url: string
 }
 
 export const authRedirect = new Elysia(ElysiaSettings)
   .onBeforeHandle(({ headers, set, status, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
-    const ip = "" + headers['cf-connecting-ip']
-    const userAgent = "" + headers['user-agent']
+    const ip = getIp(headers)
+    const userAgent = headers['user-agent'] || ""
     // Set
     // console.log('found: ' + rawcookie)
     if (rawcookie === undefined) {
@@ -54,6 +55,7 @@ export const authRedirect = new Elysia(ElysiaSettings)
         || cookieContent.name.indexOf(':') < 0
         || cookieContent.userAgent !== userAgent
         || cookieContent.ipAddress !== ip) {
+        console.log('Cookie does not match user')
         set.headers['Location'] = '/auth/login'
         return status(307)
       }
@@ -68,13 +70,12 @@ export const authRedirect = new Elysia(ElysiaSettings)
       return status(307)
     }
   })
-  // Scoped to parent instance but not beyond
-  .as('scoped')
+  .as('scoped') // Scoped to parent instance but not beyond
 
 
 type AccessTokenResponse = {
   access_token: string
-  // scope, token_type, etc.
+  // scope, token_type, etc. not used in this code
 }
 
 type TokenCheckResponse = {
@@ -83,9 +84,23 @@ type TokenCheckResponse = {
 
 export const getUser = () => Container.get<User>('user')
 
+function getIp(headers: Record<string, string | undefined>):string {
+  return headers['cf-connecting-ip'] || ''
+}
+
+function calcStateHmac(headers: Record<string, string | undefined>): string {
+  return createHmac("sha256", 'Het was een wonder, boven wonder')
+    .update(getIp(headers) + "some pepper" + headers['user-agent'])
+    .digest('hex')
+    .substring(0, 10)
+}
 
 export const authController = new Elysia(ElysiaSettings)
-  .get('/auth/to-github', ({ set, status }) => { set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID; return status(307) })
+  .get('/auth/to-github', async ({ headers, set, status }) => {
+    const state = calcStateHmac(headers)
+    set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&state=' + state
+    return status(307)
+  })
   .get('/auth/github', async ({ headers, query, set, status, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined) {
@@ -94,7 +109,13 @@ export const authController = new Elysia(ElysiaSettings)
       set.headers['Location'] = '/auth/login'
       return status(307)
     }
-    const ip = "" + headers['cf-connecting-ip']
+    const ip = getIp(headers)
+    const verifyState = calcStateHmac(headers)
+    if (verifyState !== query.state) {
+      console.log('state has been tampared')
+      set.headers['Location'] = '/auth/login'
+      return status(307)
+    }
     const tokenAccessResponse = await fetch('https://github.com/login/oauth/access_token', {
       method: "POST",
       headers: {
@@ -149,7 +170,7 @@ export const authController = new Elysia(ElysiaSettings)
     SESSION.value = {
       id: sessionId,
       name: 'github:' + checkedTokenInfo.user.login,
-      userAgent: "" + headers['user-agent'],
+      userAgent: headers['user-agent'] || "",
       ipAddress: ip,
       image: checkedTokenInfo.user.avatar_url
     }
@@ -159,6 +180,7 @@ export const authController = new Elysia(ElysiaSettings)
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
+      state: t.Optional(t.String()),
       error: t.Optional(t.String()),
       error_description: t.Optional(t.String()),
       error_uri: t.Optional(t.String()),

@@ -9,13 +9,13 @@ import { ElysiaSettings } from '../../config'
 
 const htmxRedirect = new Elysia(ElysiaSettings)
   .onBeforeHandle(({ set, status, request }) => {
-  if (!isHtmxEnabled(request)) {
-    set.headers['Location'] = '/product-list'
-    return status(307)
-  }
-})
-  // Scoped to parent instance but not beyond
-.as('scoped')
+    if (!isHtmxEnabled(request)) {
+      set.headers['Location'] = '/product-list'
+      return status(307)
+    }
+  })
+  .as('scoped') // Scoped to parent instance but not beyond
+
 
 export const productController = new Elysia(ElysiaSettings)
   .use(authRedirect)
