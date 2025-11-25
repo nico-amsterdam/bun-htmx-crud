@@ -8,8 +8,7 @@ export const ElysiaSettings = {
   normalize: false,
   cookie: {
         httpOnly: true,
-   //     sameSite: "strict",  when strict cookies get lost in redirects
-        // secure: true,   when using https
+   //     sameSite: "strict",  when strict, cookies get lost in redirects
         secrets: ["Er waren eens twee beren"],
         sign: true,
         path: "/",

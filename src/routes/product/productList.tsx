@@ -15,9 +15,10 @@ const BaseHtml = ({ children }: { children: JSX.Element }) => `
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bun HTMX CRUD</title>
   <meta name="description" content="BUN HTMX CRUD project">
+  <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false,"defaultSwapStyle":"outerHTML"}'>
   <link rel="stylesheet" href="/css/bootstrap3-un.css">
-  <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.js" integrity="sha384-ezjq8118wdwdRMj+nX4bevEi+cDLTbhLAeFF688VK8tPDGeLUe0WoY2MZtSla72F" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/hyperscript.org@0.9.14" integrity="sha384-NzchC8z9HmP/Ed8cheGl9XuSrFSkDNHPiDl+ujbHE0F0I7tWC4rUnwPXP+7IvVZv" crossorigin="anonymous"></script>
+  <script src="/javascript/vendor/htmx.js" integrity="sha384-ezjq8118wdwdRMj+nX4bevEi+cDLTbhLAeFF688VK8tPDGeLUe0WoY2MZtSla72F" crossorigin="anonymous"></script>
+  <script src="/javascript/vendor/_hyperscript.min.js" integrity="sha384-NzchC8z9HmP/Ed8cheGl9XuSrFSkDNHPiDl+ujbHE0F0I7tWC4rUnwPXP+7IvVZv" crossorigin="anonymous"></script>
 </head>
 ${children}
 </html>
@@ -47,11 +48,13 @@ function Product({ id, name, description, price }: ProductType): JSX.Element {
     if (price !== null && Number.isFinite(+price)) priceInEuro = "" + (+price / 100)
     return (
         <tr>
-            <td><a hx-get={`/product/${id}/edit`} hx-push-url="true" hx-trigger="click, keyup[key=='Enter']" hx-target="#main" hx-swap="outerHTML" tabindex="0">{name}</a></td>
+            <td><a hx-get={`/product/${id}/edit`} hx-push-url="true" hx-trigger="click"
+            data-script="on keyup if the event's key is 'Enter' trigger click"
+            hx-target="#main" tabindex="0">{name}</a></td>
             <td>{description}</td>
             <td>{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
-            <td><button type="button" hx-get={`/product/${id}/edit`} hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-warning btn-xs">Edit</button>
-                {" "}<button type="button" hx-get={`/product/${id}/delete`} hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-danger btn-xs">Delete</button></td>
+            <td><button type="button" hx-get={`/product/${id}/edit`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">Edit</button>
+                {" "}<button type="button" hx-get={`/product/${id}/delete`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">Delete</button></td>
         </tr>
     )
 }
@@ -69,7 +72,7 @@ function ProductList(page: PageType): JSX.Element {
 function Main(page: PageType): JSX.Element {
     return (
         <section id="main">
-            <div class="actions"><button type="button" hx-get="/add-product" hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
+            <div class="actions"><button type="button" hx-get="/add-product" hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                 class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>

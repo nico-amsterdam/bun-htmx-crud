@@ -1,9 +1,8 @@
-import { Elysia, t } from 'elysia'
+import { Elysia, HTTPHeaders, t } from 'elysia'
 import { Html, html } from '@elysiajs/html'
+import { createHmac, getRandomValues } from 'crypto'
 import Container from 'typedi'
 import { getEnv, ElysiaSettings } from "config"
-import { createHmac, getRandomValues } from 'crypto'
-import type { HttpHeaders, Schema } from '../../../types.d'
 
 // function from Lucia auth, see https://lucia-auth.com/sessions/basic
 export function generateSecureRandomString(): string {
@@ -25,7 +24,10 @@ export function generateSecureRandomString(): string {
 
 type CookieValuesType = {
   id: string,
+  login: string,
   name: string,
+  email: string,
+  csrfToken: string,
   userAgent: string,
   ipAddress: string,
   image: string
@@ -33,7 +35,8 @@ type CookieValuesType = {
 
 type User = {
   login: string,
-//  name: string,
+  name: string,
+  email: string,
   avatar_url: string
 }
 
@@ -42,7 +45,6 @@ export const authRedirect = new Elysia(ElysiaSettings)
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)
     const userAgent = headers['user-agent'] || ""
-    // Set
     // console.log('found: ' + rawcookie)
     if (rawcookie === undefined) {
       console.log('No cookie')
@@ -51,8 +53,8 @@ export const authRedirect = new Elysia(ElysiaSettings)
     }
     try {
       const cookieContent = JSON.parse(rawcookie) as CookieValuesType
-      if (!cookieContent.name
-        || cookieContent.name.indexOf(':') < 0
+      if (!cookieContent.login
+        || cookieContent.login.indexOf(':') < 0
         || cookieContent.userAgent !== userAgent
         || cookieContent.ipAddress !== ip) {
         console.log('Cookie does not match user')
@@ -60,7 +62,9 @@ export const authRedirect = new Elysia(ElysiaSettings)
         return status(307)
       }
       const user = {
-        login: cookieContent.name,
+        login: cookieContent.login,
+        name: cookieContent.name,
+        email: cookieContent.email,
         avatar_url: cookieContent.image
       } as User
       Container.set('user', user)
@@ -69,6 +73,7 @@ export const authRedirect = new Elysia(ElysiaSettings)
       set.headers['Location'] = '/auth/login'
       return status(307)
     }
+    setContentSecurityPolicy(set.headers)
   })
   .as('scoped') // Scoped to parent instance but not beyond
 
@@ -84,8 +89,13 @@ type TokenCheckResponse = {
 
 export const getUser = () => Container.get<User>('user')
 
-function getIp(headers: Record<string, string | undefined>):string {
+function getIp(headers: Record<string, string | undefined>): string {
   return headers['cf-connecting-ip'] || ''
+}
+
+function setContentSecurityPolicy(headers: HTTPHeaders) {
+  // Cross-site-scripting protection with a safe CSP:
+  headers['Content-Security-Policy'] = "default-src 'self';img-src 'self' data:;"
 }
 
 function calcStateHmac(headers: Record<string, string | undefined>): string {
@@ -164,16 +174,23 @@ export const authController = new Elysia(ElysiaSettings)
     console.log('token check response: ' + JSON.stringify(checkedTokenInfo))
     console.log('login name: ' + checkedTokenInfo.user.login)
 
-    Container.set('user', checkedTokenInfo.user)
+    // This route always redirect. This is not needed here:
+    // Container.set('user', checkedTokenInfo.user)
 
     const sessionId = generateSecureRandomString();
+    const csrfToken = generateSecureRandomString();
     SESSION.value = {
       id: sessionId,
-      name: 'github:' + checkedTokenInfo.user.login,
+      login: 'github:' + checkedTokenInfo.user.login,
+      name: checkedTokenInfo.user.name,
+      email: checkedTokenInfo.user.email,
+      csrfToken: csrfToken,
       userAgent: headers['user-agent'] || "",
       ipAddress: ip,
       image: checkedTokenInfo.user.avatar_url
     }
+    const protocol = headers['x-forwarded-proto'] || 'http'
+    if (protocol === 'https') SESSION.secure = true;
     // go to main page
     set.headers['Location'] = '/product-list'
     return status(307)
@@ -189,7 +206,10 @@ export const authController = new Elysia(ElysiaSettings)
       SESSION: t.Optional(
         t.Object({
           id: t.String(),
+          login: t.String(),
           name: t.String(),
+          email: t.String(),
+          csrfToken: t.String(),
           userAgent: t.String(),
           ipAddress: t.String(),
           image: t.String()
@@ -198,12 +218,16 @@ export const authController = new Elysia(ElysiaSettings)
     })
   })
   .use(html())
-  .get('/auth/login', ({ html, cookie: { SESSION } }) => {
+  .get('/auth/login', ({ set, html, cookie: { SESSION } }) => {
 
     // logout: remove previous cookie
     SESSION.remove()
 
+    setContentSecurityPolicy(set.headers)
+
+
     return html(<div><a href="/auth/to-github">Login with Github</a></div>)
   })
+
 
 

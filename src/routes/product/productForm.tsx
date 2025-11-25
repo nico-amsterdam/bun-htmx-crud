@@ -38,7 +38,7 @@ export function ProductFormFields(page: PageType): JSX.Element {
 
 export function CancelButton(): JSX.Element {
   return (
-    <button type="button" hx-get="/product-list" hx-push-url="true" hx-target="#main" hx-swap="outerHTML" class="btn btn-default">Cancel</button>
+    <button type="button" hx-get="/product-list" hx-push-url="true" hx-target="#main" class="btn btn-default">Cancel</button>
   )
 }
 
