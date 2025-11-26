@@ -10,6 +10,7 @@ type FormFieldsType = keyof BaseProductType
 type FormDataType = {
   values: Partial<Record<FormFieldsType, string>>
   errors: Partial<Record<FormFieldsType | 'general', string>>
+  csrfToken: string
 }
 
 export type PageType = {
@@ -20,6 +21,7 @@ export type PageType = {
 export function ProductFormFields(page: PageType): JSX.Element {
   return (
     <div>
+      <input type="hidden" name="csrf" id="csrf" value={page.form.csrfToken} />
       {page.form.errors.general && (<div class="error">{page.form.errors.general}</div>)}
       <div class="form-group"><label for="edit-name">Name</label><input class="form-control" id="edit-name"
         name="name" required={true} maxlength="20" value={page.form.values.name} autofocus />
@@ -43,7 +45,7 @@ export function CancelButton(): JSX.Element {
 }
 
 function newFormData(): FormDataType {
-  return { values: {}, errors: {} }
+  return { values: {}, errors: {}, csrfToken: '' }
 }
 
 export function newPage(): PageType {

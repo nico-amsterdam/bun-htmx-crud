@@ -1,10 +1,11 @@
-import { t, Elysia, HTTPHeaders } from 'elysia'
+import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { asc } from 'drizzle-orm'
 import { HttpHeader, isHtmxEnabled } from 'htmx'
 import { getDB, tables, ProductType } from "db"
 import { PageType, newPage } from './productForm'
 import { ElysiaSettings } from 'config'
+import { authRedirect } from '../auth'
 
 
 const BaseHtml = ({ children }: { children: JSX.Element }) => `
@@ -99,8 +100,10 @@ function Main(page: PageType): JSX.Element {
     )
 }
 
+const PRODUCT_LIST_PATH = '/product-list'
+
 export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element> {
-    headers[HttpHeader.HxReplaceURL] = "/product-list"
+    headers[HttpHeader.HxReplaceURL] = PRODUCT_LIST_PATH
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
@@ -114,8 +117,9 @@ export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())
+    .use(authRedirect)
     .get(
-        '/product-list',
+        PRODUCT_LIST_PATH,
         async ({ html, request }) => {
 
             const page = newPage()

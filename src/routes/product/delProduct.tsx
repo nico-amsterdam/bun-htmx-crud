@@ -1,15 +1,16 @@
-import { Elysia } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { getDB, tables } from "db"
 import { PageType, CancelButton, newPage } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
-
+import { authRedirect } from '../auth'
 
 function DelProductForm(page: PageType): JSX.Element {
     return (
         <form hx-post={`/product/${page.form.values.id}/delete`}>
+            <input type="hidden" name="csrf" id="csrf" value={page.form.csrfToken} />
             <p>The action cannot be undone.</p><button type="submit" class="btn btn-danger">Delete</button>
             {" "}<CancelButton />
         </form>
@@ -27,9 +28,9 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .get('/product/:id/delete', async ({ html, set, status, params: { id } }) => {
+    .use(authRedirect)
+    .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id } }) => {
         const page = newPage()
-
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
@@ -39,6 +40,7 @@ export const delProductController = new Elysia(ElysiaSettings)
             return status(307)
         }
 
+        page.form.csrfToken = csrfToken
         page.form.values.id = id
         page.form.values.description = product.description
         page.form.values.name = product.name
@@ -48,11 +50,17 @@ export const delProductController = new Elysia(ElysiaSettings)
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ html, set, params: { id } }) => {
-        // Delete product
-        await getDB().delete(tables.products).where(
-            eq(tables.products.id, +id)
-        )
+    .post('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, body: { csrf } }) => {
+        if (csrfToken === csrf) {
+            // Delete product
+            await getDB().delete(tables.products).where(
+                eq(tables.products.id, +id)
+            )
+        }
 
         return html(await gotoProductList(set.headers))
+    }, { // TypeBox
+        body: t.Object({
+            csrf: t.String()
+        })
     })

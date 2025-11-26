@@ -1,5 +1,4 @@
 import { Elysia } from 'elysia'
-import type { ElysiaConfig } from 'elysia';
 import Container from 'typedi'
 import { drizzle } from 'drizzle-orm/d1'
 import * as schema from './db/schema'
@@ -10,11 +9,6 @@ import { ElysiaSettings } from './config'
 // Experimental: import { CloudflareAdapter } from 'elysia/adapter/cloudflare-worker'
 // import { env } from 'cloudflare:workers'
 
-// export interface Env {
-//   DB: D1Database
-//   , GITHUB_CLIENT_ID: string
-// }
-
 export default {
   async fetch(request: Request, env: Env) {
     const db = drizzle(env.DB, { schema, logger: true })
@@ -22,8 +16,11 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
-      .get('/', ({ set, status }) => { set.headers['Location'] = '/product-list'; return status(307) })
-      .get('/health', ({}) => new Response('ok') )
+      .get('/', ({ set, status }) => {
+        set.headers['Location'] = '/product-list'
+        return status(307)
+      })
+      .get('/health', ({ }) => new Response('ok'))
       .use(authController)
       .use(productController)
       .handle(request)

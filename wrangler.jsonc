@@ -39,7 +39,10 @@
 	 * Environment Variables
 	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
 	 */
-	, "vars": { "GITHUB_CLIENT_ID": "<fill in your GITHUB API token client-id>" },
+	, "vars": { 
+                "GITHUB_CLIENT_ID": "<fill in your Github APP token client-id>",
+                "GOOGLE_CLIENT_ID": "<fill in your Google Cloud oauth client-id>" 
+              },
 	/**
 	 * Note: Use secrets to store sensitive data.
 	 * https://developers.cloudflare.com/workers/configuration/secrets/

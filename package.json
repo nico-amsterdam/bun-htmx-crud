@@ -13,6 +13,7 @@
     "test:db": "bun wrangler d1 execute bun-htmx-crud --remote --command \"select * from products\";",
     "deploy:app": "bun wrangler deploy",
     "secret:github": "bun wrangler secret put GITHUB_CLIENT_SECRET",
+    "secret:google": "bun wrangler secret put GOOGLE_CLIENT_SECRET",
     "logtail:remote": "bun wrangler tail bun-htmx-crud",
     "dev:remote": "bun wrangler dev --remote",
     "rollback:app": "bun wrangler rollback",

@@ -5,7 +5,7 @@ import { getDB, tables, ModifyProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
-import { getUser } from '../auth'
+import { authRedirect } from '../auth'
 
 function EditProductForm(page: PageType): JSX.Element {
     return (
@@ -28,7 +28,8 @@ function EditProduct(page: PageType): JSX.Element {
 
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .get('/product/:id/edit', async ({ html, set, status, params: { id } }) => {
+    .use(authRedirect)
+    .get('/product/:id/edit', async ({ csrfToken, html, set, status, params: { id } }) => {
         const page = newPage()
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -40,6 +41,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             return status(307)
         }
 
+        page.form.csrfToken = csrfToken
         page.form.values.id = id
         page.form.values.description = product.description
         page.form.values.name = product.name
@@ -49,11 +51,12 @@ export const editProductController = new Elysia(ElysiaSettings)
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', async ({ html, set, body: { name, description, price }, params: { id } }) => {
+    .post('/product/:id/edit', async ({ authUser, csrfToken, html, set, body: { name, description, price, csrf }, params: { id } }) => {
         const page = validateFormAndCreatePage(name, description, price)
+        page.form.csrfToken = csrfToken
         validateIdAndUpdatePage(page, id)
         let errors = page.form.errors
-        if (Object.keys(errors).length > 0) {
+        if (Object.keys(errors).length > 0 || csrfToken !== csrf) {
             return html(
                 <EditProductForm {...page} />
             )
@@ -64,7 +67,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             , name: name.trim()
             , description: description.trimEnd()
             , price: (price === '' ? null : +price * 100)
-            , modifiedBy: getUser().login || 'unknown'
+            , modifiedBy: authUser.login || 'unknown'
             , modifiedAt: new Date()
         }
 
@@ -89,7 +92,8 @@ export const editProductController = new Elysia(ElysiaSettings)
         body: t.Object({
             name: t.String(),
             description: t.String(),
-            price: t.String()
+            price: t.String(),
+            csrf: t.String()
         })
     })
 

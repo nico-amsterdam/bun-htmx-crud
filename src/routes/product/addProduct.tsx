@@ -4,8 +4,7 @@ import { getDB, tables, AddProductType } from "db"
 import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
-import { getUser } from '../auth'
-
+import { authRedirect } from '../auth'
 
 function AddProductForm(page: PageType): JSX.Element {
     return (
@@ -30,18 +29,21 @@ function AddProduct(page: PageType): JSX.Element {
 
 export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
+    .use(authRedirect)
     .get(
         '/add-product',
-        ({ html }) => {
+        ({ csrfToken, html }) => {
             const page = newPage()
+            page.form.csrfToken = csrfToken
             return html(
                 <AddProduct {...page} />
             )
         })
-    .post('/add-product', async ({ html, set, body: { name, description, price } }) => {
+    .post('/add-product', async ({ authUser, csrfToken, html, set, body: { name, description, price, csrf } }) => {
         const page = validateFormAndCreatePage(name, description, price)
+        page.form.csrfToken = csrfToken
         let errors = page.form.errors
-        if (Object.keys(errors).length > 0) {
+        if (Object.keys(errors).length > 0 || csrfToken !== csrf) {
             return html(
                 <AddProductForm {...page} />
             )
@@ -51,7 +53,7 @@ export const addProductController = new Elysia(ElysiaSettings)
               name: name.trim()
             , description: description.trimEnd()
             , price: (price === '' ? null : +price * 100)
-            , createdBy: getUser().login || 'unknown'
+            , createdBy: authUser.login || 'unknown'
             , createdAt: new Date()
         }
 
@@ -74,6 +76,7 @@ export const addProductController = new Elysia(ElysiaSettings)
         body: t.Object({
             name: t.String(),
             description: t.String(),
-            price: t.String()
+            price: t.String(),
+            csrf: t.String()
         })
     })
