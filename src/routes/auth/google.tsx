@@ -23,16 +23,16 @@ type TokenCheckResponse = {
   error_description: string
 }
 
-function getRedirectUri(headers : Record<string, string | undefined>) {
-    const protocol = headers['x-forwarded-proto'] || 'http'
-    return (protocol === 'http' ? redirect_uri_local : redirect_uri_remote)
+function getRedirectUri(headers: Record<string, string | undefined>) {
+  const protocol = headers['x-forwarded-proto'] || 'http'
+  return (protocol === 'http' ? redirect_uri_local : redirect_uri_remote)
 }
 
 export const googleController = new Elysia(ElysiaSettings)
   .get('/auth/to-google', async ({ headers, set, status }) => {
     const state = calcStateHmac(headers)
     const redirect_uri = getRedirectUri(headers)
-    set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
+    set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
     return status(307)
   })
   .get('/auth/google', async ({ headers, query, set, status, cookie: { SESSION } }) => {
@@ -71,7 +71,7 @@ export const googleController = new Elysia(ElysiaSettings)
 
     const { access_token, token_type } = googleAccessToken;
 
-    if (access_token === undefined || googleAccessToken.error !== undefined ) {
+    if (access_token === undefined || googleAccessToken.error !== undefined) {
       console.log(googleAccessToken.error_description)
       // incorrect secret?
       set.headers['Location'] = '/auth/login'
@@ -98,7 +98,7 @@ export const googleController = new Elysia(ElysiaSettings)
     console.log('login name: ' + checkedTokenInfo.name)
     console.log('user unique id: ' + checkedTokenInfo.sub)
 
-    if (checkedTokenInfo.sub === undefined || checkedTokenInfo.error !== undefined ) {
+    if (checkedTokenInfo.sub === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
       set.headers['Location'] = '/auth/login'
       return status(307)
@@ -118,6 +118,7 @@ export const googleController = new Elysia(ElysiaSettings)
     }
     const protocol = headers['x-forwarded-proto'] || 'http'
     if (protocol === 'https') SESSION.secure = true;
+
     // go to main page
     set.headers['Location'] = '/product-list'
     return status(307)

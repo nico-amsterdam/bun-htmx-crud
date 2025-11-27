@@ -19,7 +19,7 @@ type TokenCheckResponse = {
 export const githubController = new Elysia(ElysiaSettings)
   .get('/auth/to-github', async ({ headers, set, status }) => {
     const state = calcStateHmac(headers)
-    set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&state=' + state
+    set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state
     return status(307)
   })
   .get('/auth/github', async ({ headers, query, set, status, cookie: { SESSION } }) => {
@@ -54,7 +54,7 @@ export const githubController = new Elysia(ElysiaSettings)
     // console.log('access token: ' + JSON.stringify(githubAccessToken))
 
     const { access_token } = githubAccessToken;
-    if (access_token === undefined || githubAccessToken.error !== undefined ) {
+    if (access_token === undefined || githubAccessToken.error !== undefined) {
       console.log(githubAccessToken.error_description)
       // incorrect secret?
       set.headers['Location'] = '/auth/login'
@@ -91,7 +91,7 @@ export const githubController = new Elysia(ElysiaSettings)
     // console.log('token check response: ' + JSON.stringify(checkedTokenInfo))
     console.log('login name: ' + checkedTokenInfo.user.login)
 
-    if (checkedTokenInfo.user.login === undefined || checkedTokenInfo.error !== undefined ) {
+    if (checkedTokenInfo.user.login === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
       set.headers['Location'] = '/auth/login'
       return status(307)
@@ -111,6 +111,7 @@ export const githubController = new Elysia(ElysiaSettings)
     }
     const protocol = headers['x-forwarded-proto'] || 'http'
     if (protocol === 'https') SESSION.secure = true;
+
     // go to main page
     set.headers['Location'] = '/product-list'
     return status(307)

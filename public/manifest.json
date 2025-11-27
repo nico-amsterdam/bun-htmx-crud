@@ -1,0 +1,39 @@
+{
+  "name": "Bun HTMX demo - on Cloudflare with Google/Github authentication",
+  "short_name": "Bun HTMX Elysia CRUD demo",
+  "description": "CRUD demo hosted on Cloudflare. Authenticate with Github/Google.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#00d4ff",
+  "orientation": "portrait-primary",
+  "categories": ["productivity", "utilities"],
+  "lang": "en",
+  "icons": [
+    {
+      "src": "image/4koma.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "image/4koma.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "image/4koma.png",
+      "sizes": "310x505",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ],
+  "features": [
+    "cross-platform",
+    "offline-capable",
+    "touch-optimized"
+  ]
+}

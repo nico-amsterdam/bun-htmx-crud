@@ -12,7 +12,7 @@ import { ElysiaSettings } from './config'
 export default {
   async fetch(request: Request, env: Env) {
     const db = drizzle(env.DB, { schema, logger: true })
-    // inject db and env as deps
+    // inject db and env
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
