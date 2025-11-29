@@ -1,4 +1,4 @@
-# HTMX Elysia with Bun runtime on Cloudflare
+# Bun HTMX Elysia on Cloudflare
 
 ## About this project
 
@@ -12,7 +12,7 @@ Git clone this repostory, or download the source from github.
 [Sqlite](https://www.sqlite.org/index.html) is the central database. More specifically [Cloudflare D1](https://developers.cloudflare.com/d1/worker-api/d1-database/).
 
 Uses [JSX](https://bun.com/docs/runtime/jsx): HTML is embedded in typescript functions (tsx files).
-All HTML is generated server-side.
+All HTML is generated server-side. All code, including route parameters and templates are typesafe.
 
 Recommended HTMX reading material: [Following up "Mother of all htmx demos"](https://david.guillot.me/en/posts/tech/following-up-mother-of-all-htmx-demos/)
 
