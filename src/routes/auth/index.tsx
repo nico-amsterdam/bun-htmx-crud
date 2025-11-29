@@ -5,6 +5,8 @@ import { getIp } from './securityHelper'
 import { githubController } from './github'
 import { googleController } from './google'
 import { addContentSecurityPolicyHeader } from '../helper/securityHeaders'
+import { BaseHtml } from '../helper/basePage'
+
 
 export type User = {
   login: string,
@@ -26,8 +28,26 @@ type CookieValuesType = {
 
 function LoginPage(): JSX.Element {
   return (
-    <div><a href="/auth/to-github">Login with Github</a>
-      <p><a href="/auth/to-google">Login with Google</a></p></div>
+    <BaseHtml>
+      <body class="login-container">
+        <div class="login-box">
+          <h1 class="login-title">Welcome to the Bun HTMX CRUD Demo</h1>
+          <p class="login-subtitle">Sign in to continue</p>
+
+          <div class="social-login-container">
+            <a href="/auth/to-github" class="social-login-button github-login">
+              <img src="/image/github-icon.svg" alt="GitHub" class="social-icon" />
+              Continue with GitHub
+            </a>
+
+            <a href="/auth/to-google" class="social-login-button google-login">
+              <img src="/image/google-icon.svg" alt="Google" class="social-icon" />
+              Continue with Google
+            </a>
+          </div>
+        </div>
+      </body>
+    </BaseHtml>
   )
 }
 
@@ -45,7 +65,7 @@ export const authController = new Elysia(ElysiaSettings)
   })
 
 export const authRedirect = new Elysia(ElysiaSettings)
-  .resolve({ as: 'scoped'}, ({ headers, set, status, cookie: { SESSION } }) => {
+  .resolve({ as: 'scoped' }, ({ headers, set, status, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)
     const userAgent = headers['user-agent'] || ""
@@ -72,8 +92,10 @@ export const authRedirect = new Elysia(ElysiaSettings)
         avatar_url: cookieContent.image
       } as User
       // add to context
-      return {'authUser': user,
-              'csrfToken': cookieContent.csrfToken}
+      return {
+        'authUser': user,
+        'csrfToken': cookieContent.csrfToken
+      }
     } catch (e) {
       console.log('Session cookie did not parse')
       set.headers['Location'] = '/auth/login'
