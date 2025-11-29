@@ -31,7 +31,8 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 header,
 section {
-    display: block
+    display: block;
+    margin-top: 15px
 }
 
 a:active,
@@ -197,7 +198,7 @@ p {
 
 .page-header {
     padding-bottom: 9px;
-    margin: 40px 0 20px;
+    margin: 0;
     border-bottom: 1px solid #eee
 }
 
@@ -582,10 +583,9 @@ textarea.form-control {
 }
 
 .htmx-logo-svg {
-    width: 200px;
-    height: 50px;
+    width: 100px;
+    height: 25px;
     margin-bottom: -8px;
-    margin-left: 6px;
     transition: opacity 0.2s ease;
 }
 
@@ -593,8 +593,19 @@ textarea.form-control {
     opacity: 0.8;
 }
 
-.logo-wrapper {
+.topbar {
     display: flex;
     align-items: center;
-    gap: 10px;
+}
+
+.topbar .user {
+    margin-left: auto;
+}
+
+.topbar .user img {
+    border-radius: 50%;
+}
+
+.topbar .user .signout {
+    padding-left: 5px;
 }

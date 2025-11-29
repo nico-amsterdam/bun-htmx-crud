@@ -1,5 +1,6 @@
 import { Html } from '@elysiajs/html'
 import { ProductType, BaseProductType } from "db"
+import type { User } from '../auth'
 
 type DataType = {
   products: ProductType[]
@@ -14,6 +15,7 @@ type FormDataType = {
 }
 
 export type PageType = {
+  user: User | undefined
   data: DataType
   form: FormDataType
 }
@@ -51,6 +53,7 @@ function newFormData(): FormDataType {
 export function newPage(): PageType {
   // Page page
   const page: PageType = {
+    user: undefined,
     data: { products: [] },
     form: newFormData()
   }
