@@ -43,9 +43,11 @@ Open the shown link in your browser to see the result.
 
 ## Deploy to Cloudflare
 
-In the wrangler.jsonc set your GITHUB_CLIENT_ID
+In the wrangler.jsonc set your GITHUB_CLIENT_ID and GOOGLE_CLIENT_ID
 
 In .env also set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
+
+In .env also set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 
 In .env your account id (hex string of 32 chars)
   curl "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ...."
