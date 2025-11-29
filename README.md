@@ -61,6 +61,7 @@ bun migrate
 bun test:db
 bun deploy:app
 bun wrangler secret put GITHUB_CLIENT_SECRET
+bun wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
 Open the shown link in your browser to see the result.
