@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia'
+import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp } from './securityHelper'
 import type { User } from './'
@@ -16,9 +17,11 @@ type TokenCheckResponse = {
   error_description: string
 }
 
+const secretKey = createSecretKey(Buffer.from('key-object-secret'));
+
 export const githubController = new Elysia(ElysiaSettings)
   .get('/auth/to-github', async ({ headers, set, status }) => {
-    const state = calcStateHmac(headers)
+    const state = calcStateHmac(headers, secretKey)
     set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state
     return status(307)
   })
@@ -31,7 +34,7 @@ export const githubController = new Elysia(ElysiaSettings)
       return status(307)
     }
     const ip = getIp(headers)
-    const verifyState = calcStateHmac(headers)
+    const verifyState = calcStateHmac(headers, secretKey)
     if (verifyState !== query.state) {
       console.log('state has been tampered')
       set.headers['Location'] = '/auth/login'
@@ -102,12 +105,12 @@ export const githubController = new Elysia(ElysiaSettings)
     SESSION.value = {
       id: sessionId,
       login: 'github:' + checkedTokenInfo.user.login,
-      name: checkedTokenInfo.user.name,
-      email: checkedTokenInfo.user.email,
+      name: checkedTokenInfo.user.name || '',
+      email: checkedTokenInfo.user.email || '',
       csrfToken: csrfToken,
-      userAgent: headers['user-agent'] || "",
+      userAgent: headers['user-agent'] || '',
       ipAddress: ip,
-      image: checkedTokenInfo.user.avatar_url
+      image: checkedTokenInfo.user.avatar_url || ''
     }
     const protocol = headers['x-forwarded-proto'] || 'http'
     if (protocol === 'https') SESSION.secure = true;

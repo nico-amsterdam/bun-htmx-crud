@@ -1,4 +1,5 @@
 import { Elysia, t } from 'elysia'
+import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp } from './securityHelper'
 
@@ -28,9 +29,11 @@ function getRedirectUri(headers: Record<string, string | undefined>) {
   return (protocol === 'http' ? redirect_uri_local : redirect_uri_remote)
 }
 
+const secretKey = createSecretKey(Buffer.from('key-object-secret'));
+
 export const googleController = new Elysia(ElysiaSettings)
   .get('/auth/to-google', async ({ headers, set, status }) => {
-    const state = calcStateHmac(headers)
+    const state = calcStateHmac(headers, secretKey)
     const redirect_uri = getRedirectUri(headers)
     set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
     return status(307)
@@ -44,7 +47,7 @@ export const googleController = new Elysia(ElysiaSettings)
       return status(307)
     }
     const ip = getIp(headers)
-    const verifyState = calcStateHmac(headers)
+    const verifyState = calcStateHmac(headers, secretKey)
     if (verifyState !== query.state) {
       console.log('state has been tampered')
       set.headers['Location'] = '/auth/login'
@@ -109,12 +112,12 @@ export const googleController = new Elysia(ElysiaSettings)
     SESSION.value = {
       id: sessionId,
       login: 'google:' + checkedTokenInfo.sub,
-      name: checkedTokenInfo.name,
+      name: checkedTokenInfo.name || '',
       email: '',
       csrfToken: csrfToken,
-      userAgent: headers['user-agent'] || "",
+      userAgent: headers['user-agent'] || '',
       ipAddress: ip,
-      image: checkedTokenInfo.picture
+      image: checkedTokenInfo.picture || ''
     }
     const protocol = headers['x-forwarded-proto'] || 'http'
     if (protocol === 'https') SESSION.secure = true;

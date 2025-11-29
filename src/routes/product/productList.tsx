@@ -16,7 +16,7 @@ const BaseHtml = ({ children }: { children: JSX.Element }) => `
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bun HTMX CRUD</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0a0a0a">
+  <meta name="theme-color" content="#6fb01fff">
   <link rel="apple-touch-icon" href="images/bun-htmx.png">
   <meta name="description" content="BUN HTMX CRUD project">
   <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false,"defaultSwapStyle":"outerHTML"}'>

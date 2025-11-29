@@ -1,4 +1,4 @@
-import { createHmac, getRandomValues } from 'crypto'
+import { createHmac, getRandomValues, KeyObject } from 'crypto'
 
 // function from Lucia auth, see https://lucia-auth.com/sessions/basic
 export function generateSecureRandomString(): string {
@@ -22,8 +22,8 @@ export function getIp(headers: Record<string, string | undefined>): string {
   return headers['cf-connecting-ip'] || ''
 }
 
-export function calcStateHmac(headers: Record<string, string | undefined>): string {
-  return createHmac("sha256", 'Het was een wonder, boven wonder')
+export function calcStateHmac(headers: Record<string, string | undefined>, secretKeyObject: KeyObject): string {
+  return createHmac("sha256", secretKeyObject)
     .update(getIp(headers) + "some pepper" + headers['user-agent'] + headers['x-forwarded-proto'] + headers['x-forwarded-for'])
     .digest('hex')
     .substring(0, 10)
