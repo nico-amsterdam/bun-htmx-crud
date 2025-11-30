@@ -8,7 +8,7 @@ export const BaseHtml = ({ children }: { children: JSX.Element }) => `
   <title>Bun HTMX CRUD</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#fddcd0">
-  <link rel="apple-touch-icon" href="images/bun-htmx.png">
+  <link rel="apple-touch-icon" href="/image/icon-192.png">
   <meta name="description" content="BUN HTMX CRUD project">
   <meta name="htmx-config" content='{"allowEval":false,"includeIndicatorStyles":false,"defaultSwapStyle":"outerHTML"}'>
   <link rel="stylesheet" href="/css/bootstrap3-un.css">
