@@ -19,10 +19,10 @@ function DelProductForm(page: PageType): JSX.Element {
 
 function DelProduct(page: PageType): JSX.Element {
     return (
-        <section id="main">
+        <main id="main">
             <h2>Delete product {page.form.values.name}</h2>
             <DelProductForm {...page} />
-        </section>
+        </main>
     )
 }
 

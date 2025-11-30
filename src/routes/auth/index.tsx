@@ -32,7 +32,7 @@ function LoginPage(): JSX.Element {
     <BaseHtml>
       <body class="full-container">
         <div id="content" class="login-container">
-          <div id="main" class="login-box">
+          <main id="main" class="login-box">
             <h1 class="login-title">Welcome to the Bun HTMX CRUD Demo</h1>
             <p class="login-subtitle">Sign in to continue</p>
 
@@ -47,7 +47,7 @@ function LoginPage(): JSX.Element {
                 Continue with Google
               </a>
             </div>
-          </div>
+          </main>
         </div>
       </body>
     </BaseHtml>

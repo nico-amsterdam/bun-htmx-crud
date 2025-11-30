@@ -20,10 +20,10 @@ function AddProductForm(page: PageType): JSX.Element {
 
 function AddProduct(page: PageType): JSX.Element {
     return (
-        <section id="main">
+        <main id="main">
             <h2>Add new product</h2>
             <AddProductForm {...page} />
-        </section>
+        </main>
     )
 }
 

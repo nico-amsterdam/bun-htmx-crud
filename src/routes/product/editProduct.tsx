@@ -19,10 +19,10 @@ function EditProductForm(page: PageType): JSX.Element {
 
 function EditProduct(page: PageType): JSX.Element {
     return (
-        <section id="main">
+        <main id="main">
             <h2>Edit product</h2>
             <EditProductForm {...page} />
-        </section>
+        </main>
     )
 }
 

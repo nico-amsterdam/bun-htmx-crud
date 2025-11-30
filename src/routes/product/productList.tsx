@@ -76,7 +76,7 @@ function ProductList(page: PageType): JSX.Element {
 
 function Main(page: PageType): JSX.Element {
     return (
-        <div id="main">
+        <main id="main">
             <div class="actions"><button type="button" hx-get="/add-product" hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                 class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
@@ -100,7 +100,7 @@ function Main(page: PageType): JSX.Element {
                 </thead>
                 <ProductList {...page} />
             </table>
-        </div>
+        </main>
     )
 }
 
