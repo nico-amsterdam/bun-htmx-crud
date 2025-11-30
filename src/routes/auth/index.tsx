@@ -1,5 +1,6 @@
 import { Elysia } from 'elysia'
 import { Html, html } from '@elysiajs/html'
+import { isHtmxEnabled } from 'htmx'
 import { ElysiaSettings } from "config"
 import { getIp } from './securityHelper'
 import { githubController } from './github'
@@ -29,25 +30,38 @@ type CookieValuesType = {
 function LoginPage(): JSX.Element {
   return (
     <BaseHtml>
-      <body class="login-container">
-        <div class="login-box">
-          <h1 class="login-title">Welcome to the Bun HTMX CRUD Demo</h1>
-          <p class="login-subtitle">Sign in to continue</p>
+      <body class="full-container">
+        <div id="content" class="login-container">
+          <div id="main" class="login-box">
+            <h1 class="login-title">Welcome to the Bun HTMX CRUD Demo</h1>
+            <p class="login-subtitle">Sign in to continue</p>
 
-          <div class="social-login-container">
-            <a href="/auth/to-github" class="social-login-button github-login">
-              <img src="/image/github-icon.svg" alt="GitHub" class="social-icon" />
-              Continue with GitHub
-            </a>
+            <div class="social-login-container">
+              <a href="/auth/to-github" class="social-login-button github-login">
+                <img src="/image/github-icon.svg" alt="GitHub" class="social-icon" />
+                Continue with GitHub
+              </a>
 
-            <a href="/auth/to-google" class="social-login-button google-login">
-              <img src="/image/google-icon.svg" alt="Google" class="social-icon" />
-              Continue with Google
-            </a>
+              <a href="/auth/to-google" class="social-login-button google-login">
+                <img src="/image/google-icon.svg" alt="Google" class="social-icon" />
+                Continue with Google
+              </a>
+            </div>
           </div>
         </div>
       </body>
     </BaseHtml>
+  )
+}
+function SessionExpired(): JSX.Element {
+  return (
+    <dialog open class="relogin" aria-labelledby="dialog-title">
+      <h3 id="dialog-title">Session expired</h3>
+      <form method="get" action="/auth/login">
+        <p>Please login again.</p>
+        <button class="btn btn-primary" autofocus>Login</button>
+      </form>
+    </dialog>
   )
 }
 
@@ -56,7 +70,15 @@ export const authController = new Elysia(ElysiaSettings)
   .use(googleController)
   .use(html())
   .use(addContentSecurityPolicyHeader)
-  .get('/auth/login', ({ html, cookie: { SESSION } }) => {
+  .post('auth/login', ({ html }) => {
+    return html(<SessionExpired />)
+  })
+  .get('auth/login', ({ html, request, cookie: { SESSION } }) => {
+
+    if (isHtmxEnabled(request)) {
+      // Show error to user in the current part of the screen. The login link will swap the whole page.
+      return html(<SessionExpired />)
+    }
 
     // logout: remove previous cookie
     SESSION.remove()

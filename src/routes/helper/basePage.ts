@@ -6,7 +6,7 @@ export const BaseHtml = ({ children }: { children: JSX.Element }) => `
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Bun HTMX CRUD</title>
-  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#fddcd0">
   <link rel="apple-touch-icon" href="images/bun-htmx.png">
   <meta name="description" content="BUN HTMX CRUD project">
