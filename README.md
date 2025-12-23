@@ -66,3 +66,12 @@ bun wrangler secret put GOOGLE_CLIENT_SECRET
 
 Open the shown link in your browser to see the result.
 
+## OAuth2 security
+
+- This application uses signed session cookies; the cookies can be read with the browse devtools, but modifying them to login as a different user will not succeed, because they are digitally signed.
+- The session cookies have a session id. The session id is currently not used, because the server doesn't keep session information. As a result, the sessions do not timeout.
+- Although they are session cookies, most browsers by default do not delete session cookies when the tab or the browser is closed. In principle the window.unload event could be used clean up the session cookies, but with oauth2 this doesn't provide more security; see next bullet point
+- Google/Github OAuth2 can be used as an identity provider (what I like), but it also provides single sign on (what I don't like). There is no way to only log out of the application only, and expect that you must enter your credentials again when you relogin. I could do a SSO-logout, but that means for example for the Google users that they will need to relogin for gmail (and other google services). The SSO sessions are long lasting sessions. To, solve this, we need a provider that supports OpenID Connect RP-Initiated Logout. OpenID is an extension of Oauth.
+- I have configured the login url to always prompt for consent (so it does not automatically redirect back when there is still a valid SSO session and there was a previous authorization of this app), but it is very easy to remove this from the url.
+- Github will ask to give bun-htmx-crud permission to 'act on your behalf'. The wording is very confusing for end-users, because this 'act' is only to verify the credentials. Only if you click on the link it states: "Applications act on your behalf to access your data based on the permissions you grant them."
+
