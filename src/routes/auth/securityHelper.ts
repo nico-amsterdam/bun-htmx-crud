@@ -24,7 +24,7 @@ export function getIp(headers: Record<string, string | undefined>): string {
 
 // Allow to switch from Mobile to Desktop view without relogin.
 export function stripMobileDesktopFromUserAgent(userAgent: string | undefined): string {
-  return (userAgent || '').replace(/ \([^)]+\)/, '').replaceAll(/ Edg(A|iOS)?(\/[0-9.]+)/g, ' Edg').replaceAll(/ Mobile(\/[0-9.])*/g, '').replaceAll(/ OPR(\/[0-9.]+)/g, ' OPR')
+  return (userAgent || '').replace(/ \([^)]+\)/, '').replaceAll(/ Edg(A|iOS)?(\/[0-9.]+)/g, ' Edg').replaceAll(/ Mobile(\/[0-9.]*)/g, '').replaceAll(/ OPR(\/[0-9.]+)/g, ' OPR')
 }
 
 export function calcStateHmac(headers: Record<string, string | undefined>, secretKeyObject: KeyObject): string {
