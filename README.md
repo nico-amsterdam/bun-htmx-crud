@@ -77,9 +77,33 @@ Open the shown link in your browser to see the result.
 
 ## Setup Google client
 
-It must be setup in 'Google Auth Platform' [documentation](https://developers.google.com/identity/openid-connect/openid-connect)
+It must be setup in 'Google Auth Platform'.
 
-## Setup Github app client
+- Login at https://console.cloud.google.com/. When asked, choose the free tier
+- Create a new project or select an existing project
+- In the project select 'APIs & Services' plus 'Credentials' from the menu
+
+<img width="312" height="260" alt="image" src="https://github.com/user-attachments/assets/b19d55e4-59f9-4ed6-86a0-e8d767fd52d4" />
+
+- Click 'Create Credentials' plus 'OAuth client ID'
+
+<img width="241" height="144" alt="image" src="https://github.com/user-attachments/assets/61fcbbfb-a7a7-4d18-8988-8eb52816e8c5" />
+
+- Choose web application type: Web application
+- Enter a name
+- Add authorized redirect Url's. One with your production url, and another one for local development
+
+<img width="249" height="121" alt="image" src="https://github.com/user-attachments/assets/4a637026-2c6d-4d1d-b7ed-7242e1002977" />
+
+- Push the create button
+- Download or copy the client id and client secret. Put them in the `.env` file. Also put the client id in `wrangler.jsonc`. Use the `bun wrangler secret put GOOGLE_CLIENT_SECRET` command to upload the secret to Cloudflare.
+
+
+[More info](https://developers.google.com/identity/openid-connect/openid-connect)
+
+
+
+## Setup Github OAuth2 client
 
 Github recommends to use a 'Github App' for authentication, but this will ask your users for permission to 'act on your behalf'. The wording is very confusing for end-users and it is an [unresolved issue since 2022](https://github.com/orgs/community/discussions/37117). Instead, you must create a Github 'OAuth App' which only ask the end-user access to 'public data only'. 
 
@@ -99,9 +123,10 @@ To create the OAuth App:
 
 <img width="716" height="663" alt="Register OAuth App" src="https://github.com/user-attachments/assets/e2e14c48-8c02-4d45-87a3-3b68c91d049d" />
 
-- Copy the client ID to your .env file and your wrangler.jsonc file.
-- Edit your new OAuth App again, and click on 'Generate a new client secret'.
-- Copy the secret to your clickboard and past it in your .env file. Use the `bun wrangler secret put GITHUB_CLIENT_SECRET` command to upload the secret to Cloudflare.
+- Click on 'Register application'.
+- Copy the client ID to your `.env` file and your `wrangler.jsonc` file
+- Click on 'Generate a new client secret'
+- Copy the secret to your clickboard and past it in your `.env` file. Use the `bun wrangler secret put GITHUB_CLIENT_SECRET` command to upload the secret to Cloudflare.
 
 
 
