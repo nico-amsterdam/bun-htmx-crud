@@ -2,7 +2,7 @@ import { Elysia } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { isHtmxEnabled } from 'htmx'
 import { ElysiaSettings } from "config"
-import { getIp } from './securityHelper'
+import { getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 import { githubController } from './github'
 import { googleController } from './google'
 import { addContentSecurityPolicyHeader } from '../helper/securityHeaders'
@@ -90,7 +90,7 @@ export const authRedirect = new Elysia(ElysiaSettings)
   .resolve({ as: 'scoped' }, ({ headers, set, status, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)
-    const userAgent = headers['user-agent'] || ""
+    const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])
     // console.log('found: ' + rawcookie)
     if (rawcookie === undefined) {
       console.log('No cookie')

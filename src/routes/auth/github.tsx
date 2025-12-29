@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
-import { calcStateHmac, generateSecureRandomString, getIp } from './securityHelper'
+import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 import type { User } from './'
 
 type AccessTokenResponse = {
@@ -108,7 +108,7 @@ export const githubController = new Elysia(ElysiaSettings)
       name: checkedTokenInfo.user.name || '',
       email: checkedTokenInfo.user.email || '',
       csrfToken: csrfToken,
-      userAgent: headers['user-agent'] || '',
+      userAgent: stripMobileDesktopFromUserAgent(headers['user-agent']),
       ipAddress: ip,
       image: checkedTokenInfo.user.avatar_url || ''
     }

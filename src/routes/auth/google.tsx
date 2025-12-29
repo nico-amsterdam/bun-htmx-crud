@@ -1,7 +1,7 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
-import { calcStateHmac, generateSecureRandomString, getIp } from './securityHelper'
+import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 
 const redirect_uri_local = 'http://localhost:8787/auth/google'
 const redirect_uri_remote = 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/google'
@@ -115,7 +115,7 @@ export const googleController = new Elysia(ElysiaSettings)
       name: checkedTokenInfo.name || '',
       email: '',
       csrfToken: csrfToken,
-      userAgent: headers['user-agent'] || '',
+      userAgent: stripMobileDesktopFromUserAgent(headers['user-agent']),
       ipAddress: ip,
       image: checkedTokenInfo.picture || ''
     }
