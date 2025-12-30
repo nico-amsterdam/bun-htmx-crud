@@ -97,6 +97,10 @@ It must be setup in 'Google Auth Platform'.
 
 - Push the create button
 - Download or copy the client id and client secret. Put them in the `.env` file. Also put the client id in `wrangler.jsonc`. Use the `bun wrangler secret put GOOGLE_CLIENT_SECRET` command to upload the secret to Cloudflare.
+- In the audience tab, click on 'Publish app'
+
+<img width="396" height="332" alt="image" src="https://github.com/user-attachments/assets/9917ca7a-7bbf-4980-93a0-53ebb24bb51e" />
+
 
 
 [More info](https://developers.google.com/identity/openid-connect/openid-connect)
