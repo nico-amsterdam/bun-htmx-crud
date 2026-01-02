@@ -7,7 +7,8 @@ export const ElysiaSettings = {
   aot: false,
   normalize: false,
   cookie: {
-    // sameSite: "strict",  when using strict, session cookies got lost in the temporary redirects
+    // when using sameSite: "strict", session cookies got lost in the temporary redirects
+    sameSite: "lax", // not all browsers use lax as default
     httpOnly: true,
     // secrets: used for signing cookies. TODO: change the secret in build/deploy step
     secrets: ["Ik zag twee beren"],
