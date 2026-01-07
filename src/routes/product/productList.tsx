@@ -121,7 +121,7 @@ export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(authRedirect)
+    .use(authRedirect) // also sets authUser and csrfToken
     .get(
         PRODUCT_LIST_PATH,
         async ({ authUser, html, request }) => {

@@ -86,7 +86,11 @@ export const authController = new Elysia(ElysiaSettings)
     return html(<LoginPage />)
   })
 
-export const authRedirect = new Elysia(ElysiaSettings)
+/*
+ * Redirect to /auth/login when not logged-in.
+ * If logged-in, add authUser and csrfToken to the scope
+ */
+export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'})
   .resolve({ as: 'scoped' }, ({ headers, set, status, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)

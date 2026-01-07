@@ -6,7 +6,7 @@ function setContentSecurityPolicy(headers: HTTPHeaders) {
   headers['Content-Security-Policy'] = "default-src 'self';img-src 'self' data: https://*.googleusercontent.com/ https://avatars.githubusercontent.com/ ;"
 }
 
-export const addContentSecurityPolicyHeader = new Elysia(ElysiaSettings)
+export const addContentSecurityPolicyHeader = new Elysia({ ...ElysiaSettings, name: 'addCSP'})
   .onBeforeHandle({ as: 'scoped' }, ({ set }) => {
     setContentSecurityPolicy(set.headers)
   })

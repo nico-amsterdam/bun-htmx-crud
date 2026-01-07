@@ -29,7 +29,7 @@ function AddProduct(page: PageType): JSX.Element {
 
 export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(authRedirect)
+    .use(authRedirect) // also sets authUser and csrfToken
     .get(
         '/add-product',
         ({ csrfToken, html }) => {

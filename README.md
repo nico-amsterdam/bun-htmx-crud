@@ -2,37 +2,59 @@
 
 ## About this project
 
-Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/).
+Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/), with the option to deploy it on Cloudflare, so everything can run on the edge in the cloud.
 
 There is a demo on https://bun-htmx-crud.nico-amsterdam.workers.dev/. Login with your Google or Github account.
 
-You can use this project for learning purposes and demo's.
+You can use this project as a starter for your server-side rendered application with authentication.
 Git clone this repostory, or download the source from github.
 
 [Sqlite](https://www.sqlite.org/index.html) is the central database. More specifically [Cloudflare D1](https://developers.cloudflare.com/d1/worker-api/d1-database/).
+D1 is a managed database with automatic backups (Time Travel).
+It is great for most CRUD applications. There are a few limitations; D1 has a maximum size of 10 GB per instance (5 GB in the free plan) and it does't support transactions with multiple steps, though it does support atomic batch operations.
 
 Uses [JSX](https://bun.com/docs/runtime/jsx): HTML is embedded in typescript functions (tsx files).
 All HTML is generated server-side. All code, including route parameters and templates are typesafe.
 
 Recommended HTMX reading material: [Following up "Mother of all htmx demos"](https://david.guillot.me/en/posts/tech/following-up-mother-of-all-htmx-demos/)
 
+## Directory structure
+
+```text
+├── migrations/
+├── public/
+│   ├── css/
+│   ├── image/
+│   └── javascript/
+├── src/
+│   ├── config/
+│   ├── db/
+│   ├── htmx/
+│   ├── routes/
+│   │   ├── auth/
+│   │   ├── helper/
+│   │   └── product/
+└── tests/
+```
+
 ## Getting Started
-- install Bun
+- install [Bun](https://bun.com)
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud
+
+  `git clone https://github.com/nico-amsterdam/bun-htmx-crud.git`
 - When using git, switch to the Cloudflare branch:
   git checkout cloudflare-d1
 - run:
 
 ```bash
 bun install
-bun create:db  // interactive: use DB as binding
-bun generate
+cp .env.example .env
+bun migrate:create
 bun migrate:dev
 bun test:db:dev
 ```
 
 ## Development
-Update your .env file. DB_ID can be found in wrangler.jsonc as the database_id
 
 To start the development server run:
 ```bash
@@ -57,6 +79,9 @@ it is also visible in the url of https://dash.cloudflare.com/ when logged in.
 
 To deploy to cloudflare:
 ```bash
+bunx wrangler login  # login on your Cloudflare account
+bun create:db        # interactive: use DB as binding
+                     # Update your .env file. DB_ID can be found in wrangler.jsonc as the database_id
 bun migrate
 bun test:db
 bun deploy:app
@@ -109,7 +134,7 @@ It must be setup in 'Google Auth Platform'.
 
 ## Setup Github OAuth2 client
 
-Github recommends to use a 'Github App' for authentication, but this will ask your users for permission to 'act on your behalf'. The wording is very confusing for end-users and it is an [unresolved issue since 2022](https://github.com/orgs/community/discussions/37117). Instead, you must create a Github 'OAuth App' which only ask the end-user access to 'public data only'. 
+Github recommends to use a 'Github App' for authentication, but this will ask your users for permission to 'act on your behalf'. The wording is very confusing for end-users and it is an [unresolved issue since 2022](https://github.com/orgs/community/discussions/37117). Instead, you must create a Github 'OAuth App' which only ask the end-user access to 'public data only'.
 
 To create the OAuth App:
 - login with your account in [github.com](https://github.com/)
@@ -117,7 +142,7 @@ To create the OAuth App:
 
 <img width="159" height="276" alt="Github settings" src="https://github.com/user-attachments/assets/7a979212-984f-496f-a707-5a1338f5dabe" />
 
-- Select 'Developer settings':  
+- Select 'Developer settings':
 
 <img width="301" height="427" alt="Developer settings" src="https://github.com/user-attachments/assets/b68cc95d-4091-4c4b-9605-1420a4d2e2ac" />
 

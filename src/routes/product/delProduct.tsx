@@ -28,7 +28,7 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(authRedirect)
+    .use(authRedirect) // also sets authUser and csrfToken
     .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id } }) => {
         const page = newPage()
         const product = await getDB().select().from(tables.products).where(and(

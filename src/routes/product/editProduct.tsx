@@ -2,7 +2,8 @@ import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { getDB, tables, ModifyProductType } from "db"
-import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
+import { ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
+import type { PageType } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
@@ -28,7 +29,7 @@ function EditProduct(page: PageType): JSX.Element {
 
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(authRedirect)
+    .use(authRedirect) // also sets authUser and csrfToken
     .get('/product/:id/edit', async ({ csrfToken, html, set, status, params: { id } }) => {
         const page = newPage()
 

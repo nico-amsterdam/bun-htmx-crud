@@ -51,7 +51,6 @@ function newFormData(): FormDataType {
 }
 
 export function newPage(): PageType {
-  // Page page
   const page: PageType = {
     user: undefined,
     data: { products: [] },
