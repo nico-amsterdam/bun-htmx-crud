@@ -26,6 +26,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │   ├── css/
 │   ├── image/
 │   └── javascript/
+│       └── vendor/
 ├── src/
 │   ├── config/
 │   ├── db/
