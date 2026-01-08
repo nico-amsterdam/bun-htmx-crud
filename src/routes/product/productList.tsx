@@ -16,7 +16,7 @@ function Body(page: PageType): JSX.Element {
                     <div class="topbar">
                         <h1>Bun JSX HTMX CRUD</h1>
                         <span class="user">
-                            <img width="50px" height="50px" id="user-image" src={page.user?.avatar_url} title="Avatar" />
+                            <img width="50px" height="50px" id="user-image" src={page.user?.avatar_url} title={page.user?.name || 'Avatar'} />
                             <a title="Sign out" href="/auth/login" class="signout">➜] Sign out</a>
                         </span>
                     </div>
