@@ -40,6 +40,9 @@ function Body(page: PageType): JSX.Element {
                                 </g>
                             </svg>
                         </a>
+                        <a href="https://elysiajs.com" title="Elysia site" target="_blank">
+                            <img class="elysia-logo-svg" alt="Elysia logo" width="25px" src="/image/elysia.svg" />
+                        </a>
                     </div>
                 </header>
                 <Main {...page} />

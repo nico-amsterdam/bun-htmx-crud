@@ -590,7 +590,11 @@ textarea.form-control {
 }
 
 .htmx-logo:hover .htmx-logo-svg {
-    opacity: 0.8;
+    opacity: 0.7;
+}
+
+.elysia-logo-svg {
+    margin-left: 10px
 }
 
 .topbar {

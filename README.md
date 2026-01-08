@@ -31,10 +31,10 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │   ├── config/
 │   ├── db/
 │   ├── htmx/
-│   ├── routes/
-│   │   ├── auth/
-│   │   ├── helper/
-│   │   └── product/
+│   └── routes/
+│       ├── auth/
+│       ├── helper/
+│       └── product/
 └── tests/
 ```
 
@@ -43,8 +43,6 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud
 
   `git clone https://github.com/nico-amsterdam/bun-htmx-crud.git`
-- When using git, switch to the Cloudflare branch:
-  git checkout cloudflare-d1
 - run:
 
 ```bash
@@ -68,21 +66,19 @@ Open the shown link in your browser to see the result.
 
 In the wrangler.jsonc set your GITHUB_CLIENT_ID and GOOGLE_CLIENT_ID
 
-In .env also set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
+In .env set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
 
-In .env also set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+In .env set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 
-In .env your account id (hex string of 32 chars)
-  curl "https://api.cloudflare.com/client/v4/accounts" -H "Authorization: Bearer ...."
-  The json response contains result.id; that is the account_id.
-
-it is also visible in the url of https://dash.cloudflare.com/ when logged in.
+In .env set your Cloudflare account id. This is a hex string of 32 chars,
+which can be seen in the url of https://dash.cloudflare.com/ when logged in.
 
 To deploy to cloudflare:
 ```bash
-bunx wrangler login  # login on your Cloudflare account
+bun wrangler login  # login on your Cloudflare account
 bun create:db        # interactive: use DB as binding
-                     # Update your .env file. DB_ID can be found in wrangler.jsonc as the database_id
+# Update your .env file. DB_ID can be found in wrangler.jsonc as the database_id
+# Remove old bindings from wrangler.jsonc, such that only one DB binding remains
 bun migrate
 bun test:db
 bun deploy:app
@@ -90,7 +86,13 @@ bun wrangler secret put GITHUB_CLIENT_SECRET
 bun wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-Open the shown link in your browser to see the result.
+Open the shown [link](http://localhost:8787/) in your browser to see the result.
+
+## Setup Google and Github
+
+[Setup Google](auth-setup-google.md)
+
+[Setup Github](auth-setup-github.md)
 
 ## OAuth2 (or OpenID connect) security
 
@@ -101,63 +103,15 @@ Open the shown link in your browser to see the result.
 - Google/Github OAuth2 can be used as an identity provider (what I like), but it also provides single sign on (what I don't like). There is no good way to only log out of the application, and expect that they must enter credentials again on relogin. I could do a Federated/Single Logout, but that means for example for the Google users that they will need to relogin for Gmail and other google services. The SSO sessions are long lasting sessions.
 - I have configured the login url to always prompt for consent (so it does not automatically redirect back when there is still a valid SSO session and permissions where already granted by the user), but it is very easy to remove this from the url.
 
-## Setup Google client
+## Tips
 
-It must be setup in 'Google Auth Platform'.
+- Run `bun logtail` to view the log of the application running on Cloudflare
+- Run `bun studio:db` to view the production database with Drizzle Studio. Needs the Cloudflare environment settings in the .env file. Create the Cloudflare token with the following additional account permissions: D1:Edit, Workers KV Storage:Edit
+- The content of the local database can be quickly viewed with `bun dbcat:db:dev` and the Key-Value store with `bun dbcat:kv:dev`
+- If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will use automatically this token (instead of `wrangler login`). Make sure that the token has enough permissions.
 
-- Login at https://console.cloud.google.com/. When asked, choose the free tier
-- Create a new project or select an existing project
-- In the project select 'APIs & Services' plus 'Credentials' from the menu
+<img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
-<img width="312" height="260" alt="image" src="https://github.com/user-attachments/assets/b19d55e4-59f9-4ed6-86a0-e8d767fd52d4" />
+- If the remote database is deleted (`bun wrangler d1 delete bun-htmx-crud`) and created again, and there are errors (like: `Error: 7500: You do not have permission to perform this operation`) when doing queries then reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
 
-- Click 'Create Credentials' plus 'OAuth client ID'
-
-<img width="241" height="144" alt="image" src="https://github.com/user-attachments/assets/61fcbbfb-a7a7-4d18-8988-8eb52816e8c5" />
-
-- Choose web application type: Web application
-- Enter a name
-- Add authorized redirect Url's. One with your production url, and another one for local development
-
-<img width="249" height="121" alt="image" src="https://github.com/user-attachments/assets/4a637026-2c6d-4d1d-b7ed-7242e1002977" />
-
-- Push the create button
-- Download or copy the client id and client secret. Put them in the `.env` file. Also put the client id in `wrangler.jsonc`. Use the `bun wrangler secret put GOOGLE_CLIENT_SECRET` command to upload the secret to Cloudflare.
-- In the audience tab, click on 'Publish app'
-
-<img width="396" height="332" alt="image" src="https://github.com/user-attachments/assets/9917ca7a-7bbf-4980-93a0-53ebb24bb51e" />
-
-
-
-[More info](https://developers.google.com/identity/openid-connect/openid-connect)
-
-
-
-## Setup Github OAuth2 client
-
-Github recommends to use a 'Github App' for authentication, but this will ask your users for permission to 'act on your behalf'. The wording is very confusing for end-users and it is an [unresolved issue since 2022](https://github.com/orgs/community/discussions/37117). Instead, you must create a Github 'OAuth App' which only ask the end-user access to 'public data only'.
-
-To create the OAuth App:
-- login with your account in [github.com](https://github.com/)
-- In the upper right corner, click on your picture and goto settings:
-
-<img width="159" height="276" alt="Github settings" src="https://github.com/user-attachments/assets/7a979212-984f-496f-a707-5a1338f5dabe" />
-
-- Select 'Developer settings':
-
-<img width="301" height="427" alt="Developer settings" src="https://github.com/user-attachments/assets/b68cc95d-4091-4c4b-9605-1420a4d2e2ac" />
-
-- Select 'OAuth Apps'
-- Click the 'New OAuth App' button
-- Fill in the details. During local development fill in the logout url: 'http://localhost:8787/auth/github'. After deployment, change it to the url for production. In my case this is 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/github'.
-
-<img width="716" height="663" alt="Register OAuth App" src="https://github.com/user-attachments/assets/e2e14c48-8c02-4d45-87a3-3b68c91d049d" />
-
-- Click on 'Register application'.
-- Copy the client ID to your `.env` file and your `wrangler.jsonc` file
-- Click on 'Generate a new client secret'
-- Copy the secret to your clickboard and past it in your `.env` file. Use the `bun wrangler secret put GITHUB_CLIENT_SECRET` command to upload the secret to Cloudflare.
-
-
-
-
+<img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />

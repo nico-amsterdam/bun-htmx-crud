@@ -37,6 +37,6 @@
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.8",
     "typed-html": "^3.0.1",
-    "wrangler": "^4.57.0"
+    "wrangler": "^4.58.0"
   }
 }
