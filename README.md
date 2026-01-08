@@ -46,12 +46,22 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 - run:
 
 ```bash
+cd bun-htmx-crud
 bun install
 cp .env.example .env
 bun migrate:create
 bun migrate:dev
-bun test:db:dev
 ```
+
+## Setup Google and Github authentication
+
+[Setup Google](auth-setup-google.md)
+
+[Setup Github](auth-setup-github.md)
+
+In .env set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
+
+In .env set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
 
 ## Development
 
@@ -60,15 +70,11 @@ To start the development server run:
 bun dev
 ```
 
-Open the shown link in your browser to see the result.
+Open the shown [link](http://localhost:8787/) in your browser to see the result.
 
 ## Deploy to Cloudflare
 
 In the wrangler.jsonc set your GITHUB_CLIENT_ID and GOOGLE_CLIENT_ID
-
-In .env set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
-
-In .env set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 
 In .env set your Cloudflare account id. This is a hex string of 32 chars,
 which can be seen in the url of https://dash.cloudflare.com/ when logged in.
@@ -77,22 +83,20 @@ To deploy to cloudflare:
 ```bash
 bun wrangler login  # login on your Cloudflare account
 bun create:db        # interactive: use DB as binding
-# Update your .env file. DB_ID can be found in wrangler.jsonc as the database_id
-# Remove old bindings from wrangler.jsonc, such that only one DB binding remains
-bun migrate
-bun test:db
-bun deploy:app
-bun wrangler secret put GITHUB_CLIENT_SECRET
-bun wrangler secret put GOOGLE_CLIENT_SECRET
 ```
 
-Open the shown [link](http://localhost:8787/) in your browser to see the result.
+Set DB_ID in the .env file. The value can be found in `wrangler.jsonc` as the database_id.
 
-## Setup Google and Github
+Remove old bindings from wrangler.jsonc, such that only one DB binding remains.
 
-[Setup Google](auth-setup-google.md)
+```bash
+bun migrate
+bun deploy:app
+bun secret:google
+bun secret:github
+```
 
-[Setup Github](auth-setup-github.md)
+Open the shown link by the deploy:app command in your browser to see the result.
 
 ## OAuth2 (or OpenID connect) security
 
@@ -106,8 +110,8 @@ Open the shown [link](http://localhost:8787/) in your browser to see the result.
 ## Tips
 
 - Run `bun logtail` to view the log of the application running on Cloudflare
-- Run `bun studio:db` to view the production database with Drizzle Studio. Needs the Cloudflare environment settings in the .env file. Create the Cloudflare token with the following additional account permissions: D1:Edit, Workers KV Storage:Edit
-- The content of the local database can be quickly viewed with `bun dbcat:db:dev` and the Key-Value store with `bun dbcat:kv:dev`
+- Run `bun studio:db` to view the production database with Drizzle Studio. Needs the Cloudflare environment settings in the .env file. Create the Cloudflare token with the following additional account permission: D1:Edit
+- The content of the local database can be quickly viewed with `bun dbcat:db:dev`
 - If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will use automatically this token (instead of `wrangler login`). Make sure that the token has enough permissions.
 
 <img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />

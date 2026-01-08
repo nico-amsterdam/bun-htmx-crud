@@ -1,4 +1,4 @@
-import { Elysia } from 'elysia'
+import { Elysia, ErrorHandler } from 'elysia'
 import Container from 'typedi'
 import { drizzle } from 'drizzle-orm/d1'
 import * as schema from './db/schema'
@@ -16,6 +16,14 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
+      .onError(({ code, status, set }) => {
+        if (code === 'INVALID_COOKIE_SIGNATURE') {
+          // override invalid cookie
+          set.headers['Set-Cookie'] = 'SESSION=; HttpOnly; path=/; max-age=0'
+          set.headers['Location'] = '/auth/login'
+          return status(307)
+        }
+      })
       .get('/', ({ set, status }) => {
         set.headers['Location'] = '/product-list'
         return status(307)
