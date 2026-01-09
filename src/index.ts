@@ -16,12 +16,15 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
-      .onError(({ code, status, set }) => {
+      .onError(({ code, error, set, status }) => {
         if (code === 'INVALID_COOKIE_SIGNATURE') {
-          // override invalid cookie
-          set.headers['Set-Cookie'] = 'SESSION=; HttpOnly; path=/; max-age=0'
-          set.headers['Location'] = '/auth/login'
-          return status(307)
+          console.log('Invalid cookie: ' + error.message)
+          if (error.message.includes('"SESSION"')) {
+            // override invalid cookie
+            set.headers['Set-Cookie'] = 'SESSION=; HttpOnly; path=/; max-age=0'
+            set.headers['Location'] = '/auth/login'
+            return status(307)
+          }
         }
       })
       .get('/', ({ set, status }) => {
