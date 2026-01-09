@@ -119,3 +119,29 @@ Open the shown link by the deploy:app command in your browser to see the result.
 - If the remote database is deleted (`bun wrangler d1 delete bun-htmx-crud`) and created again, and there are errors (like: `Error: 7500: You do not have permission to perform this operation`) when doing queries then reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
 
 <img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />
+
+## Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `bun update:types` | Generate TypeScript types from your Cloudflare Worker configuration |
+| `bun typecheck` | Run TypeScript type checking without emitting files |
+| `bun typecheck:watch` | Run TypeScript type checking in watch mode |
+| `bun create:db` | Create a new Cloudflare D1 database |
+| `bun migrate:create` | Generate database migration files using Drizzle Kit |
+| `bun migrate:dev` | Apply database migrations to local development database |
+| `bun migrate` | Apply database migrations to remote production database |
+| `bun test:db:dev` | Test local development database connection and query products table |
+| `bun test:db` | Test remote production database connection and query products table |
+| `bun dev` | Start local development server with hot reload |
+| `bun deploy:app` | Deploy application to Cloudflare Workers |
+| `bun secret:github` | Set GitHub OAuth client secret in Cloudflare environment |
+| `bun secret:google` | Set Google OAuth client secret in Cloudflare environment |
+| `bun logtail` | Stream real-time logs from deployed Cloudflare Worker |
+| `bun rollback:app` | Rollback to previous deployment version |
+| `bun delete:app` | Delete the deployed Cloudflare Worker |
+| `bun databases` | List all Cloudflare D1 databases |
+| `bun studio:db` | Open Drizzle Studio for production database management |
+| `bun studio:db:dev` | Open Drizzle Studio for local development database |
+| `bun introspect:db` | Introspect database schema using Drizzle Kit |
+| `bun dbcat:db:dev` | View local development database content using dbcat CLI tool |
