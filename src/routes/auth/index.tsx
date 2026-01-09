@@ -38,12 +38,12 @@ function LoginPage(): JSX.Element {
 
             <div class="social-login-container">
               <a href="/auth/to-github" class="social-login-button github-login">
-                <img src="/image/github-icon.svg" alt="GitHub" class="social-icon" />
+                <img src="/image/github-icon.svg" alt="GitHub logo" class="social-icon" />
                 Continue with GitHub
               </a>
 
               <a href="/auth/to-google" class="social-login-button google-login">
-                <img src="/image/google-icon.svg" alt="Google" class="social-icon" />
+                <img src="/image/google-icon.svg" alt="Google logo" class="social-icon" />
                 Continue with Google
               </a>
             </div>
