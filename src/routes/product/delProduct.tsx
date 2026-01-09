@@ -11,7 +11,7 @@ function DelProductForm(page: PageType): JSX.Element {
     return (
         <form hx-post={`/product/${page.form.values.id}/delete`}>
             <input type="hidden" name="csrf" id="csrf" value={page.form.csrfToken} />
-            <p>The action cannot be undone.</p><button type="submit" class="btn btn-danger">Delete</button>
+            <p>The action cannot be undone.</p><button type="submit" class="btn btn-danger" autofocus>Delete</button>
             {" "}<CancelButton />
         </form>
     )
