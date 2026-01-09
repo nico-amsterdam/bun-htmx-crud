@@ -133,6 +133,9 @@ Open the shown link by the deploy:app command in your browser to see the result.
 | `bun migrate` | Apply database migrations to remote production database |
 | `bun test:db:dev` | Test local development database connection and query products table |
 | `bun test:db` | Test remote production database connection and query products table |
+| `bun test` | Run tests |
+| `bun test --coverage` | Print out a test coverage report to the console |
+| `bun test --watch` | Watch changes and re-run tests |
 | `bun dev` | Start local development server with hot reload |
 | `bun deploy:app` | Deploy application to Cloudflare Workers |
 | `bun secret:github` | Set GitHub OAuth client secret in Cloudflare environment |
