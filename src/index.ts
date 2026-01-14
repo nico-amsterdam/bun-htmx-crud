@@ -1,4 +1,4 @@
-import { Elysia, ErrorHandler } from 'elysia'
+import { Elysia } from 'elysia'
 import Container from 'typedi'
 import { drizzle } from 'drizzle-orm/d1'
 import * as schema from './db/schema'

@@ -7,17 +7,39 @@ import { PageType, newPage } from './productForm'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
+import { localeMiddleware } from '../../i18n/localeMiddleware'
+
+function LanguageSwitcher({linkTo, page}: {linkTo: string, page: PageType}): JSX.Element {
+    const _ = page.locale.t
+    const onChangeScript = `on change
+                if my value is 'es' go to url ${linkTo}?lang=es
+                else if my value is 'fr' go to url ${linkTo}?lang=fr
+                else if my value is 'de' go to url ${linkTo}?lang=de
+                otherwise go to url ${linkTo}`
+
+    return (
+        <select id="choose-lang" name="language"
+            class="form-control language-switcher"
+            aria-label={_('Choose site language')}
+            data-script={onChangeScript}>
+            <option value="en" lang="en" selected={page.locale.lang === 'en'}>English</option>
+            <option value="es" lang="es" selected={page.locale.lang === 'es'}>Español</option>
+            <option value="fr" lang="fr" selected={page.locale.lang === 'fr'}>Français</option>
+            <option value="de" lang="de" selected={page.locale.lang === 'de'}>Deutsch</option>
+        </select>)
+}
 
 function Body(page: PageType): JSX.Element {
+    const _ = page.locale.t
     return (
         <body class="container">
             <div id="content" class="product-list">
                 <header class="page-header">
                     <div class="topbar">
-                        <h1>Bun JSX HTMX CRUD</h1>
+                        <h1>{_('Bun JSX HTMX CRUD')}</h1>
                         <span class="user">
-                            <img width="50px" height="50px" id="user-image" src={page.user?.avatar_url} alt={page.user?.name || 'Avatar'} />
-                            <a title="Sign out" href="/auth/login" class="signout">➜] Sign out</a>
+                            <img width="50px" height="50px" id="user-image" src={page.user?.avatar_url} title={page.user?.name || _('Avatar')} />
+                            <a title={_('Sign out')} href={`/auth/login${page.locale.langQueryParam}`} class="signout">➜] {_('Sign out')}</a>
                         </span>
                     </div>
                     <div id="logos">
@@ -50,18 +72,20 @@ function Body(page: PageType): JSX.Element {
     )
 }
 
-function Product({ id, name, description, price }: ProductType): JSX.Element {
+function Product({ page, product }: { page: PageType, product: ProductType }): JSX.Element {
+    const { id, name, description, price } = product
+    const _ = page.locale.t
     let priceInEuro = ''
     if (price !== null && Number.isFinite(+price)) priceInEuro = "" + (+price / 100)
     return (
         <tr>
-            <td><a hx-get={`/product/${id}/edit`} hx-push-url="true" hx-trigger="click"
+            <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
                 data-script="on keyup if the event's key is 'Enter' trigger click"
                 hx-target="#main" tabindex="0">{name}</a></td>
             <td>{description}</td>
             <td>{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
-            <td><button type="button" hx-get={`/product/${id}/edit`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">Edit</button>
-                {" "}<button type="button" hx-get={`/product/${id}/delete`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">Delete</button></td>
+            <td><button type="button" hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
+                {" "}<button type="button" hx-get={`/product/${id}/delete${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">{_('Delete')}</button></td>
         </tr>
     )
 }
@@ -70,26 +94,30 @@ function ProductList(page: PageType): JSX.Element {
     return (
         <tbody id="search-results">
             {page.data.products.map((product) => (
-                <Product {...product} />
+                <Product product={product} page={page} />
             ))}
         </tbody>
     )
 }
 
 function Main(page: PageType): JSX.Element {
+    const _ = page.locale.t
     return (
         <main id="main">
-            <div class="actions"><button type="button" hx-get="/add-product" hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
-                xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
-                class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
-                <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
-            </svg> Add product </button></div>
+            <div class="form-actions">
+                <LanguageSwitcher linkTo='/product-list' page={page} />
+                <button type="button" hx-get={`/add-product${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
+                    xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
+                    class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
+                    <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
+                </svg> {_('Add product')} </button>
+            </div>
             <search class="filters row">
-                <div class="form-group col-sm-3"><label for="search-element">Search product</label>
+                <div class="form-group product-search"><label for="search-element">{_('Search product')}</label>
                     <input
                         class="form-control" name="search" id="search-element" autocomplete="off" tabindex="0"
                         autofocus
-                        aria-description="Results will update as you type"
+                        aria-description={_('Results will update as you type')}
                         data-script="
 on input
 set matchCount to 0
@@ -114,16 +142,16 @@ end"                />
             <table class="table">
                 <thead>
                     <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Price</th>
-                        <th class="col-sm-2">Actions</th>
+                        <th>{_('Name')}</th>
+                        <th>{_('Description')}</th>
+                        <th>{_('Price')}</th>
+                        <th class="table-actions">{_('Actions')}</th>
                     </tr>
                 </thead>
                 <ProductList {...page} />
                 <tfoot id="search-results-footer">
                     <tr id="announceResults" aria-live="assertive" aria-atomic="true">
-                        <td id="noResults" colspan="4" class="hide">No search results found</td>
+                        <td id="noResults" colspan="4" class="hide">{_('No search results found')}</td>
                     </tr>
                 </tfoot>
             </table>
@@ -131,14 +159,12 @@ end"                />
     )
 }
 
-const PRODUCT_LIST_PATH = '/product-list'
-
-export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element> {
-    headers[HttpHeader.HxReplaceURL] = PRODUCT_LIST_PATH
+export async function gotoProductList(headers: HTTPHeaders, lang: string): Promise<JSX.Element> {
+    headers[HttpHeader.HxReplaceURL] = '/product-list' + (lang === 'en' ? '' : '?lang=' + lang)
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
-    const page = newPage()
+    const page = newPage(lang)
     page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name))
 
     return (
@@ -148,12 +174,13 @@ export async function gotoProductList(headers: HTTPHeaders): Promise<JSX.Element
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())
+    .use(localeMiddleware)
     .use(authRedirect) // also sets authUser and csrfToken
     .get(
-        PRODUCT_LIST_PATH,
-        async ({ authUser, html, request }) => {
+        '/product-list',
+        async ({ authUser, html, request, lang }) => {
 
-            const page = newPage()
+            const page = newPage(lang)
             page.user = authUser
 
             page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name))
@@ -165,9 +192,7 @@ export const productListController = new Elysia(ElysiaSettings)
             }
 
             return html(
-                <BaseHtml>
-                    <Body {...page} />
-                </BaseHtml>
+                <BaseHtml lang={lang} body={<Body {...page} />} />
             )
         }
     )

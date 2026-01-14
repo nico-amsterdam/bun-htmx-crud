@@ -6,21 +6,26 @@ import { PageType, CancelButton, newPage } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
+import { localeMiddleware } from '../../i18n/localeMiddleware'
 
 function DelProductForm(page: PageType): JSX.Element {
+    const _ = page.locale.t
     return (
         <form hx-post={`/product/${page.form.values.id}/delete`}>
             <input type="hidden" name="csrf" id="csrf" value={page.form.csrfToken} />
-            <p>The action cannot be undone.</p><button type="submit" class="btn btn-danger" autofocus>Delete</button>
-            {" "}<CancelButton />
+            <input type="hidden" name="lang" id="lang" value={page.locale.lang} />
+            <p>{_('The action cannot be undone.')}</p><button type="submit" class="btn btn-danger" autofocus>{_('Delete')}</button>
+            {" "}<CancelButton {...page} />
         </form>
     )
 }
 
 function DelProduct(page: PageType): JSX.Element {
+  const _ = page.locale.t
+
     return (
         <main id="main">
-            <h2>Delete product {page.form.values.name}</h2>
+            <h2>{_("Delete product '{0}'", page.form.values.name)}</h2>
             <DelProductForm {...page} />
         </main>
     )
@@ -28,15 +33,16 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
+    .use(localeMiddleware)
     .use(authRedirect) // also sets authUser and csrfToken
-    .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id } }) => {
-        const page = newPage()
+    .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id }, lang }) => {
+        const page = newPage(lang)
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
 
         if (!product) {
-            set.headers['Location'] = '/product-list'
+            set.headers['Location'] = '/product-list' + page.locale.langQueryParam
             return status(307)
         }
 
@@ -50,7 +56,7 @@ export const delProductController = new Elysia(ElysiaSettings)
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, body: { csrf } }) => {
+    .post('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, body: { csrf, lang } }) => {
         if (csrfToken === csrf) {
             // Delete product
             await getDB().delete(tables.products).where(
@@ -58,9 +64,10 @@ export const delProductController = new Elysia(ElysiaSettings)
             )
         }
 
-        return html(await gotoProductList(set.headers))
+        return html(await gotoProductList(set.headers, lang))
     }, { // TypeBox
         body: t.Object({
-            csrf: t.String()
+            csrf: t.String(),
+            lang: t.String()
         })
     })

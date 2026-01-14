@@ -7,7 +7,8 @@ import { githubController } from './github'
 import { googleController } from './google'
 import { addContentSecurityPolicyHeader } from '../helper/securityHeaders'
 import { BaseHtml } from '../helper/basePage'
-
+import { localeMiddleware } from '../../i18n/localeMiddleware'
+import { newLocale } from '../../i18n/translations'
 
 export type User = {
   login: string,
@@ -27,39 +28,46 @@ type CookieValuesType = {
   image: string
 }
 
-function LoginPage(): JSX.Element {
+function LoginPage({ lang }: { lang: string }): JSX.Element {
+  const locale = newLocale(lang)
+  const _ = locale.t
+  const toGithubLink = '/auth/to-github' + locale.langQueryParam
+  const toGoogleLink = '/auth/to-google' + locale.langQueryParam
+  const body =
+    <body class="full-container">
+      <div id="content" class="login-container">
+        <main id="main" class="login-box">
+          <h1 class="login-title">{_('Welcome to the Bun HTMX CRUD Demo')}</h1>
+          <p class="login-subtitle">{_('Sign in to continue')}</p>
+
+          <div class="social-login-container">
+            <a href={toGithubLink} class="social-login-button github-login">
+              <img src="/image/github-icon.svg" alt="GitHub logo" class="social-icon" />
+              {_('Continue with GitHub')}
+            </a>
+
+            <a href={toGoogleLink} class="social-login-button google-login">
+              <img src="/image/google-icon.svg" alt="Google logo" class="social-icon" />
+              {_('Continue with Google')}
+            </a>
+          </div>
+        </main>
+      </div>
+    </body>
+
   return (
-    <BaseHtml>
-      <body class="full-container">
-        <div id="content" class="login-container">
-          <main id="main" class="login-box">
-            <h1 class="login-title">Welcome to the Bun HTMX CRUD Demo</h1>
-            <p class="login-subtitle">Sign in to continue</p>
-
-            <div class="social-login-container">
-              <a href="/auth/to-github" class="social-login-button github-login">
-                <img src="/image/github-icon.svg" alt="GitHub logo" class="social-icon" />
-                Continue with GitHub
-              </a>
-
-              <a href="/auth/to-google" class="social-login-button google-login">
-                <img src="/image/google-icon.svg" alt="Google logo" class="social-icon" />
-                Continue with Google
-              </a>
-            </div>
-          </main>
-        </div>
-      </body>
-    </BaseHtml>
+    <BaseHtml lang="en" body={body} />
   )
 }
-function SessionExpired(): JSX.Element {
+
+function SessionExpired({ lang }: { lang: string }): JSX.Element {
+  const _ = newLocale(lang).t
   return (
     <dialog open class="relogin" aria-labelledby="dialog-title">
-      <h3 id="dialog-title">Session expired</h3>
+      <h3 id="dialog-title">{_('Session expired')}</h3>
       <form method="get" action="/auth/login">
-        <p>Please login again.</p>
-        <button class="btn btn-primary" autofocus>Login</button>
+        <p>{_('Please login again.')}</p>
+        <button class="btn btn-primary" autofocus>{_('Login')}</button>
       </form>
     </dialog>
   )
@@ -70,27 +78,28 @@ export const authController = new Elysia(ElysiaSettings)
   .use(googleController)
   .use(html())
   .use(addContentSecurityPolicyHeader)
-  .post('auth/login', ({ html }) => {
-    return html(<SessionExpired />)
+  .use(localeMiddleware)
+  .post('auth/login', ({ html, lang }) => {
+    return html(<SessionExpired lang={lang} />)
   })
-  .get('auth/login', ({ html, request, cookie: { SESSION } }) => {
+  .get('auth/login', ({ html, request, lang, cookie: { SESSION } }) => {
 
     if (isHtmxEnabled(request)) {
       // Show error to user in the current part of the screen. The login link will swap the whole page.
-      return html(<SessionExpired />)
+      return html(<SessionExpired lang={lang} />)
     }
 
     // logout: remove previous cookie
     SESSION.remove()
 
-    return html(<LoginPage />)
+    return html(<LoginPage lang={lang} />)
   })
 
 /*
  * Redirect to /auth/login when not logged-in.
  * If logged-in, add authUser and csrfToken to the scope
  */
-export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'})
+export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect' })
   .resolve({ as: 'scoped' }, ({ headers, set, status, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)

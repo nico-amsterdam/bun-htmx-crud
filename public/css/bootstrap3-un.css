@@ -185,11 +185,11 @@ h2 {
 
 h1 {
     margin: .67em 0;
-    font-size: 36px
+    font-size: 28px
 }
 
 h2 {
-    font-size: 30px
+    font-size: 20px
 }
 
 p {
@@ -230,12 +230,20 @@ p {
     margin-left: -15px
 }
 
-.col-sm-2,
-.col-sm-3 {
+.table-actions,
+.product-search {
     position: relative;
     min-height: 1px;
     padding-right: 15px;
     padding-left: 15px
+}
+
+.product-search {
+    max-width: 450px;
+}
+
+.table-actions {
+    width: 150px;
 }
 
 @media (min-width: 768px) {
@@ -243,18 +251,10 @@ p {
         width: 750px
     }
 
-    .col-sm-2,
-    .col-sm-3 {
-        float: left
+    .product-search {
+        width: 60%
     }
 
-    .col-sm-3 {
-        width: 25%
-    }
-
-    .col-sm-2 {
-        width: 16.66666667%
-    }
 }
 
 th {
@@ -275,7 +275,7 @@ th {
     border-top: 1px solid #ddd
 }
 
-.table>thead>tr>th {
+.table>thead>tr {
     vertical-align: bottom;
     border-bottom: 2px solid #ddd
 }
@@ -327,7 +327,7 @@ textarea.form-control {
     margin-bottom: 15px
 }
 
-.actions {
+.form-actions {
     padding: 10px 0
 }
 
@@ -617,4 +617,10 @@ textarea.form-control {
 
 .hide {
     display:none
+}
+
+.language-switcher {
+    width: auto;
+    margin-top: -27px;
+    float: right;
 }

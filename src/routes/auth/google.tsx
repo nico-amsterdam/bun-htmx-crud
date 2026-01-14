@@ -2,6 +2,7 @@ import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
+import { localeMiddleware, NON_DEFAULT_LANGUAGES } from '../../i18n/localeMiddleware'
 
 const redirect_uri_local = 'http://localhost:8787/auth/google'
 const redirect_uri_remote = 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/google'
@@ -32,12 +33,6 @@ function getRedirectUri(headers: Record<string, string | undefined>) {
 const secretKey = createSecretKey(Buffer.from('key-object-secret'));
 
 export const googleController = new Elysia(ElysiaSettings)
-  .get('/auth/to-google', async ({ headers, set, status }) => {
-    const state = calcStateHmac(headers, secretKey)
-    const redirect_uri = getRedirectUri(headers)
-    set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
-    return status(307)
-  })
   .get('/auth/google', async ({ headers, query, set, status, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {
@@ -47,12 +42,14 @@ export const googleController = new Elysia(ElysiaSettings)
       return status(307)
     }
     const ip = getIp(headers)
+    const stateArray = decodeURIComponent(query.state || '').split('?lang=')
     const verifyState = calcStateHmac(headers, secretKey)
-    if (verifyState !== query.state) {
+    if (verifyState !== stateArray[0]) {
       console.log('state has been tampered')
       set.headers['Location'] = '/auth/login'
       return status(307)
     }
+    const langQueryParam = NON_DEFAULT_LANGUAGES.includes(stateArray[1]) ? '?lang=' + stateArray[1] : ''
     const redirect_uri = getRedirectUri(headers)
     const tokenAccessResponse = await fetch('https://accounts.google.com/o/oauth2/token', {
       method: "POST",
@@ -69,15 +66,15 @@ export const googleController = new Elysia(ElysiaSettings)
         "redirect_uri": redirect_uri
       })
     })
-    const googleAccessToken = await tokenAccessResponse.json() as AccessTokenResponse;
+    const googleAccessToken = await tokenAccessResponse.json() as AccessTokenResponse
     // console.log('access token: ' + JSON.stringify(googleAccessToken))
 
-    const { access_token, token_type } = googleAccessToken;
+    const { access_token, token_type } = googleAccessToken
 
     if (access_token === undefined || googleAccessToken.error !== undefined) {
       console.log(googleAccessToken.error_description)
       // incorrect secret?
-      set.headers['Location'] = '/auth/login'
+      set.headers['Location'] = '/auth/login' + langQueryParam
       return status(307)
     }
 
@@ -96,14 +93,14 @@ export const googleController = new Elysia(ElysiaSettings)
       })
     })
 
-    const checkedTokenInfo = await tokenCheckResponse.json() as TokenCheckResponse;
+    const checkedTokenInfo = await tokenCheckResponse.json() as TokenCheckResponse
     // console.log('token check response: ' + JSON.stringify(checkedTokenInfo))
     console.log('login name: ' + checkedTokenInfo.name)
     console.log('user unique id: ' + checkedTokenInfo.sub)
 
     if (checkedTokenInfo.sub === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
-      set.headers['Location'] = '/auth/login'
+      set.headers['Location'] = '/auth/login' + langQueryParam
       return status(307)
     }
 
@@ -123,7 +120,7 @@ export const googleController = new Elysia(ElysiaSettings)
     if (protocol === 'https') SESSION.secure = true;
 
     // go to main page
-    set.headers['Location'] = '/product-list'
+    set.headers['Location'] = '/product-list' + langQueryParam
     return status(307)
   }, {
     query: t.Object({
@@ -148,4 +145,11 @@ export const googleController = new Elysia(ElysiaSettings)
         })
       )
     })
+  })
+  .use(localeMiddleware)
+  .get('/auth/to-google', async ({ headers, set, status, lang }) => {
+    const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
+    const redirect_uri = getRedirectUri(headers)
+    set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
+    return status(307)
   })
