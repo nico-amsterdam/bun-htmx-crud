@@ -10,4 +10,4 @@ export const tables = schema
 export type ProductType = InferSelectModel<typeof schema.products>
 export type AddProductType = InferInsertModel<typeof schema.products>
 export type ModifyProductType = Omit<ProductType, 'createdBy' | 'createdAt'>
-export type BaseProductType = Omit<ModifyProductType, 'modifiedBy' | 'modifiedAt'>
+export type BaseProductType = Omit<ModifyProductType, 'modifiedBy'>

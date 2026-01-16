@@ -12,6 +12,5 @@ export const products = sqliteTable('products', {
     .notNull(),
   modifiedBy: text('modified_by'),
   modifiedAt: integer("modified_at", { mode: "timestamp_ms" })
-    .$onUpdate(() => /* @__PURE__ */ new Date())
 })
 

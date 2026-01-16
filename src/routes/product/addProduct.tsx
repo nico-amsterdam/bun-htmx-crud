@@ -82,6 +82,7 @@ export const addProductController = new Elysia(ElysiaSettings)
             name: t.String(),
             description: t.String(),
             price: t.String(),
+            modifiedAt: t.String(),
             csrf: t.String(),
             lang: t.String()
         })

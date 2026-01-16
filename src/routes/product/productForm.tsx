@@ -41,6 +41,7 @@ export function ProductFormFields(page: PageType): JSX.Element {
       <div class="form-group"><label for="edit-price">{_('Price €')}</label><input type="number" class="form-control" id="edit-price" name="price" min="0" step="0.01" value={page.form.values.price} />
         {page.form.errors.price && (<div class="error">{page.form.errors.price}</div>)}
       </div>
+      <input type="hidden" name="modifiedAt" id="modifiedAt" value={page.form.values.modifiedAt} />
     </div>
   )
 }

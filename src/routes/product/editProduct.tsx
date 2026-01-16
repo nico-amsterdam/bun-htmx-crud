@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
-import { and, eq } from 'drizzle-orm'
+import { and, eq, isNull } from 'drizzle-orm'
 import { getDB, tables, ModifyProductType } from "db"
 import { ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import type { PageType } from './productForm'
@@ -51,12 +51,13 @@ export const editProductController = new Elysia(ElysiaSettings)
         page.form.values.description = product.description
         page.form.values.name = product.name
         if (product.price !== null) page.form.values.price = "" + (product.price / 100)
+        page.form.values.modifiedAt = product.modifiedAt?.toISOString() || ''
 
         return html(
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', async ({ authUser, csrfToken, html, set, body: { name, description, price, csrf, lang }, params: { id } }) => {
+    .post('/product/:id/edit', async ({ authUser, csrfToken, html, set, body: { name, description, price, modifiedAt, csrf, lang }, params: { id } }) => {
         const page = validateFormAndCreatePage(name, description, price, lang)
         const _ = page.locale.t
         page.form.csrfToken = csrfToken
@@ -78,11 +79,16 @@ export const editProductController = new Elysia(ElysiaSettings)
         }
 
         try {
-            const product = await getDB().update(tables.products)
+            const verifyModifiedAt = modifiedAt === '' ? null : new Date(modifiedAt)
+            console.log('Verify ' + verifyModifiedAt)
+            const updatedProductIds: { updatedId: number }[] = await getDB().update(tables.products)
                 .set(modifiedProduct).where(and(
-                    eq(tables.products.id, +id)
-                )).returning().get()
-            if (!product) errors['general'] = _("Could not update '{0}'. Removed?", modifiedProduct.name)
+                    eq(tables.products.id, +id),
+                    (!verifyModifiedAt ? isNull(tables.products.modifiedAt) : eq(tables.products.modifiedAt, verifyModifiedAt))
+                )).returning({ updatedId: tables.products.id })
+
+            const countUpdates = updatedProductIds.length
+            if (countUpdates === 0) errors['general'] = _("'{0}' is changed or removed by another user. Reopen it from the list.", modifiedProduct.name)
         } catch (error) {
             errors['general'] = _("Product '{0}' already exists", modifiedProduct.name)
         }
@@ -99,6 +105,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             name: t.String(),
             description: t.String(),
             price: t.String(),
+            modifiedAt: t.String(),
             csrf: t.String(),
             lang: t.String()
         })
