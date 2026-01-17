@@ -3,31 +3,13 @@ import { Html, html } from '@elysiajs/html'
 import { asc } from 'drizzle-orm'
 import { HttpHeader, isHtmxEnabled } from 'htmx'
 import { getDB, tables, ProductType } from "db"
-import { PageType, newPage } from './productForm'
+import { newPage } from './productForm'
+import type { PageType } from './productForm'
+import { LanguageSwitcher } from './languageSwitcher'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
 import { localeMiddleware } from '../../i18n/localeMiddleware'
-
-function LanguageSwitcher({linkTo, page}: {linkTo: string, page: PageType}): JSX.Element {
-    const _ = page.locale.t
-    const onChangeScript = `on change
-                if my value is 'es' go to url ${linkTo}?lang=es
-                else if my value is 'fr' go to url ${linkTo}?lang=fr
-                else if my value is 'de' go to url ${linkTo}?lang=de
-                otherwise go to url ${linkTo}`
-
-    return (
-        <select id="choose-lang" name="language"
-            class="form-control language-switcher"
-            aria-label={_('Choose site language')}
-            data-script={onChangeScript}>
-            <option value="en" lang="en" selected={page.locale.lang === 'en'}>English</option>
-            <option value="es" lang="es" selected={page.locale.lang === 'es'}>Español</option>
-            <option value="fr" lang="fr" selected={page.locale.lang === 'fr'}>Français</option>
-            <option value="de" lang="de" selected={page.locale.lang === 'de'}>Deutsch</option>
-        </select>)
-}
 
 function Body(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -64,6 +46,7 @@ function Body(page: PageType): JSX.Element {
                         <a href="https://elysiajs.com" title="Elysia site" target="_blank">
                             <img class="elysia-logo-svg" alt="Elysia logo" width="25px" src="/image/elysia.svg" />
                         </a>
+                        <input type="hidden" id="search-state" value=""></input>
                     </div>
                 </header>
                 <Main {...page} />
@@ -102,6 +85,7 @@ function ProductList(page: PageType): JSX.Element {
 
 function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
+    const productCount = page.data.products.length
     return (
         <main id="main">
             <div class="form-actions">
@@ -119,7 +103,9 @@ function Main(page: PageType): JSX.Element {
                         autofocus
                         aria-description={_('Results will update as you type')}
                         data-script="
-on input
+on load set my.value to #search-state.value
+on blur set #search-state.value to my.value
+on input or load
 set matchCount to 0
 set q to my value.toLowerCase()
 
@@ -151,7 +137,7 @@ end"                />
                 <ProductList {...page} />
                 <tfoot id="search-results-footer">
                     <tr id="announceResults" aria-live="assertive" aria-atomic="true">
-                        <td id="noResults" colspan="4" class="hide">{_('No search results found')}</td>
+                        <td id="noResults" colspan="4" class={productCount === 0 ? '' : 'hide'}>{productCount === 0 ? _('No products available') : _('No search results found')}</td>
                     </tr>
                 </tfoot>
             </table>
