@@ -14,7 +14,7 @@ import { localeMiddleware } from '../../i18n/localeMiddleware'
 function Body(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <body class="container">
+        <body class="container" data-script="on every htmx:sendError call #networkErrDialog.showModal()">
             <div id="content" class="product-list">
                 <header class="page-header">
                     <div class="topbar">
@@ -50,6 +50,11 @@ function Body(page: PageType): JSX.Element {
                     </div>
                 </header>
                 <Main {...page} />
+                <dialog id="networkErrDialog" data-script="on click if target is me call #networkErrDialog.close()">
+                    <h2>{_('Network error')}</h2>
+                    <p>{_('Offline? Check your connection')}</p>
+                    <button id="closeNetworkErrDialogBtn" aria-controls="networkErrDialog" data-script="on click call #networkErrDialog.close()">Close</button>
+                </dialog>
             </div>
         </body>
     )

@@ -21,6 +21,8 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 ## Directory structure
 
 ```text
+├── client/
+│   └── src/
 ├── migrations/
 ├── public/
 │   ├── css/
@@ -125,6 +127,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 | Script | Description |
 |--------|-------------|
 | `bun update:types` | Generate TypeScript types from your Cloudflare Worker configuration |
+| `bun build:client` | Compile client-side typescript from `client/src` to javascript in `public/javascript` |
 | `bun typecheck` | Run TypeScript type checking without emitting files |
 | `bun typecheck:watch` | Run TypeScript type checking in watch mode |
 | `bun create:db` | Create a new Cloudflare D1 database |
