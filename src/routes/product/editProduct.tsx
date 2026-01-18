@@ -32,8 +32,8 @@ function EditProduct(page: PageType): JSX.Element {
 
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware)
-    .use(authRedirect) // also sets authUser and csrfToken
+    .use(localeMiddleware) // set lang
+    .use(authRedirect) // redirects or sets authUser and csrfToken
     .get('/product/:id/edit', async ({ csrfToken, html, set, status, params: { id }, lang }) => {
         const page = newPage(lang)
 
@@ -80,7 +80,6 @@ export const editProductController = new Elysia(ElysiaSettings)
 
         try {
             const verifyModifiedAt = modifiedAt === '' ? null : new Date(modifiedAt)
-            console.log('Verify ' + verifyModifiedAt)
             const updatedProductIds: { updatedId: number }[] = await getDB().update(tables.products)
                 .set(modifiedProduct).where(and(
                     eq(tables.products.id, +id),

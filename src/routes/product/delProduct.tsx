@@ -33,8 +33,8 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware)
-    .use(authRedirect) // also sets authUser and csrfToken
+    .use(localeMiddleware) // sets lang
+    .use(authRedirect)  // redirects or sets authUser and csrfToken
     .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id }, lang }) => {
         const page = newPage(lang)
         const product = await getDB().select().from(tables.products).where(and(

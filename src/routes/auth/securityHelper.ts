@@ -28,7 +28,7 @@ export function stripMobileDesktopFromUserAgent(userAgent: string | undefined): 
 }
 
 export function calcStateHmac(headers: Record<string, string | undefined>, secretKeyObject: KeyObject): string {
-  return createHmac("sha256", secretKeyObject)
+  return createHmac('sha256', secretKeyObject)
     .update(getIp(headers)
       + 'some pepper'
       + stripMobileDesktopFromUserAgent(headers['user-agent'])
@@ -37,4 +37,3 @@ export function calcStateHmac(headers: Record<string, string | undefined>, secre
     .digest('hex')
     .substring(0, 10)
 }
-

@@ -2,6 +2,7 @@ import { Elysia } from 'elysia'
 import Container from 'typedi'
 import { drizzle } from 'drizzle-orm/d1'
 import * as schema from './db/schema'
+import { addContentSecurityPolicyHeader, allowRequest } from './routes/helper/securityHeaders'
 import { authController } from 'routes/auth'
 import { productController } from 'routes/product'
 import { ElysiaSettings } from './config'
@@ -16,6 +17,12 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
+      .onBeforeHandle(({ headers, path, request, status }) => {
+        // checks cross-site origin
+        if (!allowRequest(request.method, path, headers)) {
+          return status(403) // Forbidden
+        }
+      })
       .onError(({ code, error, set, status }) => {
         if (code === 'INVALID_COOKIE_SIGNATURE') {
           console.log('Invalid cookie: ' + error.message)
@@ -27,11 +34,12 @@ export default {
           }
         }
       })
+      .use(addContentSecurityPolicyHeader)
+      .get('/health', ({ }) => new Response('ok'))
       .get('/', ({ set, status }) => {
         set.headers['Location'] = '/product-list'
         return status(307)
       })
-      .get('/health', ({ }) => new Response('ok'))
       .use(authController)
       .use(productController)
       .handle(request)

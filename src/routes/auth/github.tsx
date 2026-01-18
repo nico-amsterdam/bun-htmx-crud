@@ -139,7 +139,7 @@ export const githubController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .use(localeMiddleware)
+  .use(localeMiddleware) // sets lang
   .get('/auth/to-github', async ({ headers, set, status, lang }) => {
     const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
     set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state

@@ -146,7 +146,7 @@ export const googleController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .use(localeMiddleware)
+  .use(localeMiddleware) // sets lang
   .get('/auth/to-google', async ({ headers, set, status, lang }) => {
     const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
     const redirect_uri = getRedirectUri(headers)

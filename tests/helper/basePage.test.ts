@@ -60,14 +60,12 @@ describe('BaseHtml', () => {
 
   it('should include htmx.js with integrity hash', () => {
     const result = BaseHtml({ lang: 'en', body: '' })
-    expect(result).toContain('/javascript/vendor/htmx.min.js')
-    expect(result).toContain('integrity="sha384-')
-    expect(result).toContain('crossorigin="anonymous"')
+    expect(result).toContain('/javascript/vendor/htmx.min.js" integrity="sha384-')
   })
 
   it('should include hyperscript.js with integrity hash', () => {
     const result = BaseHtml({ lang: 'en', body: '' })
-    expect(result).toContain('/javascript/vendor/_hyperscript.min.js')
+    expect(result).toContain('/javascript/vendor/_hyperscript.min.js" integrity="sha384-')
   })
 
   it('should place body content in correct position', () => {

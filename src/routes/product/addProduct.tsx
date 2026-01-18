@@ -32,8 +32,8 @@ function AddProduct(page: PageType): JSX.Element {
 
 export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware)
-    .use(authRedirect) // also sets authUser and csrfToken
+    .use(localeMiddleware) // sets lang
+    .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
         '/add-product',
         ({ csrfToken, html, lang }) => {

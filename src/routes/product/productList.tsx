@@ -169,8 +169,8 @@ export async function gotoProductList(headers: HTTPHeaders, lang: string): Promi
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware)
-    .use(authRedirect) // also sets authUser and csrfToken
+    .use(localeMiddleware) // sets lang
+    .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
         '/product-list',
         async ({ authUser, html, request, lang }) => {

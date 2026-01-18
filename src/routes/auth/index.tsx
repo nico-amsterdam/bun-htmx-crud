@@ -5,7 +5,6 @@ import { ElysiaSettings } from "config"
 import { getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 import { githubController } from './github'
 import { googleController } from './google'
-import { addContentSecurityPolicyHeader } from '../helper/securityHeaders'
 import { BaseHtml } from '../helper/basePage'
 import { localeMiddleware } from '../../i18n/localeMiddleware'
 import { newLocale } from '../../i18n/translations'
@@ -76,9 +75,8 @@ function SessionExpired({ lang }: { lang: string }): JSX.Element {
 export const authController = new Elysia(ElysiaSettings)
   .use(githubController)
   .use(googleController)
+  .use(localeMiddleware) // sets lang
   .use(html())
-  .use(addContentSecurityPolicyHeader)
-  .use(localeMiddleware)
   .post('auth/login', ({ html, lang }) => {
     return html(<SessionExpired lang={lang} />)
   })
