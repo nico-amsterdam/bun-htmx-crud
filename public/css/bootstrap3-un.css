@@ -624,3 +624,36 @@ textarea.form-control {
     margin-top: -27px;
     float: right;
 }
+
+.refresh {
+  float: right;
+  background: none;
+  border: none;
+  margin: 5px;
+  padding: 0;
+}
+
+.btn.refresh:active {
+  box-shadow: none
+}
+
+.refresh svg {
+  font-size: 24px;
+  margin: 5px 5px 0 5px;
+}
+
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.refresh:active svg {
+  color: lightblue;
+  animation: spin 500ms linear 1;
+}
+
+.refresh:not(:active) svg {
+  /* keep color for 0.5 seconds */
+  transition: color 500ms step-end;
+}

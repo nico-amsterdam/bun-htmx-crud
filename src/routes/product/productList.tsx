@@ -99,7 +99,10 @@ function Main(page: PageType): JSX.Element {
                     xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                     class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
-                </svg> {_('Add product')} </button>
+                </svg>{_('Add product')}</button>
+                <button id="refresh" class="btn refresh" title={_('Refresh')} type="button" hx-get={'/product-list' + page.locale.langQueryParam} hx-push-url="true" hx-target="#main">
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24"><g transform="translate(24 0) scale(-1 1)"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></g></svg>
+                </button>
             </div>
             <search class="filters row">
                 <div class="form-group product-search"><label for="search-element">{_('Search product')}</label>
@@ -112,7 +115,7 @@ on load set my.value to #search-state.value
 on blur set #search-state.value to my.value
 on input or load
 set matchCount to 0
-set q to my value.toLowerCase()
+set q to my value.toLowerCase().trim()
 
 repeat in <#search-results tr/>
     if its children[0].textContent.toLowerCase() contains q or its children[1].textContent.toLowerCase() contains q or its children[2].textContent contains q
