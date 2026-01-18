@@ -154,11 +154,12 @@ on input or load
 }
 
 export async function gotoProductList(headers: HTTPHeaders, lang: string): Promise<JSX.Element> {
-    headers[HttpHeader.HxReplaceURL] = '/product-list' + (lang === STANDARD_LANGUAGE ? '' : '?lang=' + lang)
+    const page = newPage(lang)
+
+    headers[HttpHeader.HxReplaceURL] = `/product-list${page.locale.langQueryParam}`
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
-    const page = newPage(lang)
     page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name))
 
     return (
