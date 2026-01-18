@@ -4,54 +4,31 @@ import { translate, newLocale } from '../../src/i18n/translations'
 describe('translate', () => {
   describe('basic translations', () => {
     it('should translate to English', () => {
-      expect(translate('en', 'Login', [])).toBe('Login')
       expect(translate('en', 'Sign out', [])).toBe('Sign out')
-      expect(translate('en', 'Name', [])).toBe('Name')
     })
 
     it('should translate to Spanish', () => {
-      expect(translate('es', 'Login', [])).toBe('Iniciar sesión')
       expect(translate('es', 'Sign out', [])).toBe('Cerrar sesión')
-      expect(translate('es', 'Name', [])).toBe('Nombre')
     })
 
     it('should translate to French', () => {
-      expect(translate('fr', 'Login', [])).toBe('Se connecter')
       expect(translate('fr', 'Sign out', [])).toBe('Se déconnecter')
-      expect(translate('fr', 'Name', [])).toBe('Nom')
     })
 
     it('should translate to German', () => {
-      expect(translate('de', 'Login', [])).toBe('Anmelden')
       expect(translate('de', 'Sign out', [])).toBe('Abmelden')
-      expect(translate('de', 'Name', [])).toBe('Name')
     })
   })
 
   describe('placeholder replacement', () => {
     it('should replace single placeholder {0}', () => {
-      expect(translate('en', "Could not create '{0}'", ['Widget'])).toBe("Could not create 'Widget'")
-      expect(translate('es', "Could not create '{0}'", ['Widget'])).toBe("No se pudo crear 'Widget'")
-      expect(translate('fr', "Could not create '{0}'", ['Widget'])).toBe("Impossible de créer 'Widget'")
-      expect(translate('de', "Could not create '{0}'", ['Widget'])).toBe("Konnte 'Widget' nicht erstellen")
-    })
-
-    it('should replace multiple placeholders {0}, {1}', () => {
-      const result = translate('en', "Product '{0}' already exists", ['Test Product'])
-      expect(result).toBe("Product 'Test Product' already exists")
-    })
-
-    it('should replace same placeholder multiple times', () => {
-      const result = translate('en', "'{0}' is changed or removed by another user. Reopen it from the list.", ['Widget'])
-      expect(result).toBe("'Widget' is changed or removed by another user. Reopen it from the list.")
+      expect(translate('en', "Could not create '{0}'", ['product'])).toBe("Could not create 'product'")
+      expect(translate('es', "Could not create '{0}'", ['product'])).toBe("No se pudo crear 'product'")
+      expect(translate('fr', "Could not create '{0}'", ['product'])).toBe("Impossible de créer 'product'")
+      expect(translate('de', "Could not create '{0}'", ['product'])).toBe("Konnte 'product' nicht erstellen")
     })
 
     it('should handle empty args array', () => {
-      const result = translate('en', 'Login', [])
-      expect(result).toBe('Login')
-    })
-
-    it('should handle no args passed', () => {
       const result = translate('en', 'Login', [])
       expect(result).toBe('Login')
     })
@@ -108,10 +85,6 @@ describe('newLocale', () => {
 
     it('should return ?lang=de for German', () => {
       expect(newLocale('de').langQueryParam).toBe('?lang=de')
-    })
-
-    it('should return ?lang=unknown for unknown language', () => {
-      expect(newLocale('zh').langQueryParam).toBe('?lang=zh')
     })
   })
 

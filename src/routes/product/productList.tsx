@@ -9,7 +9,7 @@ import { LanguageSwitcher } from './languageSwitcher'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
-import { localeMiddleware } from '../../i18n/localeMiddleware'
+import { localeMiddleware, STANDARD_LANGUAGE } from '../../i18n/localeMiddleware'
 
 function Body(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -154,7 +154,7 @@ on input or load
 }
 
 export async function gotoProductList(headers: HTTPHeaders, lang: string): Promise<JSX.Element> {
-    headers[HttpHeader.HxReplaceURL] = '/product-list' + (lang === 'en' ? '' : '?lang=' + lang)
+    headers[HttpHeader.HxReplaceURL] = '/product-list' + (lang === STANDARD_LANGUAGE ? '' : '?lang=' + lang)
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
