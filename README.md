@@ -122,12 +122,15 @@ Open the shown link by the deploy:app command in your browser to see the result.
 
 <img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />
 
+- Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
+- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `BasePage.ts`.
+
 ## Available Scripts
 
 | Script | Description |
 |--------|-------------|
 | `bun update:types` | Generate TypeScript types from your Cloudflare Worker configuration |
-| `bun build:client` | Compile client-side typescript from `client/src` to javascript in `public/javascript` |
+| `bun build:client` | Transpose client-side typescript from `client/src` to minified javascript |
 | `bun typecheck` | Run TypeScript type checking without emitting files |
 | `bun typecheck:watch` | Run TypeScript type checking in watch mode |
 | `bun create:db` | Create a new Cloudflare D1 database |

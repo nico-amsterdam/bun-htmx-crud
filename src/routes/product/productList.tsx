@@ -66,7 +66,7 @@ function Product({ page, product }: { page: PageType, product: ProductType }): J
     let priceInEuro = ''
     if (price !== null && Number.isFinite(+price)) priceInEuro = "" + (+price / 100)
     return (
-        <tr>
+        <tr class="hide">
             <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
                 data-script="on keyup if the event's key is 'Enter' trigger click"
                 hx-target="#main" tabindex="0">{name}</a></td>
@@ -114,23 +114,23 @@ function Main(page: PageType): JSX.Element {
 on load set my.value to #search-state.value
 on blur set #search-state.value to my.value
 on input or load
-set matchCount to 0
-set q to my value.toLowerCase().trim()
+    set matchCount to 0
+    set q to my value.toLowerCase().trim()
 
-repeat in <#search-results tr/>
-    if its children[0].textContent.toLowerCase() contains q or its children[1].textContent.toLowerCase() contains q or its children[2].textContent contains q
-        show it
-        increment matchCount
-    else
-        hide it
+    repeat in <#search-results tr/>
+        if its children[0].textContent.toLowerCase() contains q or its children[1].textContent.toLowerCase() contains q or its children[2].textContent contains q
+            remove .hide from it
+            increment matchCount
+        else
+            add .hide to it
+        end
     end
-end
 
-if matchCount is 0
-    remove .hide from #noResults
-else
-    add .hide to #noResults
-end"                />
+    if matchCount is 0
+        remove .hide from #noResults
+    else
+        add .hide to #noResults
+    end" />
                 </div>
             </search>
             <table class="table">
