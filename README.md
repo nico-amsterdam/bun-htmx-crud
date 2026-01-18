@@ -7,11 +7,11 @@ Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vu
 There is a demo on https://bun-htmx-crud.nico-amsterdam.workers.dev/. Login with your Google or Github account.
 
 You can use this project as a starter for your server-side rendered application with authentication.
-Git clone this repostory, or download the source from github.
+Git clone this repository, or download the source from github.
 
 [Sqlite](https://www.sqlite.org/index.html) is the central database. More specifically [Cloudflare D1](https://developers.cloudflare.com/d1/worker-api/d1-database/).
 D1 is a managed database with automatic backups (Time Travel).
-It is great for most CRUD applications. There are a few limitations; D1 has a maximum size of 10 GB per instance (5 GB in the free plan) and it does't support transactions with multiple steps, though it does support atomic batch operations.
+It is great for most CRUD applications. There are a few limitations; D1 has a maximum size of 10 GB per instance (5 GB in the free plan) and it doesn't support transactions with multiple steps, though it does support atomic batch operations.
 
 Uses [JSX](https://bun.com/docs/runtime/jsx): HTML is embedded in typescript functions (tsx files).
 All HTML is generated server-side. All code, including route parameters and templates are typesafe.
@@ -72,7 +72,12 @@ To start the development server run:
 bun dev
 ```
 
-Open the shown [link](http://localhost:8787/) in your browser to see the result.
+Open the link shown in your terminal (typically http://localhost:8787) in your browser to see the result.
+
+To run type checking in watch mode (auto-reloads on file changes):
+```bash
+bun typecheck:watch
+```
 
 ## Deploy to Cloudflare
 
@@ -102,7 +107,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 
 ## OAuth2 (or OpenID connect) security
 
-- OpenID connect (OIDC) is a very thin layer arround OAuth2
+- OpenID connect (OIDC) is a very thin layer around OAuth2
 - This application uses signed session cookies; the cookies can be read with the browse devtools, but modifying them to login as a different user will not succeed, because they are digitally signed.
 - The session cookies have a session id. The session id is currently not used, because the server doesn't keep session information. As a result, the sessions do not timeout.
 - Although they are session cookies, most browsers by default do not delete session cookies when the tab or the browser is closed. In principle the window.unload event could be used clean up the session cookies, but with OAuth2 this doesn't provide more security; see next bullet point
@@ -117,10 +122,6 @@ Open the shown link by the deploy:app command in your browser to see the result.
 - If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will use automatically this token (instead of `wrangler login`). Make sure that the token has enough permissions.
 
 <img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
-
-- If the remote database is deleted (`bun wrangler d1 delete bun-htmx-crud`) and created again, and there are errors (like: `Error: 7500: You do not have permission to perform this operation`) when doing queries then reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
-
-<img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />
 
 - Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
 - Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `BasePage.ts`.
@@ -154,3 +155,26 @@ Open the shown link by the deploy:app command in your browser to see the result.
 | `bun studio:db:dev` | Open Drizzle Studio for local development database |
 | `bun introspect:db` | Introspect database schema using Drizzle Kit |
 | `bun dbcat:db:dev` | View local development database content using dbcat CLI tool |
+
+## Troubleshooting
+
+### Database Reconnection
+
+If the remote database is deleted (`bun wrangler d1 delete bun-htmx-crud`) and recreated, you may encounter errors like:
+```
+Error: 7500: You do not have permission to perform this operation
+```
+
+To fix, reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
+1. Go to Workers & Pages → bun-htmx-crud → Settings → Variables
+2. Scroll to D1 Databases section
+3. Click "Add" and select your recreated database
+4. Remove old database bindings
+
+<img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />
+
+### Common Errors
+
+- **Migration failures**: Ensure `DB_ID` in `.env` matches the database_id in `wrangler.jsonc`
+- **Auth errors**: Verify OAuth secrets are set with `bun secret:google` and `bun secret:github`
+- **Type errors**: Run `bun typecheck` to identify type issues before deployment

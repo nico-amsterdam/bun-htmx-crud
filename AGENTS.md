@@ -101,7 +101,7 @@ The authentication system uses **signed cookies** with comprehensive security:
 - **Validation**: On each request, validates userAgent and IP address match
 - **CSRF protection**: Secure random tokens generated for each session
 
-See `src/routes/auth/index.tsx:102-139` for the `authRedirect` middleware.
+See `src/routes/auth/index.tsx` for the `authRedirect` middleware.
 
 ### OAuth2 Flow
 
@@ -192,22 +192,15 @@ To add your own tables:
 
 ## Internationalization
 
-Simple server-side i18n system in `src/i18n/translations.ts`:
+Server-side i18n in `src/i18n/translations.ts`:
+- `translate()`: Translation function with placeholder `{0}` replacement
+- `newLocale()`: Creates locale object with translation function and langQueryParam
 
-```typescript
-export function newLocale(lang: string): LocaleType {
-  const t = function (key: string, ...args: string[]) {
-    return translate(lang, key, args)
-  }
-  const langQueryParam = lang === 'en' ? '' : '?lang=' + lang
-  return { lang, t, langQueryParam }
-}
-```
+Middleware in `src/i18n/localeMiddleware.ts`:
+- `localeMiddleware`: Extracts language from query param (?lang=xx) or Accept-Language header
+- `NON_DEFAULT_LANGUAGES`: Supported non-English languages ['de', 'es', 'fr']
 
-Middleware extracts language from:
-1. URL query parameter (`?lang=fr`)
-2. Accept-Language header
-3. Defaults to English
+Supported languages: English (default), German, Spanish, French
 
 ## Development Workflow
 
@@ -257,6 +250,35 @@ Secrets (never commit):
 - `GITHUB_CLIENT_SECRET`
 
 Set via: `bun secret:google` and `bun secret:github`
+
+## Testing
+
+This project includes 95 unit tests covering:
+- i18n translations and locale middleware
+- Authentication security helpers
+- HTMX request/response headers
+- Base HTML template generation
+- Elysia configuration and cookie security
+
+Run tests:
+```bash
+bun test                   # Run all tests
+bun test --coverage        # Run with coverage report
+bun test --watch           # Watch and re-run on changes
+```
+
+## TypeScript Configuration
+
+Run type checking:
+```bash
+bun typecheck              # Check types without emitting files
+bun typecheck:watch        # Watch mode for auto-reload on changes
+```
+
+Generate types from Cloudflare Worker config:
+```bash
+bun update:types           # Regenerate types from wrangler.jsonc
+```
 
 ## Cloudflare Workers Configuration
 
@@ -347,3 +369,21 @@ To create a new application:
 9. Run migrations and deploy
 
 This template demonstrates enterprise-grade patterns suitable for production applications, including security hardening, proper authentication flows, and Cloudflare Workers deployment.
+
+## Troubleshooting
+
+### Database Reconnection
+If the remote database is deleted and recreated, you may see:
+```
+Error: 7500: You do not have permission to perform this operation
+```
+
+Reconnect in Cloudflare dashboard:
+1. Workers & Pages → bun-htmx-crud → Settings → Variables
+2. D1 Databases section → Add → Select recreated database
+3. Remove old bindings
+
+### Common Issues
+- **Migration failures**: Verify `DB_ID` in `.env` matches `wrangler.jsonc`
+- **Auth errors**: Ensure OAuth secrets set with `bun secret:google` and `bun secret:github`
+- **Type errors**: Run `bun typecheck` before deployment
