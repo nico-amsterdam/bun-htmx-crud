@@ -166,6 +166,28 @@ Sessions are bound to:
 
 This prevents session hijacking via cookie theft.
 
+### Fetch Metadata Protection
+
+The application uses [Fetch Metadata](https://web.dev/articles/fetch-metadata) request headers to reject cross-site attacks:
+
+```typescript
+// src/routes/helper/securityHeaders.tsx
+export function allowRequest(method: string, path: string, headers: Record<string, string | undefined>): boolean {
+  // Allows same-origin requests (sec-fetch-site: same-origin)
+  // Allows browser-initiated requests (sec-fetch-site: none)
+  // Allows simple top-level navigations (GET, navigate mode)
+  // Exempts /health, /favicon.ico, /image/* paths
+  // Returns 403 for all other cross-site requests
+}
+```
+
+This protects against:
+- **CSRF attacks**: Rejects cross-site POST/PUT/DELETE requests
+- **XSSI (Cross-Site Script Inclusion)**: Prevents loading JSON via script tags
+- **Timing attacks**: Makes enumeration harder for attackers
+
+The function is called in `src/index.ts` as a global `onBeforeHandle` hook that returns `403 Forbidden` for rejected requests.
+
 ## Database Schema
 
 The `products` table demonstrates schema patterns with Drizzle ORM:
@@ -252,7 +274,7 @@ Set via: `bun secret:google` and `bun secret:github`
 
 ## Testing
 
-This project includes 95 unit tests covering:
+This project includes 100+ unit tests covering:
 - i18n translations and locale middleware
 - Authentication security helpers
 - HTMX request/response headers
