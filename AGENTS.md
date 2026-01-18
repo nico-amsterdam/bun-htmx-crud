@@ -274,7 +274,7 @@ Set via: `bun secret:google` and `bun secret:github`
 
 ## Testing
 
-This project includes 100+ unit tests covering:
+This project includes 90+ unit tests covering:
 - i18n translations and locale middleware
 - Authentication security helpers
 - HTMX request/response headers
