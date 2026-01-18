@@ -40,9 +40,8 @@ Routes use middleware stacks applied in order:
 
 ```typescript
 export const productController = new Elysia(ElysiaSettings)
-  .use(addContentSecurityPolicyHeader)  // Security headers
   .use(productListController)           // Feature routes
-  .use(htmxRedirect)                    // HTMX utilities
+  .use(htmxRedirect)                    // HTMX checks
   .use(addProductController)            // More routes
   .use(editProductController)
   .use(delProductController)
@@ -82,9 +81,9 @@ function ProductList(page: PageType): JSX.Element {
 HTMX for dynamic interactions without full page reloads:
 
 ```typescript
-<button type="button" 
+<button type="button"
   hx-get={`/product/${id}/edit${page.locale.langQueryParam}`}
-  hx-push-url="true" 
+  hx-push-url="true"
   hx-target="#main">
   {_('Edit')}
 </button>
@@ -133,7 +132,7 @@ Key security utilities in `src/routes/auth/securityHelper.ts`:
 CSP headers are applied to all responses:
 
 ```typescript
-headers['Content-Security-Policy'] = 
+headers['Content-Security-Policy'] =
   "default-src 'self';img-src 'self' data: https://*.googleusercontent.com/ https://avatars.githubusercontent.com/;"
 ```
 
@@ -341,7 +340,7 @@ Global error handler in `src/index.ts`:
   if (code === 'INVALID_COOKIE_SIGNATURE') {
     // Handle session tampering
     set.headers['Location'] = '/auth/login'
-    return status(307)
+    return new Response('', { status: 307 })
   }
 })
 ```

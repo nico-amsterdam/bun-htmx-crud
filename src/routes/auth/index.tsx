@@ -9,7 +9,7 @@ import { BaseHtml } from '../helper/basePage'
 import { localeMiddleware } from '../../i18n/localeMiddleware'
 import { newLocale } from '../../i18n/translations'
 
-export type User = {
+export type UserType = {
   login: string,
   name: string,
   email: string,
@@ -93,20 +93,29 @@ export const authController = new Elysia(ElysiaSettings)
     return html(<LoginPage lang={lang} />)
   })
 
+const AUTH_REDIRECT_VALUES: { authUser: UserType, csrfToken: string } = {
+  'authUser': {
+    login: '',
+    name: '',
+    email: '',
+    avatar_url: ''
+  },
+  'csrfToken': ''
+}
+
 /*
  * Redirect to /auth/login when not logged-in.
  * If logged-in, add authUser and csrfToken to the scope
  */
 export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect' })
-  .resolve({ as: 'scoped' }, ({ headers, set, status, cookie: { SESSION } }) => {
+  .resolve({ as: 'scoped' }, ({ headers, set, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)
     const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])
     // console.log('found: ' + rawcookie)
     if (rawcookie === undefined) {
       console.log('No cookie')
-      set.headers['Location'] = '/auth/login'
-      return status(307)
+      return AUTH_REDIRECT_VALUES
     }
     try {
       const cookieContent = JSON.parse(rawcookie) as CookieValuesType
@@ -115,15 +124,14 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
         || cookieContent.userAgent !== userAgent
         || cookieContent.ipAddress !== ip) {
         console.log('Cookie does not match user')
-        set.headers['Location'] = '/auth/login'
-        return status(307)
+        return AUTH_REDIRECT_VALUES
       }
       const user = {
         login: cookieContent.login,
         name: cookieContent.name,
         email: cookieContent.email,
         avatar_url: cookieContent.image
-      } as User
+      } as UserType
       // add to context
       return {
         'authUser': user,
@@ -131,7 +139,13 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
       }
     } catch (e) {
       console.log('Session cookie did not parse')
-      set.headers['Location'] = '/auth/login'
-      return status(307)
+      return AUTH_REDIRECT_VALUES
     }
   })
+  .onBeforeHandle({ as: 'scoped' }, ({ csrfToken, set, authUser }) => {
+    if (!authUser || !csrfToken) {
+      set.headers['Location'] = '/auth/login'
+      return new Response('', { status: 307 })
+    }
+  })
+

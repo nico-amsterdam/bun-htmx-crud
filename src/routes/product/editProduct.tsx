@@ -34,7 +34,7 @@ export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(localeMiddleware) // set lang
     .use(authRedirect) // redirects or sets authUser and csrfToken
-    .get('/product/:id/edit', async ({ csrfToken, html, set, status, params: { id }, lang }) => {
+    .get('/product/:id/edit', async ({ csrfToken, html, set, params: { id }, lang }) => {
         const page = newPage(lang)
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -43,7 +43,7 @@ export const editProductController = new Elysia(ElysiaSettings)
 
         if (!product) {
             set.headers['Location'] = '/product-list'
-            return status(307)
+            return new Response('', { status: 307 })
         }
 
         page.form.csrfToken = csrfToken

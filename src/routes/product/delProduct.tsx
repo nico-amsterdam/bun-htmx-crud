@@ -35,7 +35,7 @@ export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(localeMiddleware) // sets lang
     .use(authRedirect)  // redirects or sets authUser and csrfToken
-    .get('/product/:id/delete', async ({ csrfToken, html, set, status, params: { id }, lang }) => {
+    .get('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, lang }) => {
         const page = newPage(lang)
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
@@ -43,7 +43,7 @@ export const delProductController = new Elysia(ElysiaSettings)
 
         if (!product) {
             set.headers['Location'] = '/product-list' + page.locale.langQueryParam
-            return status(307)
+            return new Response('', { status: 307 })
         }
 
         page.form.csrfToken = csrfToken

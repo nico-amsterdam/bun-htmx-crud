@@ -17,28 +17,28 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
-      .onBeforeHandle(({ headers, path, request, status }) => {
+      .onBeforeHandle(({ headers, path, request }) => {
         // checks cross-site origin
         if (!allowRequest(request.method, path, headers)) {
-          return status(403) // Forbidden
+          return new Response('', { status: 403 }) // Forbidden
         }
       })
-      .onError(({ code, error, set, status }) => {
+      .onError(({ code, error, set }) => {
         if (code === 'INVALID_COOKIE_SIGNATURE') {
           console.log('Invalid cookie: ' + error.message)
           if (error.message.includes('"SESSION"')) {
             // override invalid cookie
             set.headers['Set-Cookie'] = 'SESSION=; HttpOnly; path=/; max-age=0'
             set.headers['Location'] = '/auth/login'
-            return status(307)
+            return new Response('', { status: 307 })
           }
         }
       })
       .use(addContentSecurityPolicyHeader)
       .get('/health', ({ }) => new Response('ok'))
-      .get('/', ({ set, status }) => {
+      .get('/', ({ set }) => {
         set.headers['Location'] = '/product-list'
-        return status(307)
+        return new Response('', { status: 307 })
       })
       .use(authController)
       .use(productController)

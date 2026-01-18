@@ -2,7 +2,7 @@ import { Html } from '@elysiajs/html'
 import { ProductType, BaseProductType } from "db"
 import { newLocale } from '../../i18n/translations'
 import type { LocaleType }  from '../../i18n/translations'
-import type { User } from '../auth'
+import type { UserType } from '../auth'
 
 type DataType = {
   products: ProductType[]
@@ -17,7 +17,7 @@ type FormDataType = {
 }
 
 export type PageType = {
-  user: User | undefined
+  user: UserType | undefined
   data: DataType
   form: FormDataType
   locale: LocaleType

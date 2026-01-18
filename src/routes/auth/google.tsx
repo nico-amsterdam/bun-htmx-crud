@@ -33,13 +33,13 @@ function getRedirectUri(headers: Record<string, string | undefined>) {
 const secretKey = createSecretKey(Buffer.from('key-object-secret'));
 
 export const googleController = new Elysia(ElysiaSettings)
-  .get('/auth/google', async ({ headers, query, set, status, cookie: { SESSION } }) => {
+  .get('/auth/google', async ({ headers, query, set, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {
       console.log(query.error_description)
       // user cancelled, go to login page
       set.headers['Location'] = '/auth/login'
-      return status(307)
+      return new Response('', { status: 307 })
     }
     const ip = getIp(headers)
     const stateArray = decodeURIComponent(query.state || '').split('?lang=')
@@ -47,7 +47,7 @@ export const googleController = new Elysia(ElysiaSettings)
     if (verifyState !== stateArray[0]) {
       console.log('state has been tampered')
       set.headers['Location'] = '/auth/login'
-      return status(307)
+      return new Response('', { status: 307 })
     }
     const langQueryParam = NON_DEFAULT_LANGUAGES.includes(stateArray[1]) ? '?lang=' + stateArray[1] : ''
     const redirect_uri = getRedirectUri(headers)
@@ -75,7 +75,7 @@ export const googleController = new Elysia(ElysiaSettings)
       console.log(googleAccessToken.error_description)
       // incorrect secret?
       set.headers['Location'] = '/auth/login' + langQueryParam
-      return status(307)
+      return new Response('', { status: 307 })
     }
 
     const bearerAuth = token_type + ' ' + access_token
@@ -101,7 +101,7 @@ export const googleController = new Elysia(ElysiaSettings)
     if (checkedTokenInfo.sub === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
       set.headers['Location'] = '/auth/login' + langQueryParam
-      return status(307)
+      return new Response('', { status: 307 })
     }
 
     const sessionId = generateSecureRandomString();
@@ -121,7 +121,7 @@ export const googleController = new Elysia(ElysiaSettings)
 
     // go to main page
     set.headers['Location'] = '/product-list' + langQueryParam
-    return status(307)
+    return new Response('', { status: 307 })
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
@@ -147,9 +147,9 @@ export const googleController = new Elysia(ElysiaSettings)
     })
   })
   .use(localeMiddleware) // sets lang
-  .get('/auth/to-google', async ({ headers, set, status, lang }) => {
+  .get('/auth/to-google', async ({ headers, set, lang }) => {
     const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
     const redirect_uri = getRedirectUri(headers)
     set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
-    return status(307)
+    return new Response('', { status: 307 })
   })
