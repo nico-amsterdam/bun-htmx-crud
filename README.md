@@ -50,13 +50,13 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 | [+ Add product]                                 [↻ Refresh] |
 | Search: [_________________________] (updates as you type)   |
 +-------------------------------------------------------------+
-| Name       | Description | Price     | Actions              |
+| Name       | Description |     Price | Actions              |
 |------------|-------------|-----------|----------------------|
-| product2   | 2nd         | 102.09 €  | [Edit] [Delete]      |
-| product3   | 3rd         | 5 €       | [Edit] [Delete]      |
-| product4   | 4th         | 10000 €   | [Edit] [Delete]      |
-| product5   | 5th         | 55 €      | [Edit] [Delete]      |
-| product6   | 6th         | 2 €       | [Edit] [Delete]      |
+| product2   | 2nd         |  102.78 € | [Edit] [Delete]      |
+| product3   | 3rd         |    5.00 € | [Edit] [Delete]      |
+| product4   | 4th         | 9000.00 € | [Edit] [Delete]      |
+| product5   | 5th         |   55.55 € | [Edit] [Delete]      |
+| product6   | 6th         |    2.99 € | [Edit] [Delete]      |
 +-------------------------------------------------------------+
 ```
 
