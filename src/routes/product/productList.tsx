@@ -14,7 +14,8 @@ import { getContentLanguage } from 'i18n/lang'
 function Body(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <body class="container" data-script="on every htmx:sendError call #networkErrDialog.showModal()">
+        <body class={`container lang-${page.locale.lang}`} data-script="on every htmx:sendError call #networkErrDialog.showModal()">
+            <a href="#main" id="skip-link" class="skip-link">Skip to main content</a>
             <div id="content" class="product-list">
                 <header class="page-header">
                     <div class="topbar">

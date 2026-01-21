@@ -230,24 +230,25 @@ p {
     margin-left: auto
 }
 
-@media (min-width: 692px) {
-    .product-list .table .spacer {
-        width: 4%;
-    }
-}
-
 @media (min-width: 992px) {
     .container {
         width: 970px
     }
-    .product-list .table .spacer {
-        width: 8%;
+
+    body .product-list .table .price {
+        padding-right: 28px;
+        width: 130px
     }
 }
 
 @media (min-width: 1200px) {
     .container {
         width: 1170px
+    }
+
+    body .product-list .table .price {
+        padding-right: 58px;
+        width: 160px
     }
 }
 
@@ -273,8 +274,17 @@ p {
 }
 
 .table-actions {
-    width: 150px;
+    width: 155px;
 }
+
+.lang-en .table-actions {
+    width: 100px;
+}
+
+.lang-es .table-actions {
+    width: 120px;
+}
+
 
 @media (min-width: 768px) {
     .container {
@@ -294,7 +304,8 @@ th {
 .table {
     width: 100%;
     max-width: 100%;
-    margin-bottom: 20px
+    margin-bottom: 20px;
+    border-collapse: collapse;
 }
 
 .table>tbody>tr>td,
@@ -605,22 +616,22 @@ textarea.form-control {
     display: inline-block;
     text-decoration: none;
     margin-left: 10px;
-    vertical-align: middle;
+    vertical-align: middle
 }
 
 .htmx-logo:hover {
-    text-decoration: none;
+    text-decoration: none
 }
 
 .htmx-logo-svg {
     width: 100px;
     height: 25px;
     margin-bottom: -8px;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease
 }
 
 .htmx-logo:hover .htmx-logo-svg {
-    opacity: 0.7;
+    opacity: 0.7
 }
 
 .elysia-logo-svg {
@@ -629,69 +640,65 @@ textarea.form-control {
 
 .topbar {
     display: flex;
-    align-items: center;
+    align-items: center
 }
 
 .topbar .user {
-    margin-left: auto;
+    margin-left: auto
 }
 
 .topbar .user img {
-    border-radius: 50%;
+    border-radius: 50%
 }
 
 .topbar .user .signout {
-    margin-left: 5px;
+    margin-left: 5px
 }
 
 .hide {
-    display:none
+    display: none
 }
 
 .language-switcher {
     width: auto;
     margin-top: -27px;
-    float: right;
+    float: right
 }
 
 .refresh {
-  float: right;
-  background: none;
-  border: none;
-  margin: 5px;
-  padding: 0;
+    float: right;
+    background: none;
+    border: none;
+    margin: 5px;
+    padding: 0
 }
 
 .btn.refresh:active {
-  box-shadow: none
+    box-shadow: none
 }
 
 .refresh svg {
-  font-size: 24px;
-  margin: 5px 5px 0 5px;
+    font-size: 24px;
+    margin: 5px 5px 0 5px
 }
 
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+    100% {
+        transform: rotate(360deg)
+    }
 }
 
 .refresh:active svg {
-  color: lightblue;
-  animation: spin 500ms linear 1;
+    color: lightblue;
+    animation: spin 500ms linear 1
 }
 
 .refresh:not(:active) svg {
-  /* keep color for 0.5 seconds */
-  transition: color 500ms step-end;
+    /* keep color for 0.5 seconds */
+    transition: color 500ms step-end
 }
 
 .product-list .table .price {
     width: 102px;
-    text-align: right;
-}
-
-.product-list .table .spacer {
-   padding: 0;
+    text-align: right
 }
