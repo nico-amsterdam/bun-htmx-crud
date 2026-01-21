@@ -33,6 +33,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │   ├── config/
 │   ├── db/
 │   ├── htmx/
+│   ├── i18n/
 │   └── routes/
 │       ├── auth/
 │       ├── helper/
