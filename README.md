@@ -46,8 +46,8 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 +-------------------------------------------------------------+
 | Bun JSX HTMX CRUD                [User] [Sign Out] [Lang ▼] |
 +-------------------------------------------------------------+
-| [+ Add product]                                             |
-| [Search product]                                            |
+| [+ Add product]                                 [↻ Refresh] |
+| Search: [_________________________] (updates as you type)   |
 +-------------------------------------------------------------+
 | Name       | Description | Price     | Actions              |
 |------------|-------------|-----------|----------------------|
