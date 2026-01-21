@@ -230,9 +230,18 @@ p {
     margin-left: auto
 }
 
+@media (min-width: 692px) {
+    .product-list .table .spacer {
+        width: 4%;
+    }
+}
+
 @media (min-width: 992px) {
     .container {
         width: 970px
+    }
+    .product-list .table .spacer {
+        width: 8%;
     }
 }
 
@@ -676,4 +685,13 @@ textarea.form-control {
 .refresh:not(:active) svg {
   /* keep color for 0.5 seconds */
   transition: color 500ms step-end;
+}
+
+.product-list .table .price {
+    width: 102px;
+    text-align: right;
+}
+
+.product-list .table .spacer {
+   padding: 0;
 }

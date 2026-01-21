@@ -71,7 +71,8 @@ function Product({ page, product }: { page: PageType, product: ProductType }): J
                 data-script="on keyup if the event's key is 'Enter' trigger click"
                 hx-target="#main" tabindex="0">{name}</a></td>
             <td>{description}</td>
-            <td>{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
+            <td class="price">{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
+            <td class="spacer"></td>
             <td><button type="button" hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
                 {" "}<button type="button" hx-get={`/product/${id}/delete${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">{_('Delete')}</button></td>
         </tr>
@@ -138,14 +139,15 @@ on input or load
                     <tr>
                         <th>{_('Name')}</th>
                         <th>{_('Description')}</th>
-                        <th>{_('Price')}</th>
+                        <th class="price">{_('Price')}</th>
+                        <th class="spacer"></th>
                         <th class="table-actions">{_('Actions')}</th>
                     </tr>
                 </thead>
                 <ProductList {...page} />
                 <tfoot id="search-results-footer">
                     <tr id="announceResults" aria-live="assertive" aria-atomic="true">
-                        <td id="noResults" colspan="4" class={productCount === 0 ? '' : 'hide'}>{productCount === 0 ? _('No products available') : _('No search results found')}</td>
+                        <td id="noResults" colspan="5" class={productCount === 0 ? '' : 'hide'}>{productCount === 0 ? _('No products available') : _('No search results found')}</td>
                     </tr>
                 </tfoot>
             </table>
