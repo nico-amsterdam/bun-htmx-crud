@@ -29,6 +29,8 @@ export function newLocale(lang: string): LocaleType {
 }
 
 const translations: Translations = {
+  // Technically the English to English translation is not needed,
+  // but it serves as the primary set for translations in other languages.
   en: {
     'Welcome to the Bun HTMX CRUD Demo': 'Welcome to the Bun HTMX CRUD Demo',
     'Sign in to continue': 'Sign in to continue',

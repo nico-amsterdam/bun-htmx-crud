@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
-import { localeMiddleware, NON_DEFAULT_LANGUAGES } from '../../i18n/localeMiddleware'
+import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 
 const redirect_uri_local = 'http://localhost:8787/auth/google'
 const redirect_uri_remote = 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/google'
@@ -146,9 +146,8 @@ export const googleController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .use(localeMiddleware) // sets lang
-  .get('/auth/to-google', async ({ headers, set, lang }) => {
-    const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
+  .get('/auth/to-google', async ({ headers, set }) => {
+    const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + getContentLanguage(set.headers))
     const redirect_uri = getRedirectUri(headers)
     set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
     return new Response('', { status: 307 })

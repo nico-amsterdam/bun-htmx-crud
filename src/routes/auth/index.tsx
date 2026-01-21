@@ -6,8 +6,8 @@ import { getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 import { githubController } from './github'
 import { googleController } from './google'
 import { BaseHtml } from '../helper/basePage'
-import { localeMiddleware } from '../../i18n/localeMiddleware'
-import { newLocale } from '../../i18n/translations'
+import { newLocale } from 'i18n/translations'
+import { getContentLanguage } from 'i18n/lang'
 
 export type UserType = {
   login: string,
@@ -75,13 +75,13 @@ function SessionExpired({ lang }: { lang: string }): JSX.Element {
 export const authController = new Elysia(ElysiaSettings)
   .use(githubController)
   .use(googleController)
-  .use(localeMiddleware) // sets lang
   .use(html())
-  .post('auth/login', ({ html, lang }) => {
+  .post('/auth/login', ({ html, set }) => {
+    const lang = getContentLanguage(set.headers)
     return html(<SessionExpired lang={lang} />)
   })
-  .get('auth/login', ({ html, request, lang, cookie: { SESSION } }) => {
-
+  .get('/auth/login', ({ html, request, set, cookie: { SESSION } }) => {
+    const lang = getContentLanguage(set.headers)
     if (isHtmxEnabled(request)) {
       // Show error to user in the current part of the screen. The login link will swap the whole page.
       return html(<SessionExpired lang={lang} />)
@@ -105,10 +105,10 @@ const AUTH_REDIRECT_VALUES: { authUser: UserType, csrfToken: string } = {
 
 /*
  * Redirect to /auth/login when not logged-in.
- * If logged-in, add authUser and csrfToken to the scope
+ * If logged-in, add authUser and csrfToken to the context
  */
 export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect' })
-  .resolve({ as: 'scoped' }, ({ headers, set, cookie: { SESSION } }) => {
+  .resolve({ as: 'scoped' }, ({ headers, cookie: { SESSION } }) => {
     const rawcookie = SESSION.value as string
     const ip = getIp(headers)
     const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])
@@ -142,8 +142,8 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
       return AUTH_REDIRECT_VALUES
     }
   })
-  .onBeforeHandle({ as: 'scoped' }, ({ csrfToken, set, authUser }) => {
-    if (!authUser || !csrfToken) {
+  .onBeforeHandle({ as: 'scoped' }, ({ set, csrfToken }) => {
+    if (csrfToken === '') {
       set.headers['Location'] = '/auth/login'
       return new Response('', { status: 307 })
     }

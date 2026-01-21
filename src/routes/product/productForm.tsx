@@ -1,7 +1,7 @@
 import { Html } from '@elysiajs/html'
 import { ProductType, BaseProductType } from "db"
-import { newLocale } from '../../i18n/translations'
-import type { LocaleType }  from '../../i18n/translations'
+import { newLocale } from 'i18n/translations'
+import type { LocaleType } from 'i18n/translations'
 import type { UserType } from '../auth'
 
 type DataType = {
@@ -56,7 +56,6 @@ export function CancelButton(page: PageType): JSX.Element {
 function newFormData(): FormDataType {
   return { values: {}, errors: {}, csrfToken: '' }
 }
-
 
 export function newPage(lang: string): PageType {
   const page: PageType = {

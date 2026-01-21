@@ -124,7 +124,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 <img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
 - Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
-- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
+- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
 
 ## Available Scripts
 
@@ -178,3 +178,4 @@ To fix, reconnect the worker with the correct database in the [Cloudflare dashbo
 - **Migration failures**: Ensure `DB_ID` in `.env` matches the database_id in `wrangler.jsonc`
 - **Auth errors**: Verify OAuth secrets are set with `bun secret:google` and `bun secret:github`
 - **Type errors**: Run `bun typecheck` to identify type issues before deployment
+- **Slow typescript checks and/or errors like: `Expression produces a union type that is too complex to represent`**: Types becomes too complex if in too many places variables are added to the context. Do not overuse this mechanism, it also makes type checking slow. If the variables are not needed in the parent controller, cast the return type like this: `.use(yourplugin as unknown as Elysia)`. Time the typechecker with `time bun typecheck`. Find hotspots with the commands `bunx tsc --generateTrace trace --noEmit --incremental false` and `bunx @typescript/analyze-trace trace/`. The [go typescript checker](https://github.com/microsoft/typescript-go) is in many cases faster, and can also be used in VS Code.

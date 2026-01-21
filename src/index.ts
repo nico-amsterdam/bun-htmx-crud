@@ -6,6 +6,7 @@ import { addContentSecurityPolicyHeader, allowRequest } from './routes/helper/se
 import { authController } from 'routes/auth'
 import { productController } from 'routes/product'
 import { ElysiaSettings } from './config'
+import { getLang, setContentLanguage } from 'i18n/lang'
 
 // Experimental: import { CloudflareAdapter } from 'elysia/adapter/cloudflare-worker'
 // import { env } from 'cloudflare:workers'
@@ -17,11 +18,14 @@ export default {
     Container.set('DrizzleDB', db)
     Container.set('env', env)
     const resp = await new Elysia(ElysiaSettings)
-      .onBeforeHandle(({ headers, path, request }) => {
+      .onBeforeHandle(({ headers, path, query, request, set }) => {
         // checks cross-site origin
         if (!allowRequest(request.method, path, headers)) {
           return new Response('', { status: 403 }) // Forbidden
         }
+        // set content-language header. This header used in the controllers to get the current language.
+        const lang = getLang(headers, query)
+        setContentLanguage(set.headers, lang)
       })
       .onError(({ code, error, set }) => {
         if (code === 'INVALID_COOKIE_SIGNATURE') {
@@ -40,8 +44,8 @@ export default {
         set.headers['Location'] = '/product-list'
         return new Response('', { status: 307 })
       })
-      .use(authController)
-      .use(productController)
+      .use(authController as unknown as Elysia)
+      .use(productController as unknown as Elysia)
       .handle(request)
     // .compile() // for CloudflareAdapter
 

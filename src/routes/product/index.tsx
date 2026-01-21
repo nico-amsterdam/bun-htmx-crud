@@ -7,7 +7,7 @@ import { htmxRedirect } from '../helper/htmx'
 import { ElysiaSettings } from 'config'
 
 export const productController = new Elysia(ElysiaSettings)
-  .use(productListController)
+  .use(productListController as unknown as Elysia)
   .use(htmxRedirect)
   .use(addProductController)
   .use(editProductController)

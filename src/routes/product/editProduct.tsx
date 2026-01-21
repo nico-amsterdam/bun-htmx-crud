@@ -1,13 +1,14 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq, isNull } from 'drizzle-orm'
-import { getDB, tables, ModifyProductType } from "db"
+import { getDB, tables } from "db"
+import type { ModifyProductType } from "db"
 import { ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
 import type { PageType } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
-import { localeMiddleware } from '../../i18n/localeMiddleware'
+import { getContentLanguage } from 'i18n/lang'
 
 function EditProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -32,10 +33,9 @@ function EditProduct(page: PageType): JSX.Element {
 
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware) // set lang
     .use(authRedirect) // redirects or sets authUser and csrfToken
-    .get('/product/:id/edit', async ({ csrfToken, html, set, params: { id }, lang }) => {
-        const page = newPage(lang)
+    .get('/product/:id/edit', async ({ csrfToken, html, set, params: { id } }) => {
+        const page = newPage(getContentLanguage(set.headers))
 
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)

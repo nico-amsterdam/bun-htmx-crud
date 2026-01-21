@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { NON_DEFAULT_LANGUAGES } from '../../src/i18n/localeMiddleware'
+import { NON_DEFAULT_LANGUAGES } from '../../src/i18n/lang'
 
 describe('NON_DEFAULT_LANGUAGES', () => {
   it('should contain supported non-English languages', () => {

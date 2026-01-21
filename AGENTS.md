@@ -217,8 +217,8 @@ Server-side i18n in `src/i18n/translations.ts`:
 - `translate()`: Translation function with placeholder `{0}` replacement
 - `newLocale()`: Creates locale object with translation function and langQueryParam
 
-Middleware in `src/i18n/localeMiddleware.ts`:
-- `localeMiddleware`: Extracts language from query param (?lang=xx) or Accept-Language header
+Middleware in `src/i18n/lang.ts`:
+- `lang`: Extracts language from query param (?lang=xx) or Accept-Language header
 - `NON_DEFAULT_LANGUAGES`: Supported non-English languages ['de', 'es', 'fr']
 
 Supported languages: English (default), German, Spanish, French

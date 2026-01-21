@@ -3,7 +3,7 @@ import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
 import type { UserType } from './'
-import { localeMiddleware, NON_DEFAULT_LANGUAGES } from '../../i18n/localeMiddleware'
+import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 
 type AccessTokenResponse = {
   access_token: string,
@@ -139,9 +139,8 @@ export const githubController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .use(localeMiddleware) // sets lang
-  .get('/auth/to-github', async ({ headers, set, lang }) => {
-    const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + lang)
+  .get('/auth/to-github', async ({ headers, set }) => {
+    const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + getContentLanguage(set.headers))
     set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state
     return new Response('', { status: 307 })
   })

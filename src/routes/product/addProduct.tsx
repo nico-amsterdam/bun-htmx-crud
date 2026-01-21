@@ -5,7 +5,7 @@ import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCrea
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
-import { localeMiddleware } from '../../i18n/localeMiddleware'
+import { getContentLanguage } from 'i18n/lang'
 
 function AddProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -32,12 +32,11 @@ function AddProduct(page: PageType): JSX.Element {
 
 export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware) // sets lang
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
         '/add-product',
-        ({ csrfToken, html, lang }) => {
-            const page = newPage(lang)
+        ({ csrfToken, html, set }) => {
+            const page = newPage(getContentLanguage(set.headers))
             page.form.csrfToken = csrfToken
             return html(
                 <AddProduct {...page} />

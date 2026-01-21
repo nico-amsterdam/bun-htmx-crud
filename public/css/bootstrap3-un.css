@@ -632,8 +632,7 @@ textarea.form-control {
 }
 
 .topbar .user .signout {
-    padding-left: 5px;
-    display: inline-block;
+    margin-left: 5px;
 }
 
 .hide {

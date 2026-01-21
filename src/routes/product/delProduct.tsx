@@ -6,7 +6,7 @@ import { PageType, CancelButton, newPage } from './productForm'
 import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
-import { localeMiddleware } from '../../i18n/localeMiddleware'
+import { getContentLanguage } from 'i18n/lang'
 
 function DelProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -33,10 +33,10 @@ function DelProduct(page: PageType): JSX.Element {
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware) // sets lang
     .use(authRedirect)  // redirects or sets authUser and csrfToken
-    .get('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, lang }) => {
-        const page = newPage(lang)
+    .get('/product/:id/delete', async ({ csrfToken, html, set, params: { id } }) => {
+
+        const page = newPage(getContentLanguage(set.headers))
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
@@ -63,7 +63,6 @@ export const delProductController = new Elysia(ElysiaSettings)
                 eq(tables.products.id, +id)
             )
         }
-
         return html(await gotoProductList(set.headers, lang))
     }, { // TypeBox
         body: t.Object({

@@ -5,11 +5,11 @@ import { HttpHeader, isHtmxEnabled } from 'htmx'
 import { getDB, tables, ProductType } from "db"
 import { newPage } from './productForm'
 import type { PageType } from './productForm'
-import { LanguageSwitcher } from './languageSwitcher'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
-import { localeMiddleware, STANDARD_LANGUAGE } from '../../i18n/localeMiddleware'
+import { LanguageSwitcher } from '../helper/languageSwitcher'
+import { getContentLanguage } from 'i18n/lang'
 
 function Body(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -21,7 +21,7 @@ function Body(page: PageType): JSX.Element {
                         <h1>{_('Bun JSX HTMX CRUD')}</h1>
                         <span class="user">
                             <img width="50px" height="50px" id="user-image" src={page.user?.avatar_url} title={page.user?.name || _('Avatar')} />
-                            <a title={_('Sign out')} href={`/auth/login${page.locale.langQueryParam}`} class="signout">➜] {_('Sign out')}</a>
+                            <button type="button" data-script={`on click go to url /auth/login${page.locale.langQueryParam}`} class="btn btn-default signout">➜] {_('Sign out')}</button>
                         </span>
                     </div>
                     <div id="logos">
@@ -94,7 +94,7 @@ function Main(page: PageType): JSX.Element {
     return (
         <main id="main">
             <div class="form-actions">
-                <LanguageSwitcher linkTo='/product-list' page={page} />
+                <LanguageSwitcher linkTo='/product-list' locale={page.locale} />
                 <button type="button" hx-get={`/add-product${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                     class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
@@ -169,13 +169,11 @@ export async function gotoProductList(headers: HTTPHeaders, lang: string): Promi
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())
-    .use(localeMiddleware) // sets lang
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
         '/product-list',
-        async ({ authUser, html, request, lang }) => {
-
-            const page = newPage(lang)
+        async ({ authUser, html, request, set }) => {
+            const page = newPage(getContentLanguage(set.headers))
             page.user = authUser
 
             page.data.products = await getDB().select().from(tables.products).orderBy(asc(tables.products.name))
@@ -187,7 +185,7 @@ export const productListController = new Elysia(ElysiaSettings)
             }
 
             return html(
-                <BaseHtml lang={lang} body={<Body {...page} />} />
+                <BaseHtml lang={page.locale.lang} body={<Body {...page} />} />
             )
         }
     )
