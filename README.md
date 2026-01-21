@@ -40,6 +40,25 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 └── tests/
 ```
 
+## Wireframe
+
+```text
++-------------------------------------------------------------+
+| Bun JSX HTMX CRUD                [User] [Sign Out] [Lang ▼] |
++-------------------------------------------------------------+
+| [+ Add product]                                             |
+| [Search product]                                            |
++-------------------------------------------------------------+
+| Name       | Description | Price     | Actions              |
+|------------|-------------|-----------|----------------------|
+| product2   | 2nd         | 102.09 €  | [Edit] [Delete]      |
+| product3   | 3rd         | 5 €       | [Edit] [Delete]      |
+| product4   | 4th         | 10000 €   | [Edit] [Delete]      |
+| product5   | 5th         | 55 €      | [Edit] [Delete]      |
+| product6   | 6th         | 2 €       | [Edit] [Delete]      |
++-------------------------------------------------------------+
+```
+
 ## Getting Started
 - install [Bun](https://bun.com)
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud

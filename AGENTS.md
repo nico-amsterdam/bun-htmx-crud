@@ -16,6 +16,29 @@ This application serves as a **comprehensive template/boilerplate** for creating
 - **DI**: TypeDI container for dependency injection
 - **Deployment**: Cloudflare Workers (edge computing)
 
+## User Interface
+
+The application uses HTMX for progressive enhancement. See `README.md` for the detailed wireframe.
+
+Quick reference UI structure:
+
+```
+Header: Bun JSX HTMX CRUD  [User] [Sign Out] [Lang ▼]
+Actions: [+ Add product] [Search product]
+Table: Name | Description | Price | Actions
+Row: product1 | desc | 10.00 € | [Edit] [Delete]
+```
+
+Key UI elements:
+- **Header**: Authenticated user menu, language selector
+- **Add button**: Opens inline form or modal for new entries
+- **Search**: Filters table rows server-side via HTMX
+- **Actions column**: Edit and delete buttons per row
+
+UI files:
+- `src/routes/product/list.tsx`: Main product list view
+- `src/routes/product/edit.tsx`: Inline edit form
+
 ## Key Architectural Patterns
 
 ### 1. Modular Route Controllers
@@ -62,7 +85,7 @@ const db = getDB() // Container.get<DrizzleD1Database>
 
 ### 4. Server-Side Rendering
 
-All HTML generated server-side using JSX with custom `Html.createElement` factory:
+All HTML generated server-side using JSX with custom `Html.createElement` factory. Each route defines its own component functions that return JSX elements:
 
 ```typescript
 function ProductList(page: PageType): JSX.Element {
@@ -88,6 +111,27 @@ HTMX for dynamic interactions without full page reloads:
   {_('Edit')}
 </button>
 ```
+
+#### Hyperscript
+
+Inline [Hyperscript](https://hyperscript.org/) adds client-side logic:
+
+```typescript
+<button
+  _="on click toggle .hidden on #target"
+  class="btn">
+  Toggle
+</button>
+```
+
+**Security note**: When loading content from untrusted external sources (CMS, translations, SVGs), sanitize to remove inline scripts (`_` and `data-script` attributes, SVG with inline scripts, etc.).
+
+#### HTMX Extensions
+
+For complex client-side behavior beyond Hyperscript, build custom [HTMX extensions](https://htmx.org/extensions/building/):
+1. Put source in `client/src` directory
+2. Transform with `bun build:client` into minified JavaScript
+3. Include scripts in `basePage.ts`
 
 ## Authentication Implementation
 
@@ -218,7 +262,9 @@ Server-side i18n in `src/i18n/translations.ts`:
 - `newLocale()`: Creates locale object with translation function and langQueryParam
 
 Middleware in `src/i18n/lang.ts`:
-- `lang`: Extracts language from query param (?lang=xx) or Accept-Language header
+- `getLang()`: Extracts language from query param (?lang=xx) or Accept-Language header
+- `getContentLanguage()`: Returns content-language header value or default 'en'
+- `setContentLanguage()`: Sets content-language header on response
 - `NON_DEFAULT_LANGUAGES`: Supported non-English languages ['de', 'es', 'fr']
 
 Supported languages: English (default), German, Spanish, French
@@ -231,6 +277,7 @@ Supported languages: English (default), German, Spanish, French
 bun install                    # Install dependencies
 bun migrate:dev               # Apply migrations to local D1
 bun dev                       # Start dev server at localhost:8787
+bun dbcat:db:dev              # View local database content
 ```
 
 ### Database Operations
@@ -239,6 +286,7 @@ bun dev                       # Start dev server at localhost:8787
 bun migrate:create            # Generate new migration files
 bun migrate:dev               # Apply to local database
 bun migrate                   # Apply to production database
+bun introspect:db             # Introspect database schema using Drizzle Kit
 bun studio:db:dev             # Open Drizzle Studio (local)
 bun studio:db                 # Open Drizzle Studio (production)
 bun test:db:dev               # Test local database connection
@@ -251,6 +299,7 @@ bun deploy:app                # Deploy to Cloudflare Workers
 bun secret:google             # Set Google OAuth secret
 bun secret:github             # Set GitHub OAuth secret
 bun logtail                   # Stream production logs
+bun studio:db                 # Open Drizzle Studio (production)
 ```
 
 ### Configuration
@@ -274,7 +323,7 @@ Set via: `bun secret:google` and `bun secret:github`
 
 ## Testing
 
-This project includes 90+ unit tests covering:
+This project includes 100+ unit tests covering:
 - i18n translations and locale middleware
 - Authentication security helpers
 - HTMX request/response headers
