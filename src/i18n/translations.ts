@@ -72,7 +72,8 @@ const translations: Translations = {
     'Edit product': 'Edit product',
     'Choose site language': 'Choose site language',
     'Network error': 'Network error',
-    'Offline? Check your connection': 'Offline? Check your connection'
+    'Offline? Check your connection': 'Offline? Check your connection',
+    'Dark mode switch': 'Dark mode switch'
   },
   es: {
     'Welcome to the Bun HTMX CRUD Demo': 'Bienvenido a la Demo Bun HTMX CRUD',
@@ -115,7 +116,8 @@ const translations: Translations = {
     'Edit product': 'Editar producto',
     'Choose site language': 'Elegir el idioma del sitio',
     'Network error': 'Error de red',
-    'Offline? Check your connection': '¿Sin conexión? Revisa tu conexión'
+    'Offline? Check your connection': '¿Sin conexión? Revisa tu conexión',
+    'Dark mode switch': 'Interruptor de modo oscuro'
   },
   fr: {
     'Welcome to the Bun HTMX CRUD Demo': 'Bienvenue à la Démo Bun HTMX CRUD',
@@ -158,7 +160,8 @@ const translations: Translations = {
     'Edit product': 'Modifier le produit',
     'Choose site language': 'Choisir la langue du site',
     'Network error': 'Erreur réseau',
-    'Offline? Check your connection': 'Hors ligne? Vérifiez votre connexion'
+    'Offline? Check your connection': 'Hors ligne? Vérifiez votre connexion',
+    'Dark mode switch': 'Commutateur de mode sombre'
   },
   de: {
     'Welcome to the Bun HTMX CRUD Demo': 'Willkommen zur Bun HTMX CRUD Demo',
@@ -201,6 +204,7 @@ const translations: Translations = {
     'Edit product': 'Produkt bearbeiten',
     'Choose site language': 'Sprache der Website auswählen',
     'Network error': 'Netzwerkfehler',
-    'Offline? Check your connection': 'Offline? Prüfen Sie Ihre Verbindung'
+    'Offline? Check your connection': 'Offline? Prüfen Sie Ihre Verbindung',
+    'Dark mode switch': 'Schalter für den Dunkelmodus'
   }
 }
