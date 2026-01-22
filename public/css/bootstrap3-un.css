@@ -21,6 +21,11 @@
     --btn-warning-active: #eb9316;
     --btn-warning-background-active: #d58512;
     --btn-warning-focus: #985f0d;
+    --dark-mode-background: rgb(104, 103, 103);
+    --dark-mode-text-color: white;
+    --dark-mode-text-background-color: black;
+    --dark-mode-error-text-color: white;
+    --dark-mode-error-background-color: red;
 }
 
 /* Skip link for accessibility - WCAG 2.4.1 Bypass Blocks */
@@ -206,7 +211,7 @@ h2 {
 
 h1 {
     margin: .67em 0;
-    font-size: 28px
+    font-size: 26px
 }
 
 h2 {
@@ -274,7 +279,7 @@ p {
 }
 
 .table-actions {
-    width: 155px;
+    width: 164px;
 }
 
 .lang-en .table-actions {
@@ -643,6 +648,11 @@ textarea.form-control {
     align-items: center
 }
 
+.topbar .color-scheme {
+    margin-left: auto;
+    margin-right: 10px
+}
+
 .topbar .user {
     margin-left: auto
 }
@@ -659,6 +669,55 @@ textarea.form-control {
     display: none
 }
 
+.dark .color-scheme .sun {
+    display: none
+}
+
+.light .color-scheme .moon {
+    display: none
+}
+
+body.dark input,
+body.dark select,
+body.dark textarea,
+body.dark search button {
+    background-color: var(--dark-mode-text-background-color);
+    color: var(--dark-mode-text-color)
+}
+
+body.dark .color-scheme .moon,
+body.dark button.refresh,
+body.dark dialog button,
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark p,
+body.dark label,
+body.dark table button,
+body.dark table a,
+body.dark table th,
+body.dark table td {
+    color: var(--dark-mode-text-color)
+}
+
+body.dark #main,
+body.dark button,
+body.dark dialog,
+body.dark {
+    background-color: var(--dark-mode-background)
+}
+
+body.dark .error {
+    color: var(--dark-mode-error-text-color);
+    background-color: var(--dark-mode-error-background-color);
+    border: 5px solid var(--dark-mode-error-background-color)
+}
+
+body.dark .htmx-logo svg path,
+body.dark .htmx-logo svg polygon {
+    fill: var(--dark-mode-text-color)
+}
+
 .language-switcher {
     width: auto;
     margin-top: -27px;
@@ -667,6 +726,10 @@ textarea.form-control {
 
 .refresh {
     float: right;
+}
+
+.refresh,
+.color-scheme button {
     background: none;
     border: none;
     margin: 5px;
