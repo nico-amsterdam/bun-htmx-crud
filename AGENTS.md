@@ -8,7 +8,7 @@ This application serves as a **comprehensive template/boilerplate** for creating
 
 ## Technology Stack
 
-- **Runtime**: Bun (JavaScript runtime and package manager)
+- **Runtime**: Cloudflare Workers. Workers provide a subset of Node.js APIs
 - **Framework**: Elysia (lightweight, high-performance web framework)
 - **Frontend**: HTMX for progressive enhancement, server-side JSX rendering
 - **Database**: Cloudflare D1 (SQLite) with Drizzle ORM

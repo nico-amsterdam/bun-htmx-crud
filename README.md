@@ -5,16 +5,15 @@
 - ⛅ **Cloud**: Deploy to Cloudflare without hassle
 - 🔐 **Authentication**: Login with Google or GitHub. Easy setup instructions
 - 🤖 **AI agent instructions**: AGENTS.md for the AI coding agent
-- ⚡ **Blazing speed**: Bun's package manager, test runner and dev runtime
 - 🏭 **Server-side rendered**: Render HTML directly, no JSON API needed
 - ✨ **Modern user interface**: HTMX provides interactivity and update's page fragments
 - 📝 **Template system**: JSX: fully typed HTML embedded in TypeScript source
 - 🧩 **Ergonomic web framework**: Elysia features type-safe routing and validation
 - 💾 **Database**: Drizzle ORM with SQLite
 - 🔄 **Migrations**: Database migration system
-- ✅ **Testing**: 100+ unit tests
+- ✅ **Testing**: 100+ unit tests. Bun's speedy test runner
 - 🧠 **Type Safety**: Full TypeScript support. Enables IDE intelliSense and real-time error checking
-- ☎ **Mobile compatible**: Responsive web design. Manifest enables 'Add to Home Screen'
+- ☎  **Mobile compatible**: Responsive web design. Manifest enables 'Add to Home Screen'
 - 🕶 **Accessible**: Follows WCAG and WAI-ARIA standards for accessibility
 - 🌐 **Internationalization**: Switch between different languages
 - 🧱 **Security**: Content security policy, signed cookies, fetch metadata checks, CSRF

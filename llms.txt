@@ -1,0 +1,201 @@
+# Bun HTMX Elysia CRUD - AI Project Overview
+
+## Project Summary
+
+This is a production-ready, server-side rendered web application template built with modern edge computing technologies. It demonstrates a complete CRUD (Create, Read, Update, Delete) application with secure authentication, deployed on Cloudflare Workers at the edge for optimal performance and global availability.
+
+## Quick Start
+
+### Prerequisites
+- Install [Bun](https://bun.com) (package manager and test runner)
+- Git clone or download this repository
+
+### Local Development Setup
+```bash
+# Clone and setup
+git clone https://github.com/nico-amsterdam/bun-htmx-crud.git
+cd bun-htmx-crud
+bun install
+cp .env.example .env
+
+# Database setup
+bun migrate:create
+bun migrate:dev
+
+# Start development server
+bun dev
+# Open http://localhost:8787 in browser
+```
+
+### OAuth Setup (Optional for auth features)
+- Configure Google OAuth: Follow `auth-setup-google.md`
+- Configure GitHub OAuth: Follow `auth-setup-github.md`
+- Set client secrets in `.env` file
+
+### Deploy to Cloudflare
+```bash
+# Setup Cloudflare
+bun wrangler login
+bun create:db  # Create D1 database
+
+# Configure and deploy
+# Set DB_ID in .env (from wrangler.jsonc)
+bun migrate    # Apply migrations
+bun deploy:app # Deploy to Cloudflare
+bun secret:google  # Set OAuth secrets
+bun secret:github
+```
+
+### Essential Commands
+- `bun dev` - Start development server
+- `bun test` - Run test suite
+- `bun typecheck` - Type checking
+- `bun migrate:dev` - Apply local migrations
+- `bun studio:db:dev` - View local database
+
+## Core Technology Stack
+
+- **Runtime**: Cloudflare Workers. Workers provide a subset of Node.js APIs
+- **Web Framework**: Elysia (lightweight, high-performance, type-safe)
+- **Frontend**: HTMX for progressive enhancement, server-side JSX rendering
+- **Database**: Cloudflare D1 (SQLite) with Drizzle ORM
+- **Authentication**: OAuth2 with Google and GitHub providers
+- **Deployment**: Cloudflare Workers (edge computing)
+- **Language**: TypeScript with full type safety
+
+## Key Features & Capabilities
+
+### Security & Authentication
+- OAuth2/OIDC integration with Google and GitHub
+- Cryptographically signed session cookies with tamper protection
+- CSRF protection with secure random tokens
+- Content Security Policy (CSP) headers
+- Fetch Metadata protection against cross-site attacks
+- Session binding to IP address and user agent
+- Comprehensive security headers and cookie configuration
+
+### User Interface
+- Server-side rendered HTML with JSX templates
+- HTMX for dynamic interactions without full page reloads
+- Hyperscript for lightweight client-side logic
+- Responsive design with mobile compatibility
+- WCAG/WAI-ARIA accessibility compliance
+- Internationalization support (English, German, Spanish, French)
+- Dark mode support
+
+### Database & Data Management
+- Cloudflare D1 SQLite database with automatic backups
+- Drizzle ORM for type-safe database operations
+- Database migration system with version control
+- Optimistic locking with timestamp-based concurrency control
+- Production and development database environments
+
+### Development & Deployment
+- 100+ unit tests with coverage reporting
+- TypeScript type checking with watch mode
+- Hot reload development server
+- Cloudflare Workers deployment with rollback capabilities
+- Real-time log streaming and database management tools
+- Comprehensive build and deployment scripts
+
+## Architecture Patterns
+
+### Modular Route Structure
+```
+src/routes/
+├── auth/          # OAuth authentication (Google/GitHub)
+├── product/       # Example CRUD feature (replaceable)
+└── helper/        # Shared utilities and middleware
+```
+
+### Dependency Injection
+- TypeDI container for service management
+- Environment and database injection
+- Clean separation of concerns
+
+### Server-Side Rendering
+- All HTML generated server-side using JSX
+- Type-safe route parameters and templates
+- Component-based UI architecture
+- HTMX for progressive enhancement
+
+### Security Implementation
+- Multi-layered security with defense in depth
+- Input validation and sanitization
+- Secure session management
+- Protection against common web vulnerabilities
+
+## Project Structure
+
+```
+├── client/src/          # Client-side TypeScript (HTMX extensions)
+├── migrations/          # Database migration files
+├── public/              # Static assets (CSS, images, JavaScript)
+├── src/
+│   ├── config/          # Application configuration
+│   ├── db/              # Database schema and types
+│   ├── htmx/            # HTMX utilities and helpers
+│   ├── i18n/            # Internationalization
+│   └── routes/          # Route controllers
+├── tests/               # Unit tests
+└── wrangler.jsonc       # Cloudflare Workers configuration
+```
+
+## Use Cases & Applications
+
+This template is ideal for:
+- **SaaS Applications**: Multi-tenant web applications with authentication
+- **Admin Dashboards**: Secure backend interfaces with CRUD operations
+- **E-commerce**: Product catalogs with user management
+- **Content Management**: Authoring systems with role-based access
+- **Enterprise Applications**: Internal tools with OAuth integration
+
+## Getting Started Workflow
+
+1. **Setup**: Clone repository, install Bun, configure OAuth credentials
+2. **Development**: Run local server with hot reload, apply database migrations
+3. **Testing**: Execute comprehensive test suite with coverage reporting
+4. **Deployment**: Deploy to Cloudflare Workers with database provisioning
+5. **Monitoring**: Stream logs and manage production database
+
+## Security Considerations
+
+The application implements enterprise-grade security:
+- OAuth2 flows with state validation and PKCE support
+- Signed cookies preventing session tampering
+- CSRF protection on all state-changing operations
+- Content Security Policy preventing XSS attacks
+- Fetch Metadata protection against cross-site request forgery
+- Input validation and sanitization
+- Secure headers and cookie configuration
+
+## Performance & Scalability
+
+- **Edge Computing**: Runs on Cloudflare's global network
+- **Server-Side Rendering**: Optimal for SEO and initial load times
+- **HTMX**: Minimizes JavaScript bundle size and complexity
+- **SQLite**: Efficient for most CRUD applications (10GB limit per instance)
+- **Bun**: Fast package manager and test runner
+
+## Customization & Extension
+
+The template is designed for easy customization:
+- Replace the products table with your domain models
+- Add new features following the established patterns
+- Extend authentication with additional OAuth providers
+- Customize UI components and styling
+- Add new languages for internationalization
+- Implement additional security measures as needed
+
+## Production Readiness
+
+This is not a toy project but a production-ready template featuring:
+- Comprehensive error handling and logging
+- Database migration management
+- Security hardening and best practices
+- Testing infrastructure with high coverage
+- Deployment automation and rollback capabilities
+- Monitoring and observability tools
+- Documentation and troubleshooting guides
+
+The application serves as a solid foundation for building secure, scalable web applications that can be deployed globally on Cloudflare's edge network.
