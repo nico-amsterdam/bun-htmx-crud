@@ -42,7 +42,7 @@ export const githubController = new Elysia(ElysiaSettings)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "bun-htmx-crud/v1",
+        "User-Agent": "htmx-crud/v1",
         Accept: "application/json",
       },
       body: JSON.stringify({
@@ -79,7 +79,7 @@ export const githubController = new Elysia(ElysiaSettings)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "bun-htmx-crud/v1",
+        "User-Agent": "htmx-crud/v1",
         'X-GitHub-Api-Version': '2022-11-28',
         Accept: "application/json",
         Authorization: basicAuth,

@@ -5,7 +5,7 @@ import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFro
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 
 const redirect_uri_local = 'http://localhost:8787/auth/google'
-const redirect_uri_remote = 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/google'
+const redirect_uri_remote = 'https://htmx-crud.nico-amsterdam.workers.dev/auth/google'
 
 type AccessTokenResponse = {
   access_token: string,
@@ -55,7 +55,7 @@ export const googleController = new Elysia(ElysiaSettings)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "bun-htmx-crud/v1",
+        "User-Agent": "htmx-crud/v1",
         Accept: "application/json",
       },
       body: JSON.stringify({
@@ -84,7 +84,7 @@ export const googleController = new Elysia(ElysiaSettings)
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "User-Agent": "bun-htmx-crud/v1",
+        "User-Agent": "htmx-crud/v1",
         Accept: "application/json",
         Authorization: bearerAuth,
       },
