@@ -43,7 +43,7 @@ tokens
 
 Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/), with the option to deploy it on Cloudflare, so everything can run on the edge in the cloud.
 
-There is a demo on https://bun-htmx-crud.nico-amsterdam.workers.dev/. Login with your Google or GitHub account.
+There is a demo on https://htmx-crud.nico-amsterdam.workers.dev/. Login with your Google or GitHub account.
 
 You can use this project as a starter for your server-side rendered application with authentication.
 Git clone this repository, or download the source from GitHub.
