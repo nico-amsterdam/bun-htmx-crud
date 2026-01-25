@@ -8,17 +8,17 @@
     "build:client": "bun build client/src/*.ts --outdir public/javascript/ --target browser --minify",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
-    "create:db": "wrangler d1 create bun-htmx-crud",
+    "create:db": "wrangler d1 create htmx-crud",
     "migrate:create": "drizzle-kit generate",
-    "migrate:dev": "wrangler d1 migrations apply bun-htmx-crud --local",
-    "migrate": "wrangler d1 migrations apply bun-htmx-crud --remote",
-    "test:db:dev": "wrangler d1 execute bun-htmx-crud --local --command \"select * from products\";",
-    "test:db": "wrangler d1 execute bun-htmx-crud --remote --command \"select * from products\";",
+    "migrate:dev": "wrangler d1 migrations apply htmx-crud --local",
+    "migrate": "wrangler d1 migrations apply htmx-crud --remote",
+    "test:db:dev": "wrangler d1 execute htmx-crud --local --command \"select * from products\";",
+    "test:db": "wrangler d1 execute htmx-crud --remote --command \"select * from products\";",
     "dev": "wrangler dev",
     "deploy:app": "wrangler deploy",
     "secret:github": "wrangler secret put GITHUB_CLIENT_SECRET",
     "secret:google": "wrangler secret put GOOGLE_CLIENT_SECRET",
-    "logtail": "wrangler tail bun-htmx-crud",
+    "logtail": "wrangler tail htmx-crud",
     "rollback:app": "wrangler rollback",
     "delete:app": "wrangler delete",
     "databases": "wrangler d1 list",
@@ -39,6 +39,6 @@
     "dotenv": "^17.2.3",
     "drizzle-kit": "^0.31.8",
     "typed-html": "^3.0.1",
-    "wrangler": "^4.59.3"
+    "wrangler": "^4.60.0"
   }
 }
