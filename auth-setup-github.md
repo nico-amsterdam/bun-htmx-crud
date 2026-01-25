@@ -14,9 +14,9 @@ To create the OAuth App:
 
 - Select 'OAuth Apps'
 - Click the 'New OAuth App' button
-- Fill in the details. During local development fill in the logout url: 'http://localhost:8787/auth/github'. After deployment, change it to the url for production. In my case this is 'https://bun-htmx-crud.nico-amsterdam.workers.dev/auth/github'.
+- Fill in the details. During local development fill in the logout url: 'http://localhost:8787/auth/github'. After deployment, change it to the url for production. In my case this is 'https://htmx-crud.nico-amsterdam.workers.dev/auth/github'.
 
-<img width="716" height="663" alt="Register OAuth App" src="https://github.com/user-attachments/assets/e2e14c48-8c02-4d45-87a3-3b68c91d049d" />
+<img width="462" height="604" alt="Register OAuth App" src="https://github.com/user-attachments/assets/133353bc-e5b1-40ee-ae01-68d408c9fa17" />
 
 - Click on 'Register application'.
 - Copy the client ID to your `.env` file and your `wrangler.jsonc` file
