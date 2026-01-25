@@ -1,4 +1,4 @@
-# Project starter: Bun HTMX Elysia on Cloudflare
+# Project starter: HTMX Elysia on Cloudflare
 
 ## Features
 
