@@ -5,16 +5,15 @@
 - ⛅ **Cloud**: Deploy to Cloudflare without hassle
 - 🔐 **Authentication**: Login with Google or GitHub. Easy setup instructions
 - 🤖 **AI agent instructions**: AGENTS.md for the AI coding agent
-- ⚡ **Blazing speed**: Bun's package manager, test runner and dev runtime
 - 🏭 **Server-side rendered**: Render HTML directly, no JSON API needed
 - ✨ **Modern user interface**: HTMX provides interactivity and update's page fragments
-- 📝 **Template system**: JSX: fully typed HTML embedded in TypeScript source
+- 📝 **Template system**: JSX: fully typed HTML embedded in the TypeScript source
 - 🧩 **Ergonomic web framework**: Elysia features type-safe routing and validation
 - 💾 **Database**: Drizzle ORM with SQLite
 - 🔄 **Migrations**: Database migration system
-- ✅ **Testing**: 100+ unit tests
+- ✅ **Testing**: 100+ unit tests. Run by Bun's speedy test runner
 - 🧠 **Type Safety**: Full TypeScript support. Enables IDE intelliSense and real-time error checking
-- ☎ **Mobile compatible**: Responsive web design. Manifest enables 'Add to Home Screen'
+- ☎  **Mobile compatible**: Responsive web design. Manifest enables 'Add to Home Screen'
 - 🕶 **Accessible**: Follows WCAG and WAI-ARIA standards for accessibility
 - 🌐 **Internationalization**: Switch between different languages
 - 🧱 **Security**: Content security policy, signed cookies, fetch metadata checks, CSRF
@@ -82,7 +81,10 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 ```
 
 ## Getting Started
-- install [Bun](https://bun.com)
+- install [Git](https://github.com/git-guides/install-git)
+- install [Bun](https://bun.com) package manager and test runner. 
+- install [Node](https://nodejs.org/en/download). I recommend using nvm for the installation of Node.
+  Node is needed in this project, because Cloudflare's miniflare does not run on the Bun runtime.
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud
 
   `git clone https://github.com/nico-amsterdam/bun-htmx-crud.git`
@@ -94,6 +96,7 @@ bun install
 cp .env.example .env
 bun migrate:create
 bun migrate:dev
+bun update:types
 ```
 
 ## Setup Google and GitHub authentication
