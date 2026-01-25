@@ -24,7 +24,7 @@ tokens
 
 ```text
 +-------------------------------------------------------------+
-| Bun JSX HTMX CRUD        ☼☽      [User] [Sign Out] [Lang ▼] |
+| HTMX CRUD Demo           ☼☽      [User] [Sign Out] [Lang ▼] |
 +-------------------------------------------------------------+
 | [+ Add product]                                 [↻ Refresh] |
 | Search: [_________________________] (updates as you type)   |
@@ -32,8 +32,8 @@ tokens
 | Name       | Description |     Price | Actions              |
 |------------|-------------|-----------|----------------------|
 | product2   | 2nd         |  102.78 € | [Edit] [Delete]      |
-| product3   | 3rd         |    5.00 € | [Edit] [Delete]      |
-| product4   | 4th         | 9000.00 € | [Edit] [Delete]      |
+| product3   | 3rd         |    5.09 € | [Edit] [Delete]      |
+| product4   | 4th         | 9000.22 € | [Edit] [Delete]      |
 | product5   | 5th         |   55.55 € | [Edit] [Delete]      |
 | product6   | 6th         |    2.99 € | [Edit] [Delete]      |
 +-------------------------------------------------------------+
@@ -82,7 +82,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 
 ## Getting Started
 - install [Git](https://github.com/git-guides/install-git)
-- install [Bun](https://bun.com) package manager and test runner. 
+- install [Bun](https://bun.com) package manager and test runner.
 - install [Node](https://nodejs.org/en/download). I recommend using nvm for the installation of Node.
   Node is needed in this project, because Cloudflare's miniflare does not run on the Bun runtime.
 - Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud

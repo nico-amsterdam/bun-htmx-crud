@@ -36,7 +36,7 @@ function LoginPage({ lang }: { lang: string }): JSX.Element {
     <body class="full-container">
       <div id="content" class="login-container">
         <main id="main" class="login-box">
-          <h1 class="login-title">{_('Welcome to the Bun HTMX CRUD Demo')}</h1>
+          <h1 class="login-title">{_('Welcome to the HTMX CRUD Demo')}</h1>
           <p class="login-subtitle">{_('Sign in to continue')}</p>
 
           <div class="social-login-container">

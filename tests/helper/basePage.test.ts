@@ -23,7 +23,7 @@ describe('BaseHtml', () => {
 
   it('should include title', () => {
     const result = BaseHtml({ lang: 'en', body: '' })
-    expect(result).toContain('<title>Bun HTMX CRUD</title>')
+    expect(result).toContain('<title>HTMX CRUD Demo</title>')
   })
 
   it('should include manifest link', () => {
@@ -87,6 +87,6 @@ describe('BaseHtml', () => {
 
   it('should include meta description', () => {
     const result = BaseHtml({ lang: 'en', body: '' })
-    expect(result).toContain('<meta name="description" content="BUN HTMX CRUD project">')
+    expect(result).toContain('<meta name="description" content="HTMX CRUD Demo">')
   })
 })

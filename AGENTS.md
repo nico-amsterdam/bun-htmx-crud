@@ -23,7 +23,7 @@ The application uses HTMX for progressive enhancement. See `README.md` for the d
 Quick reference UI structure:
 
 ```
-Header: Bun JSX HTMX CRUD  [User] [Sign Out] [Lang ▼]
+Header: HTMX CRUD Demo [User] [Sign Out] [Lang ▼]
 Actions: [+ Add product] [Search product]
 Table: Name | Description | Price | Actions
 Row: product1 | desc | 10.00 € | [Edit] [Delete]

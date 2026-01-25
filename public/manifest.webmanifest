@@ -1,7 +1,7 @@
 {
-  "name": "Bun HTMX demo - on Cloudflare with Google/Github authentication",
-  "short_name": "Bun HTMX Elysia CRUD demo",
-  "description": "CRUD demo hosted on Cloudflare. Authenticate with Github/Google.",
+  "name": "HTMX CRUD Demo - on Cloudflare with Google/Github authentication",
+  "short_name": "HTMX CRUD Demo",
+  "description": "HTMX CRUD Demo hosted on Cloudflare. Authenticate with Github/Google.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#0a0a0a",
