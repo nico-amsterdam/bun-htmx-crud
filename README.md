@@ -1,8 +1,8 @@
-# Project starter: HTMX Elysia on Cloudflare
+# Project starter: HTMX with Elysia on Cloudflare
 
 ## Features
 
-- ⛅ **Cloud**: Deploy to Cloudflare without hassle
+- ⛅ **Cloud**: Deploy to Cloudflare without any hassle
 - 🔐 **Authentication**: Login with Google or GitHub. Easy setup instructions
 - 🤖 **AI agent instructions**: AGENTS.md for the AI coding agent
 - 🏭 **Server-side rendered**: Render HTML directly, no JSON API needed
@@ -18,7 +18,7 @@
 - 🌐 **Internationalization**: Switch between different languages
 - 🧱 **Security**: Content security policy, signed cookies, fetch metadata checks, CSRF
 tokens
-- 🚀 **Ready to launch**: Start directly to implement your business ideas
+- 🚀 **Ready to launch**: Skip the scaffolding. Get straight to implementing your business ideas
 
 ## Wireframe
 
@@ -109,6 +109,8 @@ In .env set your GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 
 In .env set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
 
+In `src/routes/auth/google.tsx` change the `redirect_uri_remote` to match with your production environment.
+
 ## Development
 
 To start the development server run:
@@ -117,6 +119,7 @@ bun dev
 ```
 
 Open the link shown in your terminal (typically http://localhost:8787) in your browser to see the result.
+When using another localhost port, adjust the url in the OAuth Client's and the update the `redirect_uri_local` in the `src/routes/auth/google.tsx` file accordingly.
 
 To run type checking in watch mode (auto-reloads on file changes):
 ```bash
