@@ -51,7 +51,7 @@ export const editProductController = new Elysia(ElysiaSettings)
         )).get()
 
         if (!product) {
-            set.headers['Location'] = '/product-list'
+            set.headers['Location'] = '/product-list' + page.locale.langQueryParam
             return new Response('', { status: 307 })
         }
 
