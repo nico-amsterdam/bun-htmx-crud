@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia'
-import { isHtmxEnabled } from 'htmx'
+import { isHtmxEnabled } from 'lib/htmx'
 import { ElysiaSettings } from 'config'
 import { newLocale } from 'i18n/translations'
 import { getContentLanguage } from 'i18n/lang'

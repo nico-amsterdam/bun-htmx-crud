@@ -1,14 +1,19 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq, isNull } from 'drizzle-orm'
-import { getDB, tables } from "db"
-import type { ModifyProductType } from "db"
-import { ProductFormFields, CancelButton, newPage, validateFormAndCreatePage, validateIdAndUpdatePage } from './productForm'
-import type { PageType } from './productForm'
-import { gotoProductList } from './productList'
+import { getDB, tables } from 'db'
+import type { ModifyProductType } from 'db'
 import { ElysiaSettings } from 'config'
-import { authRedirect } from '../auth'
 import { getContentLanguage } from 'i18n/lang'
+import { authRedirect } from '../auth'
+import { newPage } from './page'
+import type { PageType } from './page'
+import { CancelButton, ProductFormFields, validateIdAndUpdatePage, validateFormAndCreatePage } from './productForm'
+import { gotoProductList } from './productList'
+
+/*
+ * Functions with JSX
+ */
 
 function EditProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -30,6 +35,10 @@ function EditProduct(page: PageType): JSX.Element {
         </main>
     )
 }
+
+/*
+ * Elysia controllers
+ */
 
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
@@ -109,4 +118,3 @@ export const editProductController = new Elysia(ElysiaSettings)
             lang: t.String()
         })
     })
-

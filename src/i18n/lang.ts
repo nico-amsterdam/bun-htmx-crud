@@ -1,7 +1,14 @@
 import type { HTTPHeaders } from 'elysia'
 
+/*
+ * Global constants
+ */
 export const NON_DEFAULT_LANGUAGES = ['de', 'es', 'fr']
 export const STANDARD_LANGUAGE = 'en'
+
+/*
+ * Functions
+ */
 
 export function getLang(headers: Record<string, string | undefined>, query: Record<string, string>): string {
   // Get locale from URL query parameter, or accept-language header, default to 'en'

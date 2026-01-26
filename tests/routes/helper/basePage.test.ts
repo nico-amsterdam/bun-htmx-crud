@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { BaseHtml } from '../../src/routes/helper/basePage'
+import { BaseHtml } from 'routes/helper/basePage'
 
 describe('BaseHtml', () => {
   it('should generate valid HTML structure', () => {

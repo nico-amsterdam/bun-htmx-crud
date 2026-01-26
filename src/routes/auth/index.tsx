@@ -1,20 +1,18 @@
 import { Elysia } from 'elysia'
 import { Html, html } from '@elysiajs/html'
-import { isHtmxEnabled } from 'htmx'
+import { isHtmxEnabled } from 'lib/htmx'
 import { ElysiaSettings } from "config"
-import { getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
+import { getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { githubController } from './github'
 import { googleController } from './google'
 import { BaseHtml } from '../helper/basePage'
 import { newLocale } from 'i18n/translations'
 import { getContentLanguage } from 'i18n/lang'
+import { UserType } from './common'
 
-export type UserType = {
-  login: string,
-  name: string,
-  email: string,
-  avatar_url: string
-}
+/*
+ * Types
+ */
 
 type CookieValuesType = {
   id: string,
@@ -26,6 +24,27 @@ type CookieValuesType = {
   ipAddress: string,
   image: string
 }
+
+export { UserType } from './common'
+
+/*
+ * Variables
+ */
+
+const emptyAuthUserAndCSRFToken: { authUser: UserType, csrfToken: string } = {
+  'authUser': {
+    login: '',
+    name: '',
+    email: '',
+    avatar_url: ''
+  },
+  'csrfToken': ''
+}
+
+
+/*
+ * Functions
+ */
 
 function LoginPage({ lang }: { lang: string }): JSX.Element {
   const locale = newLocale(lang)
@@ -72,6 +91,10 @@ function SessionExpired({ lang }: { lang: string }): JSX.Element {
   )
 }
 
+/*
+ * Elysia controllers
+ */
+
 export const authController = new Elysia(ElysiaSettings)
   .use(githubController)
   .use(googleController)
@@ -93,16 +116,6 @@ export const authController = new Elysia(ElysiaSettings)
     return html(<LoginPage lang={lang} />)
   })
 
-const AUTH_REDIRECT_VALUES: { authUser: UserType, csrfToken: string } = {
-  'authUser': {
-    login: '',
-    name: '',
-    email: '',
-    avatar_url: ''
-  },
-  'csrfToken': ''
-}
-
 /*
  * Redirect to /auth/login when not logged-in.
  * If logged-in, add authUser and csrfToken to the context
@@ -115,7 +128,7 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
     // console.log('found: ' + rawcookie)
     if (rawcookie === undefined) {
       console.log('No cookie')
-      return AUTH_REDIRECT_VALUES
+      return emptyAuthUserAndCSRFToken
     }
     try {
       const cookieContent = JSON.parse(rawcookie) as CookieValuesType
@@ -124,7 +137,7 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
         || cookieContent.userAgent !== userAgent
         || cookieContent.ipAddress !== ip) {
         console.log('Cookie does not match user')
-        return AUTH_REDIRECT_VALUES
+        return emptyAuthUserAndCSRFToken
       }
       const user = {
         login: cookieContent.login,
@@ -139,7 +152,7 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
       }
     } catch (e) {
       console.log('Session cookie did not parse')
-      return AUTH_REDIRECT_VALUES
+      return emptyAuthUserAndCSRFToken
     }
   })
   .onBeforeHandle({ as: 'scoped' }, ({ set, csrfToken }) => {

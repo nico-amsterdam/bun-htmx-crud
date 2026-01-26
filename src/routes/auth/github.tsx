@@ -1,9 +1,13 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
-import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
-import type { UserType } from './'
+import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
+import type { UserType } from './common'
+
+/*
+ * Types
+ */
 
 type AccessTokenResponse = {
   access_token: string,
@@ -18,7 +22,15 @@ type TokenCheckResponse = {
   error_description: string
 }
 
+/*
+ * Variables
+ */
+
 const secretKey = createSecretKey(Buffer.from('key-object-secret'));
+
+/*
+ * Elysia controllers
+ */
 
 export const githubController = new Elysia(ElysiaSettings)
   .get('/auth/github', async ({ headers, query, set, cookie: { SESSION } }) => {

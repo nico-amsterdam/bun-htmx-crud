@@ -60,23 +60,23 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 ## Directory structure
 
 ```text
-├── client/
-│   └── src/
-├── migrations/
-├── public/
-│   ├── css/
-│   ├── image/
-│   └── javascript/
-│       └── vendor/
-├── src/
-│   ├── config/
-│   ├── db/
-│   ├── htmx/
-│   ├── i18n/
+├── client/src/        # client-side code
+├── migrations/        # database migrations (generated)
+├── public/            # public assets
+│   ├── css/           # stylesheets
+│   ├── image/         # images
+│   └── javascript/    # compiled client-side code
+│       └── vendor/    # 3rd party javascript
+|
+├── src/               # server-side code
+│   ├── config/        # configuration
+│   ├── db/            # database schema
+│   ├── lib/           # general purpose code
+│   ├── i18n/          # internationalization
 │   └── routes/
-│       ├── auth/
-│       ├── helper/
-│       └── product/
+│       ├── auth/      # OAuth authentication (Google/GitHub)
+│       ├── helper/    # Shared utilities and middleware
+│       └── product/   # Example CRUD feature (replace with your domain)
 └── tests/
 ```
 

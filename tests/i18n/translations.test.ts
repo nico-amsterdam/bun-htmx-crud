@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { translate, newLocale } from '../../src/i18n/translations'
+import { translate, newLocale } from 'i18n/translations'
 
 describe('translate', () => {
   describe('basic translations', () => {

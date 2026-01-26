@@ -1,3 +1,7 @@
+/*
+ * Classes
+ */
+
 export abstract class HttpHeader {
   // Requests: https://htmx.org/docs/#request-headers
   static readonly HxBoosted = "HX-Boosted"
@@ -22,6 +26,10 @@ export abstract class HttpHeader {
   static readonly HxTriggerAfterSettle = "HX-Trigger-After-Settle"
   static readonly HxTriggerAfterSwap = "HX-Trigger-After-Swap"
 }
+
+/*
+ * Functions
+ */
 
 export function isHtmxEnabled(request: Request) {
   return request.headers.get(HttpHeader.HxRequest) == "true"

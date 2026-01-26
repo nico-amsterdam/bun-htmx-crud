@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'bun:test'
-import { HttpHeader, isHtmxEnabled } from '../../src/htmx/index'
+import { isHtmxEnabled } from 'lib/htmx'
 
 describe('isHtmxEnabled', () => {
   it('should return true when HX-Request header is "true"', () => {

@@ -1,7 +1,17 @@
 import type { ElysiaConfig } from 'elysia';
 import Container from 'typedi'
 
-export const getEnv = () => Container.get<Env>('env')
+/*
+ * Functions
+ */
+
+export function getEnv() {
+  return Container.get<Env>('env')
+}
+
+/*
+ * Variables
+ */
 
 export const ElysiaSettings = {
   aot: false,

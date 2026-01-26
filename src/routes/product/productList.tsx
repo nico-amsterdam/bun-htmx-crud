@@ -1,16 +1,21 @@
 import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { asc } from 'drizzle-orm'
-import { HttpHeader, isHtmxEnabled } from 'htmx'
-import { getDB, tables, ProductType } from "db"
-import { newPage } from './productForm'
-import type { PageType } from './productForm'
+import { HttpHeader, isHtmxEnabled } from 'lib/htmx'
+import { getDB, tables } from "db"
+import type { ProductType } from "db"
+import { newPage } from './page'
+import type { PageType } from './page'
 import { ElysiaSettings } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
 import { Body } from '../helper/body'
 import { LanguageSwitcher } from '../helper/languageSwitcher'
 import { getContentLanguage } from 'i18n/lang'
+
+/*
+ * Functions with JSX
+ */
 
 function Product({ page, product }: { page: PageType, product: ProductType }): JSX.Element {
     const { id, name, description, price } = product
@@ -118,6 +123,10 @@ export async function gotoProductList(headers: HTTPHeaders, lang: string): Promi
         <Main {...page} />
     )
 }
+
+/*
+ * Elysia controllers
+ */
 
 export const productListController = new Elysia(ElysiaSettings)
     .use(html())

@@ -1,11 +1,18 @@
 import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
-import { getDB, tables, AddProductType } from "db"
-import { PageType, ProductFormFields, CancelButton, newPage, validateFormAndCreatePage } from './productForm'
-import { gotoProductList } from './productList'
+import { getDB, tables } from 'db'
+import type { AddProductType } from 'db'
 import { ElysiaSettings } from 'config'
-import { authRedirect } from '../auth'
 import { getContentLanguage } from 'i18n/lang'
+import { authRedirect } from '../auth'
+import { newPage } from './page'
+import type { PageType } from './page'
+import { CancelButton, ProductFormFields, validateFormAndCreatePage } from './productForm'
+import { gotoProductList } from './productList'
+
+/*
+ * Functions with JSX
+ */
 
 function AddProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -29,6 +36,10 @@ function AddProduct(page: PageType): JSX.Element {
         </main>
     )
 }
+
+/*
+ * Elysia controllers
+ */
 
 export const addProductController = new Elysia(ElysiaSettings)
     .use(html())

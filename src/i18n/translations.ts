@@ -1,4 +1,7 @@
-// Simple translation function for server-side JSX
+/*
+ * Types
+ */
+
 type Translations = Record<string, Record<string, string>>
 
 type translateFnType = (key: string, ...args: any[]) => string
@@ -8,6 +11,10 @@ export type LocaleType = {
   langQueryParam: string
   t: translateFnType
 }
+
+/*
+ * Functions
+ */
 
 export function translate(lang: string, key: string, args: string[]): string {
   let translation = translations[lang]?.[key] || translations['en'][key] || key;
@@ -27,6 +34,10 @@ export function newLocale(lang: string): LocaleType {
   const langQueryParam = lang === 'en' ? '' : '?lang=' + lang
   return { lang, t, langQueryParam }
 }
+
+/*
+ * Variables
+ */
 
 const translations: Translations = {
   // Technically the English to English translation is not needed,

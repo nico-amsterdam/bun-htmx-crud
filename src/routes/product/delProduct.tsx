@@ -2,11 +2,17 @@ import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { getDB, tables } from "db"
-import { PageType, CancelButton, newPage } from './productForm'
-import { gotoProductList } from './productList'
 import { ElysiaSettings } from 'config'
-import { authRedirect } from '../auth'
 import { getContentLanguage } from 'i18n/lang'
+import { authRedirect } from '../auth'
+import { newPage } from './page'
+import type { PageType } from './page'
+import { CancelButton } from './productForm'
+import { gotoProductList } from './productList'
+
+/*
+ * Functions with JSX
+ */
 
 function DelProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
@@ -30,6 +36,10 @@ function DelProduct(page: PageType): JSX.Element {
         </main>
     )
 }
+
+/*
+ * Elysia controllers
+ */
 
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())

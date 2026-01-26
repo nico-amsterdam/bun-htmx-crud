@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'bun:test'
-import { NON_DEFAULT_LANGUAGES, getLang, getContentLanguage, setContentLanguage } from '../../src/i18n/lang'
 import type { HTTPHeaders } from 'elysia'
+import { NON_DEFAULT_LANGUAGES, getLang, getContentLanguage, setContentLanguage } from 'i18n/lang'
 
 describe('NON_DEFAULT_LANGUAGES', () => {
   it('should contain supported non-English languages', () => {

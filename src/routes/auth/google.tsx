@@ -1,11 +1,12 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
 import { getEnv, ElysiaSettings } from "config"
-import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from './securityHelper'
+import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 
-const redirect_uri_local = 'http://localhost:8787/auth/google'
-const redirect_uri_remote = 'https://htmx-crud.nico-amsterdam.workers.dev/auth/google'
+/*
+ * Types
+ */
 
 type AccessTokenResponse = {
   access_token: string,
@@ -25,12 +26,27 @@ type TokenCheckResponse = {
   error_description: string
 }
 
+/*
+ * Variables
+ */
+
+const redirect_uri_local = 'http://localhost:8787/auth/google'
+const redirect_uri_remote = 'https://htmx-crud.nico-amsterdam.workers.dev/auth/google'
+
+const secretKey = createSecretKey(Buffer.from('key-object-secret'));
+
+/*
+ * functions
+ */
+
 function getRedirectUri(headers: Record<string, string | undefined>) {
   const protocol = headers['x-forwarded-proto'] || 'http'
   return (protocol === 'http' ? redirect_uri_local : redirect_uri_remote)
 }
 
-const secretKey = createSecretKey(Buffer.from('key-object-secret'));
+/*
+ * Elysia controllers
+ */
 
 export const googleController = new Elysia(ElysiaSettings)
   .get('/auth/google', async ({ headers, query, set, cookie: { SESSION } }) => {

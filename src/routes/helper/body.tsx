@@ -1,6 +1,6 @@
 import { Html } from '@elysiajs/html'
 import type { LocaleType } from 'i18n/translations'
-import type { UserType } from '../auth'
+import type { UserType } from 'routes/auth'
 
 export function Body({user, locale, child, contentClass}: {user: UserType, locale: LocaleType, child: JSX.Element, contentClass: string}): JSX.Element {
     const _ = locale.t
