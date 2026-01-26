@@ -67,7 +67,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │   ├── image/         # images
 │   └── javascript/    # compiled client-side code
 │       └── vendor/    # 3rd party javascript
-|
+│
 ├── src/               # server-side code
 │   ├── config/        # configuration
 │   ├── db/            # database schema
@@ -77,7 +77,8 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │       ├── auth/      # OAuth authentication (Google/GitHub)
 │       ├── helper/    # Shared utilities and middleware
 │       └── product/   # Example CRUD feature (replace with your domain)
-└── tests/
+│
+└── tests/             # subfolders in tests follow the src/ structure
 ```
 
 ## Getting Started
