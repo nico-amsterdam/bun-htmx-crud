@@ -3,5 +3,9 @@
   "include": [
     "**/*.ts",
     "../src/**/*"
-  ]
+  ],
+  "compilerOptions": {
+    "types": ["bun-types",
+              "../worker-configuration.d.ts"]
+  }
 }
