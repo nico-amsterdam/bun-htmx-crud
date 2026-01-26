@@ -66,7 +66,7 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 │   ├── css/           # stylesheets
 │   ├── image/         # images
 │   └── javascript/    # compiled client-side code
-│       └── vendor/    # 3rd party javascript
+│       └── vendor/    # 3rd party javascript libraries
 │
 ├── src/               # server-side code
 │   ├── config/        # configuration
@@ -86,9 +86,12 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 - install [Bun](https://bun.com) package manager and test runner.
 - install [Node](https://nodejs.org/en/download). I recommend using nvm for the installation of Node.
   Node is needed in this project, because Cloudflare's miniflare does not run on the Bun runtime.
-- Download, clone or fork the source from https://github.com/nico-amsterdam/bun-htmx-crud
+- [Create a GitHub project with this template](https://github.com/nico-amsterdam/bun-htmx-crud/generate) and get the project without git history.
+Or download, clone or fork the source code
+```bash
+git clone https://github.com/nico-amsterdam/bun-htmx-crud.git
+```
 
-  `git clone https://github.com/nico-amsterdam/bun-htmx-crud.git`
 - run:
 
 ```bash
@@ -134,9 +137,11 @@ In the wrangler.jsonc set your GITHUB_CLIENT_ID and GOOGLE_CLIENT_ID
 In .env set your Cloudflare account id. This is a hex string of 32 chars,
 which can be seen in the url of https://dash.cloudflare.com/ when logged in.
 
+For the first deployment, change the secrets for the signed cookies in `src/config/index.ts`. Do not expose these secrets.
+
 To deploy to cloudflare:
 ```bash
-bun wrangler login  # login on your Cloudflare account
+bun wrangler login   # login on your Cloudflare account
 bun create:db        # interactive: use DB as binding
 ```
 
