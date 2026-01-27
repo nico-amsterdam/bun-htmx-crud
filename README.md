@@ -178,6 +178,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 
 - Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
 - Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
+- The assets in the `/public` folder have cache-control settings in the `_headers` file. After changing a css file, you might see that browser still uses a cached version. Force the use of the new stylesheet by changing it's `t=` query parameter in the `basePage.ts` file.
 
 ## Available Scripts
 
