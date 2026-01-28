@@ -174,7 +174,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 - The content of the local database can be quickly viewed with `bun dbcat:db:dev`
 - If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will automatically use this token (instead of `wrangler login`). Make sure that the token has enough permissions.
 
-<img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
+<img width="358" height="177" alt="permissions" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
 - Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
 - Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
@@ -220,12 +220,12 @@ Error: 7500: You do not have permission to perform this operation
 ```
 
 To fix, reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
-1. Go to Workers & Pages → htmx-crud → Settings → Variables
-2. Scroll to D1 Databases section
-3. Click "Add" and select your recreated database
-4. Remove old database bindings
+1. Go to Workers & Pages → htmx-crud → Bindings
+2. In the table with types, click the edit button for the D1 Database
+3. Reconnect the worker with the correct database
 
-<img width="495" height="273" alt="image" src="https://github.com/user-attachments/assets/4cfb4dfa-cdb7-4e0e-aaeb-4b4d65d33dec" />
+<img width="423" height="271" alt="Fix database binding" src="https://github.com/user-attachments/assets/9bdced9d-b67d-49f4-be79-5f7ed85e5421" />
+
 
 ### Common Errors
 
