@@ -172,7 +172,7 @@ Open the shown link by the deploy:app command in your browser to see the result.
 - Run `bun logtail` to view the log of the application running on Cloudflare
 - Run `bun studio:db` to view the production database with Drizzle Studio. Needs the Cloudflare environment settings in the .env file. Create the Cloudflare token with the following additional account permission: D1:Edit
 - The content of the local database can be quickly viewed with `bun dbcat:db:dev`
-- If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will use automatically this token (instead of `wrangler login`). Make sure that the token has enough permissions.
+- If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will automatically use this token (instead of `wrangler login`). Make sure that the token has enough permissions.
 
 <img width="358" height="177" alt="image" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
@@ -214,13 +214,13 @@ Open the shown link by the deploy:app command in your browser to see the result.
 
 ### Database Reconnection
 
-If the remote database is deleted (`bun wrangler d1 delete bun-htmx-crud`) and recreated, you may encounter errors like:
+If the remote database is deleted (`bun wrangler d1 delete htmx-crud`) and recreated, you may encounter errors like:
 ```
 Error: 7500: You do not have permission to perform this operation
 ```
 
 To fix, reconnect the worker with the correct database in the [Cloudflare dashboard](https://dash.cloudflare.com/):
-1. Go to Workers & Pages → bun-htmx-crud → Settings → Variables
+1. Go to Workers & Pages → htmx-crud → Settings → Variables
 2. Scroll to D1 Databases section
 3. Click "Add" and select your recreated database
 4. Remove old database bindings
