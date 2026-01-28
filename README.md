@@ -115,6 +115,8 @@ In .env set your GITHUB_CLIENT_ID and GITHUB_CLIENT_SECRET
 
 In `src/routes/auth/google.tsx` change the `redirect_uri_remote` to match with your production environment.
 
+
+
 ## Development
 
 To start the development server run:
@@ -157,6 +159,13 @@ bun secret:github
 ```
 
 Open the shown link by the deploy:app command in your browser to see the result.
+
+## Video Guide - From Scratch to Cloudflare
+
+This video shows how to set everything up from scratch, deploy it to Cloudflare, and gives a quick tour of some of the app’s features.
+
+https://github.com/user-attachments/assets/7489d524-3229-46a9-a48c-efe58c99432d
+
 
 ## OAuth2 (or OpenID connect) security
 
