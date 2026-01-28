@@ -449,9 +449,9 @@ Error: 7500: You do not have permission to perform this operation
 ```
 
 Reconnect in Cloudflare dashboard:
-1. Workers & Pages → htmx-crud → Settings → Variables
-2. D1 Databases section → Add → Select recreated database
-3. Remove old bindings
+1. Workers & Pages → htmx-crud → Bindings
+2. D1 Database → Edit → Select recreated database
+
 
 ### Common Issues
 - **Migration failures**: Verify `DB_ID` in `.env` matches `wrangler.jsonc`
