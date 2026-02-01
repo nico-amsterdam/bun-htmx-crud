@@ -187,7 +187,7 @@ https://github.com/user-attachments/assets/7489d524-3229-46a9-a48c-efe58c99432d
 
 - Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
 - Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
-- The assets in the `/public` folder have cache-control settings in the `_headers` file. After changing a css file, you might see that browser still uses a cached version. Force the use of the new stylesheet by changing it's `t=` query parameter in the `basePage.ts` file.
+
 
 ## Available Scripts
 
@@ -242,3 +242,4 @@ To fix, reconnect the worker with the correct database in the [Cloudflare dashbo
 - **Auth errors**: Verify OAuth secrets are set with `bun secret:google` and `bun secret:github`
 - **Type errors**: Run `bun typecheck` to identify type issues before deployment
 - **Slow TypeScript checks and/or errors like: `Expression produces a union type that is too complex to represent`**: Types becomes too complex if in too many places variables are added to the context. Do not overuse this mechanism, it also makes type checking slow. If the variables are not needed in the parent controller, cast the return type like this: `.use(your-plugin as unknown as Elysia)`. Time the typechecker with `time bun typecheck`. Find hotspots with the commands `bunx tsc --generateTrace trace --noEmit --incremental false` and `bunx @typescript/analyze-trace trace/`. The [go TypeScript checker](https://github.com/microsoft/typescript-go) is in many cases faster.
+- **Browser not using the latest css file**: The assets in the `/public` folder have cache-control settings in the `_headers` file. Force the use of the new stylesheet by changing it's `t=` query parameter in the `src/routes/helper/basePage.ts` file.

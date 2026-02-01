@@ -162,7 +162,7 @@ See `src/routes/auth/google.tsx` and `src/routes/auth/github.tsx`.
 
 ### Security Helper
 
-Key security utilities in `src/routes/auth/securityHelper.ts`:
+Key security utilities in `src/lib/security.ts`:
 
 - `generateSecureRandomString()`: Cryptographically secure random IDs
 - `getIp()`: Extracts real client IP from Cloudflare headers
@@ -457,3 +457,4 @@ Reconnect in Cloudflare dashboard:
 - **Migration failures**: Verify `DB_ID` in `.env` matches `wrangler.jsonc`
 - **Auth errors**: Ensure OAuth secrets set with `bun secret:google` and `bun secret:github`
 - **Type errors**: Run `bun typecheck` before deployment
+- **Browser not using the latest css file**: Change `t=` query parameter in `src/routes/helper/basePage.ts`
