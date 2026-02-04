@@ -181,12 +181,13 @@ https://github.com/user-attachments/assets/7489d524-3229-46a9-a48c-efe58c99432d
 - Run `bun logtail` to view the log of the application running on Cloudflare
 - Run `bun studio:db` to view the production database with Drizzle Studio. Needs the Cloudflare environment settings in the .env file. Create the Cloudflare token with the following additional account permission: D1:Edit
 - The content of the local database can be quickly viewed with `bun dbcat:db:dev`
-- If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will automatically use this token (instead of `wrangler login`). Make sure that the token has enough permissions.
+- Automatically replicate your database around the world to improve global latency for read actions. Enable read replication for the database in the [Cloudflare dashboard](https://dash.cloudflare.com/)
+- If you define a CLOUDFLARE_API_TOKEN environment variable in the .env file, wrangler will automatically use this token (instead of `wrangler login`). Make sure that the token has enough permissions
 
 <img width="358" height="177" alt="permissions" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
-- Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.).
-- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`.
+- Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.)
+- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`
 
 
 ## Available Scripts
@@ -241,5 +242,5 @@ To fix, reconnect the worker with the correct database in the [Cloudflare dashbo
 - **Migration failures**: Ensure `DB_ID` in `.env` matches the database_id in `wrangler.jsonc`
 - **Auth errors**: Verify OAuth secrets are set with `bun secret:google` and `bun secret:github`
 - **Type errors**: Run `bun typecheck` to identify type issues before deployment
-- **Slow TypeScript checks and/or errors like: `Expression produces a union type that is too complex to represent`**: Types becomes too complex if in too many places variables are added to the context. Do not overuse this mechanism, it also makes type checking slow. If the variables are not needed in the parent controller, cast the return type like this: `.use(your-plugin as unknown as Elysia)`. Time the typechecker with `time bun typecheck`. Find hotspots with the commands `bunx tsc --generateTrace trace --noEmit --incremental false` and `bunx @typescript/analyze-trace trace/`. The [go TypeScript checker](https://github.com/microsoft/typescript-go) is in many cases faster.
-- **Browser not using the latest css file**: The assets in the `/public` folder have cache-control settings in the `_headers` file. Force the use of the new stylesheet by changing it's `t=` query parameter in the `src/routes/helper/basePage.ts` file.
+- **Slow TypeScript checks and/or errors like: `Expression produces a union type that is too complex to represent`**: Types becomes too complex if in too many places variables are added to the context. Do not overuse this mechanism, it also makes type checking slow. If the variables are not needed in the parent controller, cast the return type like this: `.use(your-plugin as unknown as Elysia)`. Time the typechecker with `time bun typecheck`. Find hotspots with the commands `bunx tsc --generateTrace trace --noEmit --incremental false` and `bunx @typescript/analyze-trace trace/`. The [go TypeScript checker](https://github.com/microsoft/typescript-go) is in many cases faster
+- **Browser not using the latest css file**: The assets in the `/public` folder have cache-control settings in the `_headers` file. Force the use of the new stylesheet by changing it's `t=` query parameter in the `src/routes/helper/basePage.ts` file

@@ -14,7 +14,9 @@ import { getLang, setContentLanguage } from 'i18n/lang'
 
 export default {
   async fetch(request: Request, env: Env) {
-    const db = drizzle(env.DB, { schema, logger: true })
+    // Use Cloudflare sessions to support read replication. Cast D1DatabaseSession type.
+    const cloudflareDB = env.DB.withSession() as unknown as D1Database
+    const db = drizzle(cloudflareDB, { schema, logger: true })
     // inject db and env
     Container.set('DrizzleDB', db)
     Container.set('env', env)
