@@ -7,7 +7,7 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
     return (
         <body class={`container light lang-${locale.lang}`} data-script="on every htmx:sendError call #networkErrDialog.showModal()">
             <a href="#main" id="skip-link" class="skip-link">Skip to main content</a>
-            <section id="content" class={contentClass}>
+            <div id="content" class={contentClass}>
                 <header class="page-header">
                     <div class="topbar">
                         <h1>{_('HTMX CRUD Demo')}</h1>
@@ -50,7 +50,7 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
                     <p>{_('Offline? Check your connection')}</p>
                     <button id="closeNetworkErrDialogBtn" aria-controls="networkErrDialog" data-script="on click call #networkErrDialog.close()">Close</button>
                 </dialog>
-            </section>
+            </div>
         </body>
     )
 }
