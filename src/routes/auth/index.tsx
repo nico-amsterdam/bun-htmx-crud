@@ -130,7 +130,7 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
   .resolve({ as: 'scoped' }, ({ headers, cookie: { SESSION } }) => {
     const ip = getIp(headers)
     const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])
-    if (SESSION === undefined) {
+    if (SESSION.value === undefined) {
       console.log('No cookie')
       return emptyAuthUserAndCSRFToken
     }
