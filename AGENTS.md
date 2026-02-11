@@ -407,11 +407,10 @@ function validateFormAndCreatePage(name, description, price, lang) {
 Global error handler in `src/index.ts`:
 
 ```typescript
-.onError(({ code, error, set, status }) => {
+.onError(({ code, error, redirect, request }) => {
   if (code === 'INVALID_COOKIE_SIGNATURE') {
     // Handle session tampering
-    set.headers['Location'] = '/auth/login'
-    return new Response('', { status: 307 })
+    return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
   }
 })
 ```

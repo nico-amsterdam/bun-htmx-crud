@@ -1,8 +1,10 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
-import { getEnv, ElysiaSettings } from "config"
+import { getEnv, ElysiaSettings, LANDING_PAGE_PATH } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
+import { getBaseURL } from 'lib/url'
+import { AUTH_PATH, LOGIN_PATH } from './common'
 import type { UserType } from './common'
 
 /*
@@ -33,21 +35,19 @@ const secretKey = createSecretKey(Buffer.from('key-object-secret'));
  */
 
 export const githubController = new Elysia(ElysiaSettings)
-  .get('/auth/github', async ({ headers, query, set, cookie: { SESSION } }) => {
+  .get(AUTH_PATH + '/github', async ({ headers, query, redirect, request, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {
       console.log(query.error_description)
       // user cancelled, go to login page
-      set.headers['Location'] = '/auth/login'
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
     const ip = getIp(headers)
     const stateArray = decodeURIComponent(query.state || '').split('?lang=')
     const verifyState = calcStateHmac(headers, secretKey)
     if (verifyState !== stateArray[0]) {
       console.log('state has been tampered')
-      set.headers['Location'] = '/auth/login'
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
     const langQueryParam = NON_DEFAULT_LANGUAGES.includes(stateArray[1]) ? '?lang=' + stateArray[1] : ''
     const tokenAccessResponse = await fetch('https://github.com/login/oauth/access_token', {
@@ -70,8 +70,7 @@ export const githubController = new Elysia(ElysiaSettings)
     if (access_token === undefined || githubAccessToken.error !== undefined) {
       console.log(githubAccessToken.error_description)
       // incorrect secret?
-      set.headers['Location'] = '/auth/login' + langQueryParam
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH + langQueryParam, 307)
     }
 
     /*
@@ -106,8 +105,7 @@ export const githubController = new Elysia(ElysiaSettings)
 
     if (checkedTokenInfo.user.login === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
-      set.headers['Location'] = '/auth/login' + langQueryParam
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH + langQueryParam, 307)
     }
 
     const sessionId = generateSecureRandomString();
@@ -126,8 +124,7 @@ export const githubController = new Elysia(ElysiaSettings)
     if (protocol === 'https') SESSION.secure = true;
 
     // go to main page
-    set.headers['Location'] = '/product-list' + langQueryParam
-    return new Response('', { status: 307 })
+    return redirect(getBaseURL(request.url) + LANDING_PAGE_PATH + langQueryParam, 307)
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
@@ -151,8 +148,8 @@ export const githubController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .get('/auth/to-github', async ({ headers, set }) => {
+  .get(AUTH_PATH + '/to-github', async ({ headers, redirect, set }) => {
     const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + getContentLanguage(set.headers))
-    set.headers['Location'] = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state
-    return new Response('', { status: 307 })
+    const redirectTo = 'https://github.com/login/oauth/authorize?client_id=' + getEnv().GITHUB_CLIENT_ID + '&prompt=consent&state=' + state
+    return redirect(redirectTo, 307)
   })

@@ -8,7 +8,11 @@ import { googleController } from './google'
 import { BaseHtml } from '../helper/basePage'
 import { newLocale } from 'i18n/translations'
 import { getContentLanguage } from 'i18n/lang'
-import { UserType } from './common'
+import { getBaseURL } from 'lib/url'
+import type { UserType } from './common'
+import { LOGIN_PATH, AUTH_PATH } from './common'
+
+
 
 /*
  * Types
@@ -25,11 +29,13 @@ type CookieValuesType = {
   image: string
 }
 
-export { UserType } from './common'
+export type { UserType } from './common'
 
 /*
  * Variables
  */
+
+export { LOGIN_PATH }
 
 const emptyAuthUserAndCSRFToken: { authUser: UserType, csrfToken: string } = {
   'authUser': {
@@ -49,8 +55,8 @@ const emptyAuthUserAndCSRFToken: { authUser: UserType, csrfToken: string } = {
 function LoginPage({ lang }: { lang: string }): JSX.Element {
   const locale = newLocale(lang)
   const _ = locale.t
-  const toGithubLink = '/auth/to-github' + locale.langQueryParam
-  const toGoogleLink = '/auth/to-google' + locale.langQueryParam
+  const toGithubLink = AUTH_PATH + '/to-github' + locale.langQueryParam
+  const toGoogleLink = AUTH_PATH + '/to-google' + locale.langQueryParam
   const body =
     <body class="full-container">
       <div id="content" class="login-container">
@@ -83,7 +89,7 @@ function SessionExpired({ lang }: { lang: string }): JSX.Element {
   return (
     <dialog open class="relogin" aria-labelledby="dialog-title">
       <h3 id="dialog-title">{_('Session expired')}</h3>
-      <form method="get" action="/auth/login">
+      <form method="get" action={ LOGIN_PATH }>
         <p>{_('Please login again.')}</p>
         <button class="btn btn-primary" autofocus>{_('Login')}</button>
       </form>
@@ -99,11 +105,11 @@ export const authController = new Elysia(ElysiaSettings)
   .use(githubController)
   .use(googleController)
   .use(html())
-  .post('/auth/login', ({ html, set }) => {
+  .post(LOGIN_PATH, ({ html, set }) => {
     const lang = getContentLanguage(set.headers)
     return html(<SessionExpired lang={lang} />)
   })
-  .get('/auth/login', ({ html, request, set, cookie: { SESSION } }) => {
+  .get(LOGIN_PATH, ({ html, request, set, cookie: { SESSION } }) => {
     const lang = getContentLanguage(set.headers)
     if (isHtmxEnabled(request)) {
       // Show error to user in the current part of the screen. The login link will swap the whole page.
@@ -122,16 +128,16 @@ export const authController = new Elysia(ElysiaSettings)
  */
 export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect' })
   .resolve({ as: 'scoped' }, ({ headers, cookie: { SESSION } }) => {
-    const rawcookie = SESSION.value as string
     const ip = getIp(headers)
     const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])
-    // console.log('found: ' + rawcookie)
-    if (rawcookie === undefined) {
+    if (SESSION === undefined) {
       console.log('No cookie')
       return emptyAuthUserAndCSRFToken
     }
+    // console.log('found: ' + SESSION.toString())
     try {
-      const cookieContent = JSON.parse(rawcookie) as CookieValuesType
+      const cookieContent = SESSION.value as CookieValuesType
+
       if (!cookieContent.login
         || cookieContent.login.indexOf(':') < 0
         || cookieContent.userAgent !== userAgent
@@ -155,10 +161,9 @@ export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect'
       return emptyAuthUserAndCSRFToken
     }
   })
-  .onBeforeHandle({ as: 'scoped' }, ({ set, csrfToken }) => {
+  .onBeforeHandle({ as: 'scoped' }, ({ csrfToken, redirect, request }) => {
     if (csrfToken === '') {
-      set.headers['Location'] = '/auth/login'
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
   })
 

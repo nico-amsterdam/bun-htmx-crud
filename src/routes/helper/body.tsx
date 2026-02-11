@@ -1,5 +1,6 @@
 import { Html } from '@elysiajs/html'
 import type { LocaleType } from 'i18n/translations'
+import { LOGIN_PATH } from 'routes/auth'
 import type { UserType } from 'routes/auth'
 
 export function Body({user, locale, child, contentClass}: {user: UserType, locale: LocaleType, child: JSX.Element, contentClass: string}): JSX.Element {
@@ -19,7 +20,7 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
                         </span>
                         <span class="user">
                             <img width="50px" height="50px" id="user-image" src={user?.avatar_url} title={user?.name || _('Avatar')} />
-                            <button type="button" data-script={`on click go to url /auth/login${locale.langQueryParam}`} class="btn btn-default signout">➜] {_('Sign out')}</button>
+                            <button type="button" data-script={`on click go to url ${LOGIN_PATH}${locale.langQueryParam}`} class="btn btn-default signout">➜] {_('Sign out')}</button>
                         </span>
                     </div>
                     <div id="logos">

@@ -6,7 +6,7 @@ import { getDB, tables } from "db"
 import type { ProductType } from "db"
 import { newPage } from './page'
 import type { PageType } from './page'
-import { ElysiaSettings } from 'config'
+import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
 import { Body } from '../helper/body'
@@ -51,13 +51,13 @@ function Main(page: PageType): JSX.Element {
     return (
         <main id="main">
             <div class="form-actions">
-                <LanguageSwitcher linkTo='/product-list' locale={page.locale} />
+                <LanguageSwitcher linkTo={LANDING_PAGE_PATH} locale={page.locale} />
                 <button type="button" hx-get={`/add-product${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                     class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
                 </svg>{_('Add product')}</button>
-                <button id="refresh" class="btn refresh" title={_('Refresh')} type="button" hx-get={'/product-list' + page.locale.langQueryParam} hx-push-url="true" hx-target="#main">
+                <button id="refresh" class="btn refresh" title={_('Refresh')} type="button" hx-get={LANDING_PAGE_PATH + page.locale.langQueryParam} hx-push-url="true" hx-target="#main">
                     <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" width="1em" height="1em" viewBox="0 0 24 24"><g transform="translate(24 0) scale(-1 1)"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 11A8.1 8.1 0 0 0 4.5 9M4 5v4h4m-4 4a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4"></path></g></svg>
                 </button>
             </div>
@@ -113,7 +113,7 @@ on input or load
 export async function gotoProductList(headers: HTTPHeaders, lang: string): Promise<JSX.Element> {
     const page = newPage(lang)
 
-    headers[HttpHeader.HxReplaceURL] = `/product-list${page.locale.langQueryParam}`
+    headers[HttpHeader.HxReplaceURL] = `${LANDING_PAGE_PATH}${page.locale.langQueryParam}`
     headers[HttpHeader.HxRetarget] = "#main"
     headers[HttpHeader.HxReswap] = "outerHTML"
 
@@ -132,7 +132,7 @@ export const productListController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
-        '/product-list',
+        LANDING_PAGE_PATH,
         async ({ authUser, html, request, set }) => {
             const page = newPage(getContentLanguage(set.headers))
             page.user = authUser

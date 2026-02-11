@@ -3,7 +3,8 @@ import { html, Html } from '@elysiajs/html'
 import { and, eq, isNull } from 'drizzle-orm'
 import { getDB, tables } from 'db'
 import type { ModifyProductType } from 'db'
-import { ElysiaSettings } from 'config'
+import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
+import { getBaseURL } from 'lib/url'
 import { getContentLanguage } from 'i18n/lang'
 import { authRedirect } from '../auth'
 import { newPage } from './page'
@@ -43,7 +44,7 @@ function EditProduct(page: PageType): JSX.Element {
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
-    .get('/product/:id/edit', async ({ csrfToken, html, set, params: { id } }) => {
+    .get('/product/:id/edit', async ({ csrfToken, html, redirect, request, set, params: { id } }) => {
         const page = newPage(getContentLanguage(set.headers))
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -51,8 +52,7 @@ export const editProductController = new Elysia(ElysiaSettings)
         )).get()
 
         if (!product) {
-            set.headers['Location'] = '/product-list' + page.locale.langQueryParam
-            return new Response('', { status: 307 })
+            return redirect(getBaseURL(request.url) + LANDING_PAGE_PATH + page.locale.langQueryParam, 307)
         }
 
         page.form.csrfToken = csrfToken

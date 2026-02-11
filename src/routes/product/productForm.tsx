@@ -1,5 +1,6 @@
 import { Html } from '@elysiajs/html'
 import { newPage } from './page';
+import { LANDING_PAGE_PATH } from 'config'
 import type { PageType } from './page';
 
 /*
@@ -32,7 +33,7 @@ export function ProductFormFields(page: PageType): JSX.Element {
 export function CancelButton(page: PageType): JSX.Element {
   const _ = page.locale.t
   return (
-    <button type="button" hx-get={'/product-list' + page.locale.langQueryParam} hx-push-url="true" hx-target="#main" class="btn btn-default">{_('Cancel')}</button>
+    <button type="button" hx-get={LANDING_PAGE_PATH + page.locale.langQueryParam} hx-push-url="true" hx-target="#main" class="btn btn-default">{_('Cancel')}</button>
   )
 }
 

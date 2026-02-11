@@ -1,5 +1,5 @@
 /*
- * Type shared between index.tsx and github.tsx.
+ * Shared code between index.tsx and github.tsx/google.tsx.
  *
  * Signalled by https://github.com/sverweij/dependency-cruiser
  */
@@ -10,3 +10,7 @@ export type UserType = {
   email: string
   avatar_url: string
 }
+
+export const AUTH_PATH = '/auth'
+
+export const LOGIN_PATH = AUTH_PATH + '/login'

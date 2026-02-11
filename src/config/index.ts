@@ -1,5 +1,6 @@
 import type { ElysiaConfig } from 'elysia';
 import Container from 'typedi'
+import { CloudflareAdapter } from 'elysia/adapter/cloudflare-worker'
 
 /*
  * Functions
@@ -13,8 +14,11 @@ export function getEnv() {
  * Variables
  */
 
+// logged-in landing page
+export const LANDING_PAGE_PATH = '/product-list'
+
 export const ElysiaSettings = {
-  aot: false,
+  adapter: CloudflareAdapter,
   normalize: false,
   cookie: {
     // when using sameSite: "strict", session cookies got lost in the temporary redirects

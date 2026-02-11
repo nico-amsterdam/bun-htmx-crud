@@ -1,7 +1,9 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
-import { getEnv, ElysiaSettings } from "config"
+import { getEnv, ElysiaSettings, LANDING_PAGE_PATH } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
+import { getBaseURL } from 'lib/url'
+import { AUTH_PATH, LOGIN_PATH } from './common'
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 
 /*
@@ -30,8 +32,8 @@ type TokenCheckResponse = {
  * Variables
  */
 
-const redirect_uri_local = 'http://localhost:8787/auth/google'
-const redirect_uri_remote = 'https://htmx-crud.nico-amsterdam.workers.dev/auth/google'
+const redirect_uri_local = `http://localhost:8787${AUTH_PATH}/google`
+const redirect_uri_remote = `https://htmx-crud.nico-amsterdam.workers.dev${AUTH_PATH}/google`
 
 const secretKey = createSecretKey(Buffer.from('key-object-secret'));
 
@@ -49,21 +51,19 @@ function getRedirectUri(headers: Record<string, string | undefined>) {
  */
 
 export const googleController = new Elysia(ElysiaSettings)
-  .get('/auth/google', async ({ headers, query, set, cookie: { SESSION } }) => {
+  .get(AUTH_PATH + '/google', async ({ headers, query, redirect, request, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {
       console.log(query.error_description)
       // user cancelled, go to login page
-      set.headers['Location'] = '/auth/login'
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
     const ip = getIp(headers)
     const stateArray = decodeURIComponent(query.state || '').split('?lang=')
     const verifyState = calcStateHmac(headers, secretKey)
     if (verifyState !== stateArray[0]) {
       console.log('state has been tampered')
-      set.headers['Location'] = '/auth/login'
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
     const langQueryParam = NON_DEFAULT_LANGUAGES.includes(stateArray[1]) ? '?lang=' + stateArray[1] : ''
     const redirect_uri = getRedirectUri(headers)
@@ -90,8 +90,7 @@ export const googleController = new Elysia(ElysiaSettings)
     if (access_token === undefined || googleAccessToken.error !== undefined) {
       console.log(googleAccessToken.error_description)
       // incorrect secret?
-      set.headers['Location'] = '/auth/login' + langQueryParam
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH + langQueryParam, 307)
     }
 
     const bearerAuth = token_type + ' ' + access_token
@@ -116,8 +115,7 @@ export const googleController = new Elysia(ElysiaSettings)
 
     if (checkedTokenInfo.sub === undefined || checkedTokenInfo.error !== undefined) {
       console.log(checkedTokenInfo.error_description)
-      set.headers['Location'] = '/auth/login' + langQueryParam
-      return new Response('', { status: 307 })
+      return redirect(getBaseURL(request.url) + LOGIN_PATH + langQueryParam, 307)
     }
 
     const sessionId = generateSecureRandomString();
@@ -136,8 +134,7 @@ export const googleController = new Elysia(ElysiaSettings)
     if (protocol === 'https') SESSION.secure = true;
 
     // go to main page
-    set.headers['Location'] = '/product-list' + langQueryParam
-    return new Response('', { status: 307 })
+    return redirect(getBaseURL(request.url) + LANDING_PAGE_PATH + langQueryParam, 307)
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
@@ -162,9 +159,9 @@ export const googleController = new Elysia(ElysiaSettings)
       )
     })
   })
-  .get('/auth/to-google', async ({ headers, set }) => {
+  .get(AUTH_PATH + '/to-google', async ({ headers, redirect, set }) => {
     const state = encodeURIComponent(calcStateHmac(headers, secretKey) + '?lang=' + getContentLanguage(set.headers))
     const redirect_uri = getRedirectUri(headers)
-    set.headers['Location'] = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
-    return new Response('', { status: 307 })
+    const redirectTo = 'https://accounts.google.com/o/oauth2/auth?client_id=' + getEnv().GOOGLE_CLIENT_ID + '&prompt=consent&redirect_uri=' + redirect_uri + '&scope=' + encodeURIComponent('https://www.googleapis.com/auth/userinfo.profile') + '&response_type=code&state=' + state
+    return redirect(redirectTo, 307)
   })
