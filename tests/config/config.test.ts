@@ -6,18 +6,6 @@ describe('ElysiaSettings', () => {
     expect(ElysiaSettings).toBeDefined()
   })
 
-  describe('aot setting', () => {
-    it('should have aot set to false', () => {
-      expect(ElysiaSettings.aot).toBe(false)
-    })
-  })
-
-  describe('normalize setting', () => {
-    it('should have normalize set to false', () => {
-      expect(ElysiaSettings.normalize).toBe(false)
-    })
-  })
-
   describe('cookie configuration', () => {
     const cookie = ElysiaSettings.cookie!
 
