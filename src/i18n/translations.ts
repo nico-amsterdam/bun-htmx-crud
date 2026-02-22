@@ -84,7 +84,8 @@ const translations: Translations = {
     'Choose site language': 'Choose site language',
     'Network error': 'Network error',
     'Offline? Check your connection': 'Offline? Check your connection',
-    'Dark mode switch': 'Dark mode switch'
+    'Dark mode switch': 'Dark mode switch',
+    'Skip to main content': 'Skip to main content'
   },
   es: {
     'Welcome to the HTMX CRUD Demo': 'Bienvenido a la Demo HTMX CRUD',
@@ -128,7 +129,8 @@ const translations: Translations = {
     'Choose site language': 'Elegir el idioma del sitio',
     'Network error': 'Error de red',
     'Offline? Check your connection': '¿Sin conexión? Revisa tu conexión',
-    'Dark mode switch': 'Interruptor de modo oscuro'
+    'Dark mode switch': 'Interruptor de modo oscuro',
+    'Skip to main content': 'Saltar al contenido principal'
   },
   fr: {
     'Welcome to the HTMX CRUD Demo': 'Bienvenue à la Démo HTMX CRUD',
@@ -172,7 +174,8 @@ const translations: Translations = {
     'Choose site language': 'Choisir la langue du site',
     'Network error': 'Erreur réseau',
     'Offline? Check your connection': 'Hors ligne? Vérifiez votre connexion',
-    'Dark mode switch': 'Commutateur de mode sombre'
+    'Dark mode switch': 'Commutateur de mode sombre',
+    'Skip to main content': 'Passer au contenu principal'
   },
   de: {
     'Welcome to the HTMX CRUD Demo': 'Willkommen zur HTMX CRUD Demo',
@@ -216,6 +219,7 @@ const translations: Translations = {
     'Choose site language': 'Sprache der Website auswählen',
     'Network error': 'Netzwerkfehler',
     'Offline? Check your connection': 'Offline? Prüfen Sie Ihre Verbindung',
-    'Dark mode switch': 'Schalter für den Dunkelmodus'
+    'Dark mode switch': 'Schalter für den Dunkelmodus',
+    'Skip to main content': 'Zum Hauptinhalt springen'
   }
 }

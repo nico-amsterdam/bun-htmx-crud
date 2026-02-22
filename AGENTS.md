@@ -8,13 +8,13 @@ This application serves as a **comprehensive template/boilerplate** for creating
 
 ## Technology Stack
 
-- **Runtime**: Bun (JavaScript runtime and package manager)
 - **Framework**: Elysia (lightweight, high-performance web framework)
 - **Frontend**: HTMX for progressive enhancement, server-side JSX rendering
 - **Database**: Cloudflare D1 (SQLite) with Drizzle ORM
 - **Authentication**: OAuth2 with Google and GitHub providers
-- **DI**: TypeDI container for dependency injection
 - **Deployment**: Cloudflare Workers (edge computing)
+- **Package manager**: Bun
+- **Test runner**: Bun
 
 ## User Interface
 
@@ -36,8 +36,8 @@ Key UI elements:
 - **Actions column**: Edit and delete buttons per row
 
 UI files:
-- `src/routes/product/list.tsx`: Main product list view
-- `src/routes/product/edit.tsx`: Inline edit form
+- `src/routes/product/productList.tsx`: Main product list view
+- `src/routes/product/editProduct.tsx`: Inline edit form
 
 ## Key Architectural Patterns
 

@@ -7,7 +7,7 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
     const _ = locale.t
     return (
         <body class={`container light lang-${locale.lang}`} data-script="on every htmx:sendError call #networkErrDialog.showModal()">
-            <a href="#main" id="skip-link" class="skip-link">Skip to main content</a>
+            <a href="#main" id="skip-link" class="skip-link">{_('Skip to main content')}</a>
             <div id="content" class={contentClass}>
                 <header class="page-header">
                     <div class="topbar">
