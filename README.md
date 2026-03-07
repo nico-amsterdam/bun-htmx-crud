@@ -16,8 +16,7 @@
 - ☎  **Mobile compatible**: Responsive web design. Manifest enables 'Add to Home Screen'
 - 🕶 **Accessible**: Follows WCAG and WAI-ARIA standards for accessibility
 - 🌐 **Internationalization**: Switch between different languages
-- 🧱 **Security**: Content security policy, signed cookies, fetch metadata checks, CSRF
-tokens
+- 🛡️ **Security**: Content security policy, signed cookies, fetch metadata checks, CSRF tokens
 - 🚀 **Ready to launch**: Skip the scaffolding. Get straight to implementing your business ideas
 
 ## Wireframe
@@ -71,8 +70,8 @@ Recommended HTMX reading material: [Following up "Mother of all htmx demos"](htt
 ├── src/               # server-side code
 │   ├── config/        # configuration
 │   ├── db/            # database schema
-│   ├── lib/           # general purpose code
 │   ├── i18n/          # internationalization
+│   ├── lib/           # general purpose code
 │   └── routes/
 │       ├── auth/      # OAuth authentication (Google/GitHub)
 │       ├── helper/    # Shared utilities and middleware

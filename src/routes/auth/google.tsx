@@ -138,6 +138,7 @@ export const googleController = new Elysia(ElysiaSettings)
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
+      iss: t.Optional(t.String()),
       scope: t.Optional(t.String()),
       state: t.Optional(t.String()),
       error: t.Optional(t.String()),
