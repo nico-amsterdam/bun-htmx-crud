@@ -7,7 +7,7 @@ import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
 import { getBaseURL } from 'lib/url'
 import { getContentLanguage } from 'i18n/lang'
 import { authRedirect } from '../auth'
-import { newPage } from './page'
+import { newPage, getPageHeaders } from './page'
 import type { PageType } from './page'
 import { CancelButton, ProductFormFields, validateIdAndUpdatePage, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
@@ -30,7 +30,7 @@ function EditProductForm(page: PageType): JSX.Element {
 function EditProduct(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <main id="main">
+        <main id="main" hx-headers={getPageHeaders(page)}>
             <h2>{_('Edit product')}</h2>
             <EditProductForm {...page} />
         </main>
@@ -44,8 +44,8 @@ function EditProduct(page: PageType): JSX.Element {
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
-    .get('/product/:id/edit', async ({ csrfToken, html, redirect, request, set, params: { id } }) => {
-        const page = newPage(getContentLanguage(set.headers))
+    .get('/product/:id/edit', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
+        const page = newPage(getContentLanguage(set.headers), headers.preload)
 
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
@@ -66,7 +66,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', async ({ authUser, csrfToken, html, set, body: { name, description, price, modifiedAt, csrf, lang }, params: { id } }) => {
+    .post('/product/:id/edit', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, modifiedAt, csrf, lang }, params: { id } }) => {
         const page = validateFormAndCreatePage(name, description, price, lang)
         const _ = page.locale.t
         page.form.csrfToken = csrfToken
@@ -107,7 +107,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             )
         }
 
-        return html(await gotoProductList(set.headers, lang))
+        return html(await gotoProductList(set.headers, lang, headers.preload))
     }, { // TypeBox
         body: t.Object({
             name: t.String(),

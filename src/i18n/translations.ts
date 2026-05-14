@@ -1,3 +1,5 @@
+import { STANDARD_LANGUAGE } from 'i18n/lang'
+
 /*
  * Types
  */
@@ -17,7 +19,7 @@ export type LocaleType = {
  */
 
 export function translate(lang: string, key: string, args: string[]): string {
-  let translation = translations[lang]?.[key] || translations['en'][key] || key;
+  let translation = translations[lang]?.[key] || translations[STANDARD_LANGUAGE][key] || key;
 
   // placeholder replacement
   for (let i = 0; i < args.length; i++) {
@@ -31,7 +33,7 @@ export function newLocale(lang: string): LocaleType {
   const t = function (key: string, ...args: string[]) {
     return translate(lang, key, args)
   }
-  const langQueryParam = lang === 'en' ? '' : '?lang=' + lang
+  const langQueryParam = lang === STANDARD_LANGUAGE ? '' : '?lang=' + lang
   return { lang, t, langQueryParam }
 }
 
@@ -53,7 +55,8 @@ const translations: Translations = {
     'HTMX CRUD Demo': 'HTMX CRUD Demo',
     'Sign out': 'Sign out',
     'Add product': 'Add product',
-    'Search product': 'Search product',
+    'Filter products': 'Filter products',
+    'Filter by product name\'s starting letters': 'Filter by product name\'s starting letters',
     'Results will update as you type': 'Results will update as you type',
     'Name': 'Name',
     'Description': 'Description',
@@ -64,7 +67,7 @@ const translations: Translations = {
     'Delete': 'Delete',
     'Refresh': 'Refresh',
     'No products available': 'No products available',
-    'No search results found': 'No search results found',
+    'No matching products found': 'No matching products found',
     'Name is required': 'Name is required',
     'Name is too long': 'Name is too long',
     'Description is too long': 'Description is too long',
@@ -98,7 +101,8 @@ const translations: Translations = {
     'HTMX CRUD Demo': 'HTMX CRUD Demo',
     'Sign out': 'Cerrar sesión',
     'Add product': 'Agregar producto',
-    'Search product': 'Buscar producto',
+    'Filter products': 'Filtrar productos',
+    'Filter by product name\'s starting letters': 'Filtrar por las letras iniciales del nombre del producto',
     'Results will update as you type': 'Los resultados se actualizarán mientras escribes',
     'Name': 'Nombre',
     'Description': 'Descripción',
@@ -109,7 +113,7 @@ const translations: Translations = {
     'Delete': 'Eliminar',
     'Refresh': 'Actualizar',
     'No products available': 'No hay productos disponibles',
-    'No search results found': 'No se encontraron resultados de búsqueda',
+    'No matching products found': 'No se encontraron productos coincidentes',
     'Name is required': 'El nombre es requerido',
     'Name is too long': 'El nombre es demasiado largo',
     'Description is too long': 'La descripción es demasiado larga',
@@ -143,7 +147,8 @@ const translations: Translations = {
     'HTMX CRUD Demo': 'Démo HTMX CRUD',
     'Sign out': 'Se déconnecter',
     'Add product': 'Ajouter un produit',
-    'Search product': 'Rechercher un produit',
+    'Filter products': 'Filtrer les produits',
+    'Filter by product name\'s starting letters': 'Filtrer par les premières lettres du nom du produit',
     'Results will update as you type': 'Les résultats se mettront à jour au fur et à mesure de votre saisie',
     'Name': 'Nom',
     'Description': 'Description',
@@ -154,7 +159,7 @@ const translations: Translations = {
     'Delete': 'Supprimer',
     'Refresh': 'Actualiser',
     'No products available': 'Aucun produit disponible',
-    'No search results found': 'Aucun résultat de recherche trouvé',
+    'No matching products found': 'Aucun produit correspondant trouvé',
     'Name is required': 'Le nom est requis',
     'Name is too long': 'Le nom est trop long',
     'Description is too long': 'La description est trop longue',
@@ -188,7 +193,8 @@ const translations: Translations = {
     'HTMX CRUD Demo': 'HTMX CRUD Demo',
     'Sign out': 'Abmelden',
     'Add product': 'Produkt hinzufügen',
-    'Search product': 'Produkt suchen',
+    'Filter products': 'Produkte filtern',
+    'Filter by product name\'s starting letters': 'Nach den Anfangsbuchstaben des Produktnamens filtern',
     'Results will update as you type': 'Ergebnisse werden beim Tippen aktualisiert',
     'Name': 'Name',
     'Description': 'Beschreibung',
@@ -199,7 +205,7 @@ const translations: Translations = {
     'Delete': 'Löschen',
     'Refresh': 'Aktualisieren',
     'No products available': 'Keine Produkte verfügbar',
-    'No search results found': 'Keine Suchergebnisse gefunden',
+    'No matching products found': 'Keine passenden Produkte gefunden',
     'Name is required': 'Name ist erforderlich',
     'Name is too long': 'Name ist zu lang',
     'Description is too long': 'Beschreibung ist zu lang',

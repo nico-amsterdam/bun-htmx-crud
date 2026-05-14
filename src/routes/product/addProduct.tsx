@@ -5,7 +5,7 @@ import type { AddProductType } from 'db'
 import { ElysiaSettings } from 'config'
 import { getContentLanguage } from 'i18n/lang'
 import { authRedirect } from '../auth'
-import { newPage } from './page'
+import { newPage, getPageHeaders } from './page'
 import type { PageType } from './page'
 import { CancelButton, ProductFormFields, validateFormAndCreatePage } from './productForm'
 import { gotoProductList } from './productList'
@@ -17,7 +17,7 @@ import { gotoProductList } from './productList'
 function AddProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <form hx-post="/add-product"><span>
+        <form hx-post="/product/new"><span>
             <ProductFormFields {...page} />
         </span>
             <button type="submit" class="btn btn-primary">{_('Create')}</button>
@@ -30,7 +30,7 @@ function AddProductForm(page: PageType): JSX.Element {
 function AddProduct(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <main id="main">
+        <main id="main" hx-headers={getPageHeaders(page)}>
             <h2>{_('Add new product')}</h2>
             <AddProductForm {...page} />
         </main>
@@ -45,15 +45,15 @@ export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
-        '/add-product',
-        ({ csrfToken, html, set }) => {
-            const page = newPage(getContentLanguage(set.headers))
+        '/product/new',
+        ({ csrfToken, headers, html, set }) => {
+            const page = newPage(getContentLanguage(set.headers), headers.preload)
             page.form.csrfToken = csrfToken
             return html(
                 <AddProduct {...page} />
             )
         })
-    .post('/add-product', async ({ authUser, csrfToken, html, set, body: { name, description, price, csrf, lang } }) => {
+    .post('/product/new', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, csrf, lang } }) => {
         const page = validateFormAndCreatePage(name, description, price, lang)
         const _ = page.locale.t
         page.form.csrfToken = csrfToken
@@ -86,7 +86,7 @@ export const addProductController = new Elysia(ElysiaSettings)
             )
         }
 
-        return html(await gotoProductList(set.headers, lang))
+        return html(await gotoProductList(set.headers, lang, headers.preload))
     }, { // TypeBox
         body: t.Object({
             name: t.String(),

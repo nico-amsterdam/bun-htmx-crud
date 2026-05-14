@@ -6,7 +6,7 @@ import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
 import { getContentLanguage } from 'i18n/lang'
 import { getBaseURL } from 'lib/url'
 import { authRedirect } from '../auth'
-import { newPage } from './page'
+import { newPage, getPageHeaders } from './page'
 import type { PageType } from './page'
 import { CancelButton } from './productForm'
 import { gotoProductList } from './productList'
@@ -28,10 +28,10 @@ function DelProductForm(page: PageType): JSX.Element {
 }
 
 function DelProduct(page: PageType): JSX.Element {
-  const _ = page.locale.t
+    const _ = page.locale.t
 
     return (
-        <main id="main">
+        <main id="main" hx-headers={getPageHeaders(page)}>
             <h2>{_("Delete product '{0}'", page.form.values.name)}</h2>
             <DelProductForm {...page} />
         </main>
@@ -45,9 +45,9 @@ function DelProduct(page: PageType): JSX.Element {
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect)  // redirects or sets authUser and csrfToken
-    .get('/product/:id/delete', async ({ csrfToken, html, redirect, request, set, params: { id } }) => {
+    .get('/product/:id/delete', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
 
-        const page = newPage(getContentLanguage(set.headers))
+        const page = newPage(getContentLanguage(set.headers), headers.preload)
         const product = await getDB().select().from(tables.products).where(and(
             eq(tables.products.id, +id)
         )).get()
@@ -66,14 +66,14 @@ export const delProductController = new Elysia(ElysiaSettings)
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ csrfToken, html, set, params: { id }, body: { csrf, lang } }) => {
+    .post('/product/:id/delete', async ({ csrfToken, headers, html, set, params: { id }, body: { csrf, lang } }) => {
         if (csrfToken === csrf) {
             // Delete product
             await getDB().delete(tables.products).where(
                 eq(tables.products.id, +id)
             )
         }
-        return html(await gotoProductList(set.headers, lang))
+        return html(await gotoProductList(set.headers, lang, headers.preload))
     }, { // TypeBox
         body: t.Object({
             csrf: t.String(),
