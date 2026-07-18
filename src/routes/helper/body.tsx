@@ -6,7 +6,7 @@ import type { UserType } from 'routes/auth'
 export function Body({user, locale, child, contentClass}: {user: UserType, locale: LocaleType, child: JSX.Element, contentClass: string}): JSX.Element {
     const _ = locale.t
     return (
-        <body class={`container light lang-${locale.lang}`} data-script="on every htmx:sendError call #networkErrDialog.showModal()">
+        <body class={`container light lang-${locale.lang}`}>
             <a href="#main" id="skip-link" class="skip-link">{_('Skip to main content')}</a>
             <div id="content" class={contentClass}>
                 <header class="page-header">
@@ -46,7 +46,7 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
                     </div>
                 </header>
                 {child}
-                <dialog id="networkErrDialog" data-script="on click if target is me call #networkErrDialog.close()">
+                <dialog id="networkErrDialog" hx-ext="send-error-dialog" data-script="on click if target is me call #networkErrDialog.close()">
                     <h2>{_('Network error')}</h2>
                     <p>{_('Offline? Check your connection')}</p>
                     <button id="closeNetworkErrDialogBtn" aria-controls="networkErrDialog" data-script="on click call #networkErrDialog.close()">Close</button>

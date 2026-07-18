@@ -38,8 +38,8 @@ function Product({ page, product, index }: { page: PageType, product: ProductTyp
     return (
         <tr class={trClass} {...lastRowAttributes}>
             <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
-                data-script="on keyup if the event's key is 'Enter' trigger click"
-                hx-target="#main" tabindex="0">{name}</a></td>
+                data-no-script="on keyup if the event's key is 'Enter' trigger click"
+                hx-target="#main" tabindex="0" hx-ext="click-with-enter">{name}</a></td>
             <td>{description}</td>
             <td class="price">{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
             <td class="table-actions"><button type="button" hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
