@@ -5,7 +5,7 @@
   "version": "1.0.2",
   "scripts": {
     "update:types": "wrangler types",
-    "build:client": "bun build client/src/*.ts --outdir public/javascript/ --target browser --minify",
+    "build:client": "bun build client/src/*.ts --outdir public/javascript/ --target browser --minify --entry-naming '/[name].[ext]'",
     "typecheck": "tsc --noEmit",
     "typecheck:watch": "tsc --noEmit --watch",
     "create:db": "wrangler d1 create htmx-crud",
@@ -30,7 +30,7 @@
   "dependencies": {
     "@elysiajs/html": "^1.4.2",
     "drizzle-orm": "^0.45.2",
-    "elysia": "^1.4.28",
+    "elysia": "^1.4.29",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
@@ -39,6 +39,6 @@
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
     "typed-html": "^3.0.1",
-    "wrangler": "^4.91.0"
+    "wrangler": "^4.112.0"
   }
 }

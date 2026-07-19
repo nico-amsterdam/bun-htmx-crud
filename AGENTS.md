@@ -112,23 +112,9 @@ HTMX for dynamic interactions without full page reloads:
 </button>
 ```
 
-#### Hyperscript
-
-Inline [Hyperscript](https://hyperscript.org/) adds client-side logic:
-
-```typescript
-<button
-  _="on click toggle .hidden on #target"
-  class="btn">
-  Toggle
-</button>
-```
-
-**Security note**: When loading content from untrusted external sources (CMS, translations, SVGs), sanitize to remove inline scripts (`_` and `data-script` attributes, SVG with inline scripts, etc.).
-
 #### HTMX Extensions
 
-For complex client-side behavior beyond Hyperscript, build custom [HTMX extensions](https://htmx.org/extensions/building/):
+Build custom [HTMX extensions](https://htmx.org/extensions/building/) to add client-side logic:
 1. Put source in `client/src` directory
 2. Transform with `bun build:client` into minified JavaScript
 3. Include scripts in `basePage.ts`

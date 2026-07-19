@@ -14,10 +14,16 @@ export function BaseHtml({ lang, body }: { lang: string, body: JSX.Element }): s
   <link rel="stylesheet" href="/css/bootstrap3-un.css?t=20260104">
   <link rel="stylesheet" href="/css/auth.css?t=20260104">
   <script src="/javascript/vendor/htmx.min.js" integrity="sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz" crossorigin="anonymous"></script>
-  <script src="/javascript/vendor/_hyperscript.min.js" integrity="sha384-NzchC8z9HmP/Ed8cheGl9XuSrFSkDNHPiDl+ujbHE0F0I7tWC4rUnwPXP+7IvVZv" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-preserve-input.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-filter-table.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-server-search.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-toggle-no-results.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-click-with-enter.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-send-error-dialog.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-dark-mode-toggle.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-navigate.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-dialog-close.js" crossorigin="anonymous"></script>
+  <script src="/javascript/hx-language-switcher.js" crossorigin="anonymous"></script>
 </head>
 ${body}
 </html>

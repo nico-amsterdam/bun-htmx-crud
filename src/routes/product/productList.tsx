@@ -2,6 +2,7 @@ import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { and, asc, gt, like } from 'drizzle-orm'
 import { HttpHeader, isHtmxEnabled } from 'lib/htmx'
+import { toLikePattern } from 'lib/sql'
 import type { ProductType } from "db"
 import { getDB, tables } from "db"
 import type { PageType } from './page'
@@ -38,7 +39,6 @@ function Product({ page, product, index }: { page: PageType, product: ProductTyp
     return (
         <tr class={trClass} {...lastRowAttributes}>
             <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
-                data-no-script="on keyup if the event's key is 'Enter' trigger click"
                 hx-target="#main" tabindex="0" hx-ext="click-with-enter">{name}</a></td>
             <td>{description}</td>
             <td class="price">{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
@@ -72,40 +72,6 @@ function ProductList(page: PageType): JSX.Element {
     )
 }
 
-const CLIENT_SEARCH_HYPER_SCRIPT = `on load set my.value to #search-state.value
-on blur set #search-state.value to my.value
-on input or load
-    set matchCount to 0
-    set q to my value.toLowerCase().trim()
-    repeat in <#search-results tr/>
-        if its children[0].textContent.toLowerCase() contains q or its children[1].textContent.toLowerCase() contains q or its children[2].textContent contains q
-            remove .hide from it
-            increment matchCount
-        else
-            add .hide to it
-        end
-    end
-
-    if matchCount is 0
-        remove .hide from #noResults
-    else
-        add .hide to #noResults
-    end`
-
-const SERVER_SEARCH_HYPER_SCRIPT = `
-init
- set my.value to #search-state.value
- send startsearch to me
-on blur set #search-state.value to my.value`
-
-const AFTER_SWAP_HYPER_SCRIPT = `
-on htmx:afterSwap
-    if <#search-results tr/> exists
-        add .hide to #noResults
-    else
-        remove .hide from #noResults
-    end`
-
 function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
     const searchAttributes = page.preload ? {} : {
@@ -135,10 +101,11 @@ function Main(page: PageType): JSX.Element {
                         autofocus
                         {...searchAttributes}
                         aria-description={_('Results will update as you type')}
-                        data-script={page.preload ? CLIENT_SEARCH_HYPER_SCRIPT : SERVER_SEARCH_HYPER_SCRIPT} />
+                        hx-ext={page.preload ? 'preserve-input, filter-table' : 'preserve-input, server-search'}
+                        data-preserve-input="search-state" />
                 </div>
             </search>
-            <table class="table" data-script={page.preload ? '' : AFTER_SWAP_HYPER_SCRIPT}>
+            <table class="table" hx-ext={page.preload ? '' : 'toggle-no-results'}>
                 <thead>
                     <tr>
                         <th scope="col">{_('Name')}</th>
@@ -212,8 +179,9 @@ export const productListController = new Elysia(ElysiaSettings)
             // the findbyname url is only called when preload=off
             const page = newPage(getContentLanguage(set.headers), 'off')
             const lastProductName = (query.from ?? '')
+            const searchPattern = toLikePattern(query.search || '') + '%'
 
-            page.data.products = await getDB().select().from(tables.products).where(and(gt(tables.products.name, lastProductName), like(tables.products.name, (query.search || '') + '%'))).orderBy(asc(tables.products.name)).limit(page.data.pageSize + 1)
+            page.data.products = await getDB().select().from(tables.products).where(and(gt(tables.products.name, lastProductName), like(tables.products.name, searchPattern))).orderBy(asc(tables.products.name)).limit(page.data.pageSize + 1)
 
             return html(ProductListRows(page))
         }

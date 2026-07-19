@@ -27,7 +27,7 @@ This is a production-ready, server-side rendered web application template built 
 ### User Interface
 - Server-side rendered HTML with JSX templates
 - HTMX for dynamic interactions without full page reloads
-- Hyperscript for lightweight client-side logic
+- HTMX extensions for lightweight client-side logic
 - Responsive design with mobile compatibility
 - WCAG/WAI-ARIA accessibility compliance
 - Internationalization support (English, German, Spanish, French)

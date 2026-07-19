@@ -185,8 +185,7 @@ https://github.com/user-attachments/assets/7489d524-3229-46a9-a48c-efe58c99432d
 
 <img width="358" height="177" alt="permissions" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
-- Inline [Hyperscript](https://hyperscript.org/) is used to add client-side logic. When loading page content (CMS) or other parts (translations, svg's) from untrusted external sources, make sure to sanitize it and remove all inline scripts (_ and data-script attributes, svg with inline scripts, etc.)
-- Build [HTMX extensions](https://htmx.org/extensions/building/) if Hyperscript doesn't cut it for you. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`
+- Build [HTMX extensions](https://htmx.org/extensions/building/) to add client-side logic. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`
 
 
 ## Available Scripts

@@ -13,14 +13,14 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
                     <div class="topbar">
                         <h1>{_('HTMX CRUD Demo')}</h1>
                         <span class="color-scheme">
-                            <button id="light-switch" class="btn light" title={_('Dark mode switch')} type="button" data-script="on click toggle .light on <body /> toggle .dark on <body />">
+                            <button id="light-switch" class="btn light" title={_('Dark mode switch')} type="button" hx-ext="dark-mode-toggle">
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" title="Dark mode switch" width="1.5em" height="1.5em" viewBox="0 0 24 24" class="sun"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0m-5 0h1m8-9v1m8 8h1m-9 8v1M5.6 5.6l.7.7m12.1-.7l-.7.7m0 11.4l.7.7m-12.1-.7l-.7.7"></path></svg>
                                 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" title="Dark mode switch" width="1.5em" height="1.5em" viewBox="0 0 24 24" class="moon"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3h.393a7.5 7.5 0 0 0 7.92 12.446A9 9 0 1 1 12 2.992z"></path></svg>
                             </button>
                         </span>
                         <span class="user">
                             <img width="50px" height="50px" id="user-image" src={user?.avatar_url} title={user?.name || _('Avatar')} />
-                            <button type="button" data-script={`on click go to url ${LOGIN_PATH}${locale.langQueryParam}`} class="btn btn-default signout">➜] {_('Sign out')}</button>
+                            <button type="button" hx-ext="navigate" data-navigate={`${LOGIN_PATH}${locale.langQueryParam}`} class="btn btn-default signout">➜] {_('Sign out')}</button>
                         </span>
                     </div>
                     <div id="logos">
@@ -46,10 +46,10 @@ export function Body({user, locale, child, contentClass}: {user: UserType, local
                     </div>
                 </header>
                 {child}
-                <dialog id="networkErrDialog" hx-ext="send-error-dialog" data-script="on click if target is me call #networkErrDialog.close()">
+                <dialog id="networkErrDialog" hx-ext="send-error-dialog, dialog-close">
                     <h2>{_('Network error')}</h2>
                     <p>{_('Offline? Check your connection')}</p>
-                    <button id="closeNetworkErrDialogBtn" aria-controls="networkErrDialog" data-script="on click call #networkErrDialog.close()">Close</button>
+                    <button id="closeNetworkErrDialogBtn" aria-controls="networkErrDialog" hx-ext="dialog-close" data-dialog="#networkErrDialog">Close</button>
                 </dialog>
             </div>
         </body>
