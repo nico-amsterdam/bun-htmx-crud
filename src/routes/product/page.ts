@@ -15,7 +15,7 @@ type DataType = {
 type FormFieldsType = keyof BaseProductType
 
 type FormDataType = {
-  values: Partial<Record<FormFieldsType, string>>
+  values: Partial<Record<FormFieldsType | 'search', string>>
   errors: Partial<Record<FormFieldsType | 'general', string>>
   csrfToken: string
 }

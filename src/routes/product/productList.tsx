@@ -19,7 +19,7 @@ import { htmxRedirect } from 'routes/helper/htmx'
  * Functions with JSX
  */
 
-function Product({ page, product, index }: { page: PageType, product: ProductType, index: number }): JSX.Element {
+function Product({ page, product, index, search }: { page: PageType, product: ProductType, index: number, search: string }): JSX.Element {
     // do not display last row; that is used to determine if there are more rows available.
     if (index >= page.data.pageSize) {
         return <></>;
@@ -29,7 +29,7 @@ function Product({ page, product, index }: { page: PageType, product: ProductTyp
     const trClass = page.preload ? 'hide' : ''
     const isLastRowAndMoreExists = index === (page.data.pageSize - 1) && page.data.products.length > page.data.pageSize
     const lastRowAttributes = !isLastRowAndMoreExists ? {} : {
-        "hx-get": `/product/findbyname${getQueryString(page, { "from": name })}`
+        "hx-get": `/product/findbyname${getQueryString(page, { "from": name, "search": search })}`
         , "hx-trigger": "revealed"
         , "hx-swap": "afterend"
     }
@@ -52,7 +52,7 @@ function ProductListRows(page: PageType): JSX.Element {
     return (
         <>
             {page.data.products.map((product, idx) => (
-                <Product product={product} page={page} index={idx} />
+                <Product product={product} page={page} index={idx} search={page.form.values['search'] || ''} />
             ))}
         </>
     )
@@ -180,6 +180,7 @@ export const productListController = new Elysia(ElysiaSettings)
             const page = newPage(getContentLanguage(set.headers), 'off')
             const lastProductName = (query.from ?? '')
             const searchPattern = toLikePattern(query.search || '') + '%'
+            page.form.values['search'] = query.search
 
             page.data.products = await getDB().select().from(tables.products).where(and(gt(tables.products.name, lastProductName), like(tables.products.name, searchPattern))).orderBy(asc(tables.products.name)).limit(page.data.pageSize + 1)
 
