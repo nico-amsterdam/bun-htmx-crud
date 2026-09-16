@@ -12,6 +12,10 @@ sqlite.db
 .wrangler
 .dev.vars
 
+# generated code
+/public/javascript/*.js
+worker-configuration.d.ts
+
 # misc
 .DS_Store
 *.pem
