@@ -42,6 +42,10 @@ export const githubController = new Elysia(ElysiaSettings)
       // user cancelled, go to login page
       return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
     }
+    if (query.iss !== 'https://github.com/login/oauth') { // RFC 9207
+      console.log('issuer mismatch')
+      return redirect(getBaseURL(request.url) + LOGIN_PATH, 307)
+    }
     const ip = getIp(headers)
     const stateArray = decodeURIComponent(query.state || '').split('?lang=')
     const verifyState = calcStateHmac(headers, secretKey)
