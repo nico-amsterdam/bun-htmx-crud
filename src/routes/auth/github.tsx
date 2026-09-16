@@ -128,6 +128,7 @@ export const githubController = new Elysia(ElysiaSettings)
   }, {
     query: t.Object({
       code: t.Optional(t.String()),
+      iss: t.Optional(t.String()),
       state: t.Optional(t.String()),
       error: t.Optional(t.String()),
       error_description: t.Optional(t.String()),
