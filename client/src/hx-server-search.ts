@@ -1,19 +1,23 @@
-/*
+/**
  * Trigger an initial server search when an input is processed.
- * Use this on an input element that has hx-trigger including "startsearch",
- * alongside the preserve-input extension.
+ * Use this on an input element
+ * The `data-server-search` attribute must specify the event name.
+ * In the `hx-trigger` the event can be used to trigger the search.
  */
+import { forEachElementOnce } from './hx-extension-helpers'
+
 (function () {
-    'use strict'
+  'use strict'
 
-    htmx.defineExtension('server-search', {
-        onEvent: function (name: string, evt: CustomEvent) {
-            if (name === "htmx:afterProcessNode") {
-                const input = evt.detail.elt as HTMLInputElement
+  function initServerSearch(input: Element) {
+    const eventName = input.getAttribute('data-server-search')
+    if (!eventName) return
+    // Trigger initial search
+    input.dispatchEvent(new Event(eventName))
+  }
 
-                // Trigger initial search
-                input.dispatchEvent(new Event('startsearch'))
-            }
-        }
-    })
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-server-search', initServerSearch)
+  })
+
 })()

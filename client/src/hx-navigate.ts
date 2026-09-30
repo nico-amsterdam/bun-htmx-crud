@@ -1,21 +1,22 @@
-/*
+/**
  * Navigate to a URL on click.
- * Specify the URL via a data-navigate attribute.
+ * Specify the URL via the `data-navigate` attribute.
  */
+import { forEachElementOnce } from './hx-extension-helpers'
+
 (function () {
-    'use strict'
+  'use strict'
 
-    htmx.defineExtension('navigate', {
-        onEvent: function (name: string, evt: CustomEvent) {
-            if (name === "htmx:afterProcessNode") {
-                const elt = evt.detail.elt as HTMLElement
-                const url = elt.getAttribute('data-navigate')
-                if (!url) return
+  function initNavigate(elt: Element) {
+    const url = elt.getAttribute('data-navigate')
+    if (!url) return
 
-                elt.addEventListener('click', () => {
-                    window.location.href = url
-                })
-            }
-        }
+    elt.addEventListener('click', () => {
+      window.location.href = url
     })
+  }
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-navigate', initNavigate)
+  })
 })()

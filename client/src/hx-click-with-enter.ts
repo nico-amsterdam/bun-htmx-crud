@@ -1,21 +1,24 @@
-/*
+/**
  * Perform click on html element when Enter is typed.
- * Use this on a focusable element.
+ * Use this on a focusable element with `data-click-with-enter`.
  */
+import { forEachElementOnce } from './hx-extension-helpers'
+
 (function () {
   'use strict'
 
-  htmx.defineExtension('click-with-enter', {
-    onEvent: function (name: string, evt: CustomEvent) {
-      if (name === "htmx:afterProcessNode") {
-        const elt = evt.detail.elt as HTMLElement
+  function initClickWithEnter(elt: Element) {
+    if (!(elt instanceof HTMLElement)) return
 
-        elt.addEventListener('keyup', (ev: KeyboardEvent) => {
-          if (ev.key === 'Enter') {
-            elt.click()
-          }
-        })
+    elt.addEventListener('keyup', (ev: KeyboardEvent) => {
+      if (ev.key === 'Enter') {
+        elt.click()
       }
-    }
+    })
+  }
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-click-with-enter', initClickWithEnter)
   })
+
 })()

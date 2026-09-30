@@ -31,7 +31,7 @@ function DelProduct(page: PageType): JSX.Element {
     const _ = page.locale.t
 
     return (
-        <main id="main" hx-headers={getPageHeaders(page)}>
+        <main id="main" hx-headers:inherited={getPageHeaders(page)}>
             <h2>{_("Delete product '{0}'", page.form.values.name)}</h2>
             <DelProductForm {...page} />
         </main>

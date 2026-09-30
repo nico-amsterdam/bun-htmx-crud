@@ -1,16 +1,22 @@
+/**
+ * Show a modal when an htmx request fails.
+ * Use this controller on a Dialog element.
+ */
+import { forEachElementOnce } from './hx-extension-helpers'
+
 (function () {
-    'use strict'
+  'use strict'
 
-    htmx.defineExtension('send-error-dialog', {
-        onEvent: function (name: string, evt: CustomEvent) {
-            if (name === "htmx:afterProcessNode") {
-                const dlg = evt.detail.elt as HTMLDialogElement
+  function initSendErrorDialog(dlg: Element) {
+    if (!(dlg instanceof HTMLDialogElement)) return
 
-                document.body.addEventListener("htmx:sendError", (evt) => {
-                    dlg.showModal();
-                });
-
-            }
-        }
+    document.body.addEventListener('htmx:error', () => {
+      dlg.showModal()
     })
+  }
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-send-error-dialog', initSendErrorDialog)
+  })
+
 })()

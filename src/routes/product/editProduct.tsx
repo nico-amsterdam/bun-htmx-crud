@@ -30,7 +30,7 @@ function EditProductForm(page: PageType): JSX.Element {
 function EditProduct(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <main id="main" hx-headers={getPageHeaders(page)}>
+        <main id="main" hx-headers:inherited={getPageHeaders(page)}>
             <h2>{_('Edit product')}</h2>
             <EditProductForm {...page} />
         </main>

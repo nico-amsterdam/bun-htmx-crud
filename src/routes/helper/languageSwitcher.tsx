@@ -8,8 +8,8 @@ export function LanguageSwitcher({ linkTo, locale }: { linkTo: string, locale: L
         <select id="choose-lang" name="language"
             class="form-control language-switcher"
             aria-label={_('Choose site language')}
-            hx-ext="language-switcher"
-            data-base-url={linkTo}>
+            data-language-switcher="true"
+            data-language-switcher-base-url={linkTo}>
             <option value="en" lang="en" selected={locale.lang === 'en'}>English</option>
             <option value="es" lang="es" selected={locale.lang === 'es'}>Español</option>
             <option value="fr" lang="fr" selected={locale.lang === 'fr'}>Français</option>

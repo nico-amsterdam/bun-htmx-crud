@@ -9,7 +9,7 @@ This application serves as a **comprehensive template/boilerplate** for creating
 ## Technology Stack
 
 - **Framework**: Elysia (lightweight, high-performance web framework)
-- **Frontend**: HTMX for progressive enhancement, server-side JSX rendering
+- **Frontend**: HTMX 4 for progressive enhancement, server-side JSX rendering
 - **Database**: Cloudflare D1 (SQLite) with Drizzle ORM
 - **Authentication**: OAuth2 with Google and GitHub providers
 - **Deployment**: Cloudflare Workers (edge computing)
@@ -114,10 +114,53 @@ HTMX for dynamic interactions without full page reloads:
 
 #### HTMX Extensions
 
-Build custom [HTMX extensions](https://htmx.org/extensions/building/) to add client-side logic:
-1. Put source in `client/src` directory
-2. Transform with `bun build:client` into minified JavaScript
-3. Include scripts in `basePage.ts`
+HTMX 4 extensions use an event-based API instead of the HTMX 2 callback-based API. Build custom extensions to add client-side logic:
+
+1. Put source TypeScript files in `client/src`
+2. Transform them with `bun build:client` into minified JavaScript
+3. Include the output scripts in `src/routes/helper/basePage.ts`
+
+Use the right initialization pattern for the job:
+
+- **`htmx.onLoad`** — for attaching DOM event listeners to elements that may not have `hx-*` attributes. HTMX 4 only fires `htmx:after:init` for elements with HTMX attributes, so `htmx.onLoad` is used for buttons, selects, dialogs, etc.
+
+  ```typescript
+  import { forEachElementOnce } from './hx-extension-helpers'
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-my-extension', (target) => {
+      target.addEventListener('click', () => { /* ... */ })
+    })
+  })
+  ```
+
+- **`htmx.registerExtension`** — for lifecycle hooks such as `htmx_after_init`, `htmx_config_request`, `htmx_after_request`, etc.
+
+  ```typescript
+  htmx.registerExtension('my-ext', {
+    htmx_after_init(elt) { /* ... */ },
+    htmx_config_request(elt, detail) { /* detail.ctx contains request context */ }
+  })
+  ```
+
+HTMX 4 removed the `hx-ext` attribute. Extensions that need to target a specific element should use a `data-*` attribute and `htmx.onLoad` (or `htmx.registerExtension` if they hook into HTMX lifecycle events).
+
+#### HTMX 4 Configuration and Attribute Changes
+
+Global HTMX configuration is set in `src/routes/helper/basePage.ts` via a `<meta name="htmx-config">` tag:
+
+```typescript
+<meta name="htmx-config" content='{"includeIndicatorCSS":false,"defaultSwap":"outerHTML"}'>
+```
+
+Note the HTMX 4 config key names. Removed HTMX 2 keys such as `allowEval`, `defaultSwapStyle`, and `includeIndicatorStyles` are no longer used.
+
+Other HTMX 4 changes used in this codebase:
+
+- **Attribute inheritance is explicit** with the `:inherited` modifier. For example, shared headers on a parent element are declared as `hx-headers:inherited` so descendants inherit them.
+- **Event names are colon-separated**, e.g. `htmx:error`, `htmx:after:swap`, `htmx:config:request`.
+- **Response headers removed**: `HX-Trigger-After-Swap` and `HX-Trigger-After-Settle` are gone; use `HX-Trigger` instead.
+- **Request headers changed**: `HX-Trigger` is now `HX-Source`; `HX-Trigger-Name` is removed.
 
 ## Authentication Implementation
 
@@ -347,7 +390,7 @@ The `wrangler.jsonc` configures:
 
 ## HTMX Response Headers
 
-Custom utilities in `src/htmx/index.ts` for HTMX responses:
+Custom utilities in `src/lib/htmx.ts` for HTMX responses:
 
 ```typescript
 export function isHtmxEnabled(request: Request) {

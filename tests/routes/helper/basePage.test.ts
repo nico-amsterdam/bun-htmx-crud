@@ -44,8 +44,8 @@ describe('BaseHtml', () => {
   it('should include htmx-config meta tag', () => {
     const result = BaseHtml({ lang: 'en', body: '' })
     expect(result).toContain('htmx-config')
-    expect(result).toContain('allowEval')
-    expect(result).toContain('defaultSwapStyle')
+    expect(result).toContain('includeIndicatorCSS')
+    expect(result).toContain('defaultSwap')
   })
 
   it('should include bootstrap CSS', () => {

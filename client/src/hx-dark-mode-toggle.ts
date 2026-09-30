@@ -1,18 +1,19 @@
-/*
+/**
  * Toggle .light and .dark classes on the document body when clicked.
  */
-(function () {
-    'use strict'
+import { forEachElementOnce } from './hx-extension-helpers'
 
-    htmx.defineExtension('dark-mode-toggle', {
-        onEvent: function (name: string, evt: CustomEvent) {
-            if (name === "htmx:afterProcessNode") {
-                const elt = evt.detail.elt as HTMLElement
-                elt.addEventListener('click', () => {
-                    document.body.classList.toggle('light')
-                    document.body.classList.toggle('dark')
-                })
-            }
-        }
+(function () {
+  'use strict'
+
+  function initDarkModeToggle(elt: Element) {
+    elt.addEventListener('click', () => {
+      document.body.classList.toggle('light')
+      document.body.classList.toggle('dark')
     })
+  }
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-dark-mode-toggle', initDarkModeToggle)
+  })
 })()

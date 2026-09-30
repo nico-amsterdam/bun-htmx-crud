@@ -39,7 +39,7 @@ function Product({ page, product, index, search }: { page: PageType, product: Pr
     return (
         <tr class={trClass} {...lastRowAttributes}>
             <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
-                hx-target="#main" tabindex="0" hx-ext="click-with-enter">{name}</a></td>
+                hx-target="#main" tabindex="0" data-click-with-enter="true">{name}</a></td>
             <td>{description}</td>
             <td class="price">{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
             <td class="table-actions"><button type="button" hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
@@ -66,7 +66,7 @@ function ProductList(page: PageType): JSX.Element {
     }
     // return all products
     return (
-        <tbody id="search-results">
+        <tbody id="search-results" data-filter-table-target="filter">
             <ProductListRows {...page} />
         </tbody>
     )
@@ -76,13 +76,13 @@ function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
     const searchAttributes = page.preload ? {} : {
         "hx-get": `/product/findbyname${page.locale.langQueryParam}`
-        , "hx-trigger": "input changed delay:300ms, startsearch"
+        , "hx-trigger": "input changed delay:300ms, StartSearch"
         , "hx-target": "#search-results"
         , "hx-swap": "innerHTML"
     }
     const productCount = page.data.products.length // zero or more than zero products?
     return (
-        <main id="main" hx-headers={getPageHeaders(page)}>
+        <main id="main" hx-headers:inherited={getPageHeaders(page)} {...(page.preload && { 'data-filter-table': true })} >
             <div class="form-actions">
                 <LanguageSwitcher linkTo={LANDING_PAGE_PATH} locale={page.locale} />
                 <button type="button" hx-get={`/product/new${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
@@ -101,11 +101,11 @@ function Main(page: PageType): JSX.Element {
                         autofocus
                         {...searchAttributes}
                         aria-description={_('Results will update as you type')}
-                        hx-ext={page.preload ? 'preserve-input, filter-table' : 'preserve-input, server-search'}
-                        data-preserve-input="search-state" />
+                        data-preserve-input="search-state"
+                        {...(page.preload ? { 'data-filter-table-target': 'input' } : { 'data-server-search': 'StartSearch', 'data-toggle-no-results': 'no-results' })} />
                 </div>
             </search>
-            <table class="table" hx-ext={page.preload ? '' : 'toggle-no-results'}>
+            <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">{_('Name')}</th>
@@ -117,7 +117,7 @@ function Main(page: PageType): JSX.Element {
                 <ProductList {...page} />
                 <tfoot id="search-results-footer">
                     <tr id="announceResults" aria-live="assertive" aria-atomic="true">
-                        <td id="noResults" colspan="4" class={productCount === 0 ? '' : 'hide'}>{productCount === 0 ? _('No products available') : _('No matching products found')}</td>
+                        <td id="no-results" data-filter-table-target="noResults" colspan="4" class={productCount === 0 ? '' : 'hide'}>{productCount === 0 ? _('No products available') : _('No matching products found')}</td>
                     </tr>
                 </tfoot>
             </table>

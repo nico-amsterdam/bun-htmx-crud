@@ -3,17 +3,17 @@
  */
 
 export abstract class HttpHeader {
-  // Requests: https://htmx.org/docs/#request-headers
+  // Requests: https://four.htmx.org/docs/#request-headers
   static readonly HxBoosted = "HX-Boosted"
   static readonly HxCurrentUrl = "HX-Current-URL"
   static readonly HxHistoryRestoreRequest = "HX-History-Restore-Request"
-  static readonly HxPrompt = "HX-Prompt"
   static readonly HxRequest = "HX-Request"
+  static readonly HxRequestType = "HX-Request-Type"
+  static readonly HxSource = "HX-Source"
   static readonly HxTarget = "HX-Target"
-  static readonly HxTriggerName = "HX-Trigger-Name"
-  static readonly HxTrigger = "HX-Trigger"
+  static readonly HxPrompt = "HX-Prompt" // hx-prompt extension
 
-  // Responses: https://htmx.org/docs/#response-headers
+  // Responses: https://four.htmx.org/docs/#response-headers
   static readonly HxLocation = "HX-Location"
   static readonly HxPushURL = "HX-Push-Url"
   static readonly HxRedirect = "HX-Redirect"
@@ -22,9 +22,7 @@ export abstract class HttpHeader {
   static readonly HxReswap = "HX-Reswap"
   static readonly HxRetarget = "HX-Retarget"
   static readonly HxReselect = "HX-Reselect"
-  // HxTrigger = "HX-Trigger"  already defined
-  static readonly HxTriggerAfterSettle = "HX-Trigger-After-Settle"
-  static readonly HxTriggerAfterSwap = "HX-Trigger-After-Swap"
+  static readonly HxTrigger = "HX-Trigger"
 }
 
 /*

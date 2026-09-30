@@ -1,5 +1,4 @@
 declare const htmx: {
-    defineExtension: (name: string, definition: {
-        onEvent: (name: string, evt: CustomEvent) => void
-    }) => void
+  registerExtension: (name: string, definition: Record<string, unknown>) => void
+  onLoad: (callback: (elt: Element) => void) => void
 }

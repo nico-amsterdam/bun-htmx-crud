@@ -40,7 +40,7 @@
 
 ## About this project
 
-Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/), with the option to deploy it on Cloudflare, so everything can run on the edge in the cloud.
+Rebuild of this [Vue CRUD Nuxt application](https://github.com/nico-amsterdam/vue-crud-nuxt) with [HTMX](https://four.htmx.org), [Bun](https://bun.com/) and [Elysia](https://elysiajs.com/), with the option to deploy it on Cloudflare, so everything can run on the edge in the cloud.
 
 There is a demo on https://htmx-crud.nico-amsterdam.workers.dev/. Login with your Google or GitHub account.
 
@@ -185,7 +185,8 @@ https://github.com/user-attachments/assets/7489d524-3229-46a9-a48c-efe58c99432d
 
 <img width="358" height="177" alt="permissions" src="https://github.com/user-attachments/assets/b9a2d706-d591-4eaf-9202-7965f91988f5" />
 
-- Build [HTMX extensions](https://htmx.org/extensions/building/) to add client-side logic. Put them in the `client/src` directory and transform them with `bun build:client` into minified javascript. Then, add the scripts in the `basePage.ts`
+- Build [HTMX 4 extensions](https://four.htmx.org/docs/extension-authoring-guide) to add client-side logic. Put source files in the `client/src` directory and transform them with `bun build:client` into minified JavaScript. Then add the scripts to `src/routes/helper/basePage.ts`.
+  HTMX 4 extensions are event-based: use `htmx.registerExtension` for lifecycle hooks and `htmx.onLoad` to initialize elements that do not have `hx-*` attributes.
 
 
 ## Available Scripts

@@ -1,26 +1,28 @@
-/*
+/**
  * Navigate to a language-specific URL when a select element changes.
- * Specify the base URL via data-base-url.
- * The selected option value is used as the lang query parameter.
+ * Specify the base URL via attribute data-language-switcher-base-url.
  */
+import { forEachElementOnce } from './hx-extension-helpers'
+
 (function () {
-    'use strict'
+  'use strict'
 
-    htmx.defineExtension('language-switcher', {
-        onEvent: function (name: string, evt: CustomEvent) {
-            if (name === "htmx:afterProcessNode") {
-                const select = evt.detail.elt as HTMLSelectElement
-                const baseUrl = select.getAttribute('data-base-url') || ''
+  function initLanguageSwitcher(select: Element) {
+    if (!(select instanceof HTMLSelectElement)) return
+    const baseUrl = select.getAttribute('data-language-switcher-base-url')
+    if (!baseUrl) return
 
-                select.addEventListener('change', () => {
-                    const lang = select.value
-                    if (lang === 'en') {
-                        window.location.href = baseUrl
-                    } else {
-                        window.location.href = `${baseUrl}?lang=${lang}`
-                    }
-                })
-            }
-        }
+    select.addEventListener('change', () => {
+      const lang = select.value
+      if (lang === 'en') {
+        window.location.href = baseUrl
+      } else {
+        window.location.href = `${baseUrl}?lang=${lang}`
+      }
     })
+  }
+
+  htmx.onLoad((elt) => {
+    forEachElementOnce(elt, 'data-language-switcher', initLanguageSwitcher)
+  })
 })()
