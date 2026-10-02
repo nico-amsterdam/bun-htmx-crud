@@ -76,7 +76,7 @@ function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
     const searchAttributes = page.preload ? {} : {
         "hx-get": `/product/findbyname${page.locale.langQueryParam}`
-        , "hx-trigger": "input changed delay:300ms, StartSearch"
+        , "hx-trigger": "load, input changed delay:300ms"
         , "hx-target": "#search-results"
         , "hx-swap": "innerHTML"
     }
@@ -102,7 +102,7 @@ function Main(page: PageType): JSX.Element {
                         {...searchAttributes}
                         aria-description={_('Results will update as you type')}
                         data-preserve-input="search-state"
-                        {...(page.preload ? { 'data-filter-table-target': 'input' } : { 'data-server-search': 'StartSearch', 'data-toggle-no-results': 'no-results' })} />
+                        {...(page.preload ? { 'data-filter-table-target': 'input' } : { 'data-toggle-no-results': 'no-results' })} />
                 </div>
             </search>
             <table class="table">
