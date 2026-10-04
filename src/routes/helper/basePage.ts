@@ -16,7 +16,6 @@ export function BaseHtml({ lang, body }: { lang: string, body: JSX.Element }): s
   <script src="/javascript/vendor/htmx.min.js" integrity="sha384-BvJpBiO8Kh31EqtJe5DRIeWrHWnCGkwytKs9NKFi86Hhw96dEqdEMzZDeK9iEGTc" crossorigin="anonymous"></script>
   <script src="/javascript/hx-preserve-input.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-filter-table.js" crossorigin="anonymous"></script>
-  <script src="/javascript/hx-server-search.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-toggle-no-results.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-click-with-enter.js" crossorigin="anonymous"></script>
   <script src="/javascript/hx-send-error-dialog.js" crossorigin="anonymous"></script>
