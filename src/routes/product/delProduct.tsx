@@ -18,7 +18,7 @@ import { gotoProductList } from './productList'
 function DelProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <form hx-post={`/product/${page.form.values.id}/delete`}>
+        <form hx-post={`/products/${page.form.values.id}/delete`}>
             <input type="hidden" name="csrf" id="csrf" value={page.form.csrfToken} />
             <input type="hidden" name="lang" id="lang" value={page.locale.lang} />
             <p>{_('The action cannot be undone.')}</p><button type="submit" class="btn btn-danger" autofocus>{_('Delete')}</button>
@@ -45,7 +45,7 @@ function DelProduct(page: PageType): JSX.Element {
 export const delProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect)  // redirects or sets authUser and csrfToken
-    .get('/product/:id/delete', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
+    .get('/products/:id/delete', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
 
         const page = newPage(getContentLanguage(set.headers), headers.preload)
         const product = await getDB().select().from(tables.products).where(and(
@@ -66,7 +66,7 @@ export const delProductController = new Elysia(ElysiaSettings)
             <DelProduct {...page} />
         )
     })
-    .post('/product/:id/delete', async ({ csrfToken, headers, html, set, params: { id }, body: { csrf, lang } }) => {
+    .post('/products/:id/delete', async ({ csrfToken, headers, html, set, params: { id }, body: { csrf, lang } }) => {
         if (csrfToken === csrf) {
             // Delete product
             await getDB().delete(tables.products).where(

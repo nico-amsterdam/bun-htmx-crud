@@ -15,7 +15,7 @@ export function getEnv() {
  */
 
 // logged-in landing page
-export const LANDING_PAGE_PATH = '/product-list'
+export const LANDING_PAGE_PATH = '/products'
 
 export const ElysiaSettings = {
   adapter: CloudflareAdapter,

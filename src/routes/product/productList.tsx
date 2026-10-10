@@ -29,7 +29,7 @@ function Product({ page, product, index, search }: { page: PageType, product: Pr
     const trClass = page.preload ? 'hide' : ''
     const isLastRowAndMoreExists = index === (page.data.pageSize - 1) && page.data.products.length > page.data.pageSize
     const lastRowAttributes = !isLastRowAndMoreExists ? {} : {
-        "hx-get": `/product/findbyname${getQueryString(page, { "from": name, "search": search })}`
+        "hx-get": `/products/findbyname${getQueryString(page, { "from": name, "search": search })}`
         , "hx-trigger": "revealed"
         , "hx-swap": "afterend"
     }
@@ -38,12 +38,12 @@ function Product({ page, product, index, search }: { page: PageType, product: Pr
 
     return (
         <tr class={trClass} {...lastRowAttributes}>
-            <td><a hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
+            <td><a hx-get={`/products/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-trigger="click"
                 hx-target="#main" tabindex="0" data-click-with-enter="true">{name}</a></td>
             <td>{description}</td>
             <td class="price">{priceInEuro}{priceInEuro !== '' ? ' €' : ''}</td>
-            <td class="table-actions"><button type="button" hx-get={`/product/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
-                {" "}<button type="button" hx-get={`/product/${id}/delete${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">{_('Delete')}</button></td>
+            <td class="table-actions"><button type="button" hx-get={`/products/${id}/edit${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-warning btn-xs">{_('Edit')}</button>
+                {" "}<button type="button" hx-get={`/products/${id}/delete${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-danger btn-xs">{_('Delete')}</button></td>
         </tr>
     )
 }
@@ -75,7 +75,7 @@ function ProductList(page: PageType): JSX.Element {
 function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
     const searchAttributes = page.preload ? {} : {
-        "hx-get": `/product/findbyname${page.locale.langQueryParam}`
+        "hx-get": `/products/findbyname${page.locale.langQueryParam}`
         , "hx-trigger": "load, input changed delay:300ms"
         , "hx-target": "#search-results"
         , "hx-swap": "innerHTML"
@@ -85,7 +85,7 @@ function Main(page: PageType): JSX.Element {
         <main id="main" hx-headers:inherited={getPageHeaders(page)} {...(page.preload && { 'data-filter-table': true })} >
             <div class="form-actions">
                 <LanguageSwitcher linkTo={LANDING_PAGE_PATH} locale={page.locale} />
-                <button type="button" hx-get={`/product/new${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
+                <button type="button" hx-get={`/products/new${page.locale.langQueryParam}`} hx-push-url="true" hx-target="#main" class="btn btn-default"><svg xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" aria-hidden="true" role="img" ssr="true" title="+"
                     class="plussign iconify iconify--mdi" width="1em" height="1em" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6z"></path>
@@ -174,7 +174,7 @@ export const productListController = new Elysia(ElysiaSettings)
     )
     .use(htmxRedirect)
     .get(
-        '/product/findbyname',
+        '/products/findbyname',
         async ({ html, set, query }) => {
             // the findbyname url is only called when preload=off
             const page = newPage(getContentLanguage(set.headers), 'off')

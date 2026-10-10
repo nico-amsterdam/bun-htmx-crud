@@ -36,8 +36,8 @@ Key UI elements:
 - **Actions column**: Edit and delete buttons per row
 
 UI files:
-- `src/routes/product/productList.tsx`: Main product list view
-- `src/routes/product/editProduct.tsx`: Inline edit form
+- `src/routes/products/productList.tsx`: Main product list view
+- `src/routes/products/editProduct.tsx`: Inline edit form
 
 ## Key Architectural Patterns
 
@@ -105,7 +105,7 @@ HTMX for dynamic interactions without full page reloads:
 
 ```typescript
 <button type="button"
-  hx-get={`/product/${id}/edit${page.locale.langQueryParam}`}
+  hx-get={`/products/${id}/edit${page.locale.langQueryParam}`}
   hx-push-url="true"
   hx-target="#main">
   {_('Edit')}
@@ -398,7 +398,7 @@ export function isHtmxEnabled(request: Request) {
 }
 
 // In routes:
-headers[HttpHeader.HxReplaceURL] = '/product-list'
+headers[HttpHeader.HxReplaceURL] = '/products'
 headers[HttpHeader.HxRetarget] = "#main"
 headers[HttpHeader.HxReswap] = "outerHTML"
 ```

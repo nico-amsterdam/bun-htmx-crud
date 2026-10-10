@@ -19,7 +19,7 @@ import { gotoProductList } from './productList'
 function EditProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <form hx-post={`/product/${page.form.values.id}/edit`}><span>
+        <form hx-post={`/products/${page.form.values.id}/edit`}><span>
             <ProductFormFields {...page} />
         </span><button type="submit" class="btn btn-primary">{_('Save')}</button>
             {" "}<CancelButton {...page} />
@@ -44,7 +44,7 @@ function EditProduct(page: PageType): JSX.Element {
 export const editProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
-    .get('/product/:id/edit', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
+    .get('/products/:id/edit', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {
         const page = newPage(getContentLanguage(set.headers), headers.preload)
 
         const product = await getDB().select().from(tables.products).where(and(
@@ -66,7 +66,7 @@ export const editProductController = new Elysia(ElysiaSettings)
             <EditProduct {...page} />
         )
     })
-    .post('/product/:id/edit', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, modifiedAt, csrf, lang }, params: { id } }) => {
+    .post('/products/:id/edit', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, modifiedAt, csrf, lang }, params: { id } }) => {
         const page = validateFormAndCreatePage(name, description, price, lang)
         const _ = page.locale.t
         page.form.csrfToken = csrfToken

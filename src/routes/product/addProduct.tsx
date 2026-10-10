@@ -17,7 +17,7 @@ import { gotoProductList } from './productList'
 function AddProductForm(page: PageType): JSX.Element {
     const _ = page.locale.t
     return (
-        <form hx-post="/product/new"><span>
+        <form hx-post="/products/new"><span>
             <ProductFormFields {...page} />
         </span>
             <button type="submit" class="btn btn-primary">{_('Create')}</button>
@@ -45,7 +45,7 @@ export const addProductController = new Elysia(ElysiaSettings)
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(
-        '/product/new',
+        '/products/new',
         ({ csrfToken, headers, html, set }) => {
             const page = newPage(getContentLanguage(set.headers), headers.preload)
             page.form.csrfToken = csrfToken
@@ -53,7 +53,7 @@ export const addProductController = new Elysia(ElysiaSettings)
                 <AddProduct {...page} />
             )
         })
-    .post('/product/new', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, csrf, lang } }) => {
+    .post('/products/new', async ({ authUser, csrfToken, headers, html, set, body: { name, description, price, csrf, lang } }) => {
         const page = validateFormAndCreatePage(name, description, price, lang)
         const _ = page.locale.t
         page.form.csrfToken = csrfToken

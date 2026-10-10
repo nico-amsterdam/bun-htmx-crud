@@ -10,7 +10,7 @@ export function BaseHtml({ lang, body }: { lang: string, body: JSX.Element }): s
   <meta name="theme-color" content="#fddcd0">
   <link rel="apple-touch-icon" href="/image/icon-192.png">
   <meta name="description" content="HTMX CRUD Demo">
-  <meta name="htmx-config" content='{"includeIndicatorCSS":false,"defaultSwap":"outerHTML"}'>
+  <meta name="htmx-config" content='includeIndicatorCSS:false defaultSwap:outerHTML'>
   <link rel="stylesheet" href="/css/bootstrap3-un.css?t=20260104">
   <link rel="stylesheet" href="/css/auth.css?t=20260104">
   <script src="/javascript/vendor/htmx.min.js" integrity="sha384-BvJpBiO8Kh31EqtJe5DRIeWrHWnCGkwytKs9NKFi86Hhw96dEqdEMzZDeK9iEGTc" crossorigin="anonymous"></script>
