@@ -9,7 +9,7 @@ import type { BunSQLiteDatabase } from 'drizzle-orm/bun-sqlite'
 
   console.log('Starting migrations')
 
-  migrate(db, { migrationsFolder: 'drizzle' })
+  migrate(db, { migrationsFolder: 'migrations' })
 
   console.log('Migrations complete.')
 })();
