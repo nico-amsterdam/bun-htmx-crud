@@ -9,6 +9,7 @@
 - ✨ **Modern user interface**: HTMX provides interactivity and update's page fragments
 - 📝 **Template system**: JSX: fully typed HTML embedded in the TypeScript source
 - 🧩 **Ergonomic web framework**: Elysia features type-safe routing and validation
+- ↻  **Hot reloading**: Hot Module Replacement is enabled during development
 - 💾 **Database**: Drizzle ORM with SQLite
 - 🔄 **Migrations**: Database migration system
 - ✅ **Testing**: 100+ unit tests. Run by Bun's speedy test runner
