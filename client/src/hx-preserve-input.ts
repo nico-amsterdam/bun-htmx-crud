@@ -19,6 +19,8 @@ import { forEachElementOnce } from './hx-extension-helpers'
 
     // Initialize value from state field
     input.value = stateField.value
+    // trigger event to notify other handlers
+    input.dispatchEvent(new Event("input", { bubbles: true }));
 
     // Save value on blur
     input.addEventListener('blur', () => {

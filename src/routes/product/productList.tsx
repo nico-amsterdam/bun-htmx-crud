@@ -76,7 +76,7 @@ function Main(page: PageType): JSX.Element {
     const _ = page.locale.t
     const searchAttributes = page.preload ? {} : {
         "hx-get": `/products/findbyname${page.locale.langQueryParam}`
-        , "hx-trigger": "load, input changed delay:300ms"
+        , "hx-trigger": "input changed delay:300ms"
         , "hx-target": "#search-results"
         , "hx-swap": "innerHTML"
     }
