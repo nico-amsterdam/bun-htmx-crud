@@ -13,7 +13,6 @@ import type { UserType } from './common'
 import { LOGIN_PATH, AUTH_PATH } from './common'
 
 
-
 /*
  * Types
  */
@@ -52,6 +51,12 @@ const emptyAuthUserAndCSRFToken: { authUser: UserType, csrfToken: string } = {
  * Functions
  */
 
+function languageLinks(path: string): string {
+  return ['en', 'es', 'fr', 'de']
+    .map((lang) => `<a href="${path}?lang=${lang}" hreflang="${lang}" lang="${lang}">${lang}</a>`)
+    .join(' ')
+}
+
 function LoginPage({ lang }: { lang: string }): JSX.Element {
   const locale = newLocale(lang)
   const _ = locale.t
@@ -75,6 +80,7 @@ function LoginPage({ lang }: { lang: string }): JSX.Element {
               {_('Continue with Google')}
             </a>
           </div>
+          <p class="login-languages">{languageLinks(LOGIN_PATH)}</p>
         </main>
       </div>
     </body>
