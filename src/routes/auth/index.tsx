@@ -57,6 +57,10 @@ function languageLinks(path: string): string {
     .join(' ')
 }
 
+/*
+ * Functions with JSX
+ */
+
 function LoginPage({ lang }: { lang: string }): JSX.Element {
   const locale = newLocale(lang)
   const _ = locale.t
