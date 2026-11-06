@@ -6,11 +6,14 @@ import { forEachElementOnce } from './hx-extension-helpers'
 (function () {
   'use strict'
 
+  function toggleDarkMode() {
+    document.body.classList.toggle('light')
+    document.body.classList.toggle('dark')
+  }
+
   function initDarkModeToggle(elt: Element) {
-    elt.addEventListener('click', () => {
-      document.body.classList.toggle('light')
-      document.body.classList.toggle('dark')
-    })
+    if (window.matchMedia('(prefers-color-scheme: dark)').matches) toggleDarkMode()
+    elt.addEventListener('click', toggleDarkMode);
   }
 
   htmx.onLoad((elt) => {
