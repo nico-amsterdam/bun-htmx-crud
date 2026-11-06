@@ -1,6 +1,6 @@
 # Setup Github authentication
 
-Github recommends to use a 'Github App' for authentication, but this will ask your users for permission to 'act on your behalf'. The wording is very confusing for end-users and it is an [unresolved issue since 2022](https://github.com/orgs/community/discussions/37117). Instead, you must create a Github 'OAuth App' which only ask the end-user access to 'public data only'.
+Create a Github 'OAuth App' which only ask the end-user access to 'public data only'.
 
 To create the OAuth App:
 - login with your account in [github.com](https://github.com/)
