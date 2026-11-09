@@ -2,18 +2,36 @@
 
 - Login at https://console.cloud.google.com/. When asked, choose the free tier
 - Create a new project or select an existing project
+
+<img width="736" height="167" alt="Schermafbeelding 2026-10-18 092949" src="https://github.com/user-attachments/assets/b6ac7d05-7d53-427e-be48-4fe2e8f3674d" />
+
 - Navigate to the project dashboard
 
-<img width="248" height="105" alt="Project dashboard" src="https://github.com/user-attachments/assets/8ce92bc4-7e67-4ca6-96e4-2e4776b5f901" />
+<img width="136" height="59" alt="Schermafbeelding 2026-10-18 093255" src="https://github.com/user-attachments/assets/12d81c2d-b5a7-4179-822d-b38a98b3082a" />
 
 - In the project select 'APIs & Services' plus 'Credentials' from the menu
 
-<img width="312" height="260" alt="APIs & Services" src="https://github.com/user-attachments/assets/b19d55e4-59f9-4ed6-86a0-e8d767fd52d4" />
+<img width="343" height="451" alt="Schermafbeelding 2026-10-18 093235" src="https://github.com/user-attachments/assets/a35243bf-9c6d-4009-86c0-4119658603ab" />
 
 - Click 'Create Credentials' plus 'OAuth client ID'
 
 <img width="241" height="144" alt="Create Credentials" src="https://github.com/user-attachments/assets/61fcbbfb-a7a7-4d18-8988-8eb52816e8c5" />
 
+- First get started with the Branding
+
+<img width="420" height="331" alt="image" src="https://github.com/user-attachments/assets/1a678e7a-ae85-4e9c-a792-30d7312b89ed" />
+
+- select External Audience
+
+- After finishing the 'Get started' branding, select branding again
+- Fill in the app domain, privacy url and terms url
+
+<img width="614" height="413" alt="Schermafbeelding 2026-10-18 095955" src="https://github.com/user-attachments/assets/a309d35b-84ec-4a13-83ca-c4b3592a68e7" />
+
+- Fill in the authorized domain. Normally that is: \<Your Cloudflare subdomain\>.workers.dev
+
+- Select the 'Clients' tab
+- Create client
 - Choose web application type: Web application
 - Enter a name
 - Add authorized redirect Url's. One with your production url, and another one for local development
