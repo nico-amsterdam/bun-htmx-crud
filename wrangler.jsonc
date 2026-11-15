@@ -6,13 +6,16 @@
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "htmx-crud",
 	"main": "src/index.ts",
-	"compatibility_date": "2025-11-08",
+	"compatibility_date": "2026-11-11",
 	"compatibility_flags": [
 		"nodejs_compat"
 	],
+	"workers_dev": true,
+	"preview_urls": false,
 	"observability": {
 		"enabled": true
 	},
+	"minify": true,
 	/**
 	 * Static Assets
 	 * https://developers.cloudflare.com/workers/static-assets/binding/
