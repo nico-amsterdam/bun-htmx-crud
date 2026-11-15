@@ -2,9 +2,10 @@ import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { and, eq } from 'drizzle-orm'
 import { getDB, tables } from "db"
-import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
+
 import { getContentLanguage } from 'i18n/lang'
 import { getBaseURL } from 'lib/url'
+import { LANDING_PAGE_PATH } from 'config'
 import { authRedirect } from '../auth'
 import { newPage, getPageHeaders } from './page'
 import type { PageType } from './page'
@@ -42,7 +43,7 @@ function DelProduct(page: PageType): JSX.Element {
  * Elysia controllers
  */
 
-export const delProductController = new Elysia(ElysiaSettings)
+export const delProductController = new Elysia()
     .use(html())
     .use(authRedirect)  // redirects or sets authUser and csrfToken
     .get('/products/:id/delete', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {

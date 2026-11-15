@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
-import { getEnv, ElysiaSettings, LANDING_PAGE_PATH } from "config"
+import { getEnv, LANDING_PAGE_PATH } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { getBaseURL } from 'lib/url'
 import { AUTH_PATH, LOGIN_PATH } from './common'
@@ -50,7 +50,7 @@ function getRedirectUri(headers: Record<string, string | undefined>) {
  * Elysia controllers
  */
 
-export const googleController = new Elysia(ElysiaSettings)
+export const googleController = new Elysia()
   .get(AUTH_PATH + '/google', async ({ headers, query, redirect, request, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {

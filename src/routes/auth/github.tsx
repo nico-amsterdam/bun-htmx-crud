@@ -1,6 +1,6 @@
 import { Elysia, t } from 'elysia'
 import { createSecretKey } from 'crypto'
-import { getEnv, ElysiaSettings, LANDING_PAGE_PATH } from "config"
+import { getEnv, LANDING_PAGE_PATH } from "config"
 import { calcStateHmac, generateSecureRandomString, getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { NON_DEFAULT_LANGUAGES, getContentLanguage } from 'i18n/lang'
 import { getBaseURL } from 'lib/url'
@@ -34,7 +34,7 @@ const secretKey = createSecretKey(Buffer.from('key-object-secret'));
  * Elysia controllers
  */
 
-export const githubController = new Elysia(ElysiaSettings)
+export const githubController = new Elysia()
   .get(AUTH_PATH + '/github', async ({ headers, query, redirect, request, cookie: { SESSION } }) => {
     console.log('Code: ' + query.code)
     if (query.code === undefined || query.error !== undefined) {

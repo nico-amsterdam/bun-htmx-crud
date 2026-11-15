@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia'
 import { html, Html } from '@elysiajs/html'
 import { getDB, tables } from 'db'
 import type { AddProductType } from 'db'
-import { ElysiaSettings } from 'config'
+
 import { getContentLanguage } from 'i18n/lang'
 import { authRedirect } from '../auth'
 import { newPage, getPageHeaders } from './page'
@@ -41,7 +41,7 @@ function AddProduct(page: PageType): JSX.Element {
  * Elysia controllers
  */
 
-export const addProductController = new Elysia(ElysiaSettings)
+export const addProductController = new Elysia()
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(

@@ -1,5 +1,5 @@
 import { Elysia, HTTPHeaders } from 'elysia'
-import { ElysiaSettings } from 'config'
+
 
 function setContentSecurityPolicy(headers: HTTPHeaders) {
   // Cross-site-scripting protection with a safe CSP:
@@ -10,7 +10,7 @@ function setContentSecurityPolicy(headers: HTTPHeaders) {
  * Elysia controllers
  */
 
-export const addContentSecurityPolicyHeader = new Elysia({ ...ElysiaSettings, name: 'addCSP' })
+export const addContentSecurityPolicyHeader = new Elysia({ name: 'addCSP' })
   .onBeforeHandle({ as: 'scoped'}, ({ set }) => {
     setContentSecurityPolicy(set.headers)
   })

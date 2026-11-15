@@ -3,8 +3,9 @@ import { html, Html } from '@elysiajs/html'
 import { and, eq, isNull } from 'drizzle-orm'
 import { getDB, tables } from 'db'
 import type { ModifyProductType } from 'db'
-import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
+
 import { getBaseURL } from 'lib/url'
+import { LANDING_PAGE_PATH } from 'config'
 import { getContentLanguage } from 'i18n/lang'
 import { authRedirect } from '../auth'
 import { newPage, getPageHeaders } from './page'
@@ -41,7 +42,7 @@ function EditProduct(page: PageType): JSX.Element {
  * Elysia controllers
  */
 
-export const editProductController = new Elysia(ElysiaSettings)
+export const editProductController = new Elysia()
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get('/products/:id/edit', async ({ csrfToken, headers, html, redirect, request, set, params: { id } }) => {

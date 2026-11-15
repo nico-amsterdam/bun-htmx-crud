@@ -24,3 +24,4 @@ worker-configuration.d.ts
 **/*.tar.gz
 **/*.tgz
 **/*.log
+.agents/

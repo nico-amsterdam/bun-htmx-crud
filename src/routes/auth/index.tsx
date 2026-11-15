@@ -1,7 +1,7 @@
 import { Elysia } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { isHtmxEnabled } from 'lib/htmx'
-import { ElysiaSettings } from "config"
+
 import { getIp, stripMobileDesktopFromUserAgent } from 'lib/security'
 import { githubController } from './github'
 import { googleController } from './google'
@@ -111,7 +111,7 @@ function SessionExpired({ lang }: { lang: string }): JSX.Element {
  * Elysia controllers
  */
 
-export const authController = new Elysia(ElysiaSettings)
+export const authController = new Elysia()
   .use(githubController)
   .use(googleController)
   .use(html())
@@ -136,7 +136,7 @@ export const authController = new Elysia(ElysiaSettings)
  * Redirect to /auth/login when not logged-in.
  * If logged-in, add authUser and csrfToken to the context
  */
-export const authRedirect = new Elysia({ ...ElysiaSettings, name: 'authRedirect' })
+export const authRedirect = new Elysia({ name: 'authRedirect' })
   .resolve({ as: 'scoped' }, ({ headers, cookie: { SESSION } }) => {
     const ip = getIp(headers)
     const userAgent = stripMobileDesktopFromUserAgent(headers['user-agent'])

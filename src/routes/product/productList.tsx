@@ -1,13 +1,14 @@
 import { Elysia, HTTPHeaders } from 'elysia'
 import { Html, html } from '@elysiajs/html'
 import { and, asc, gt, like } from 'drizzle-orm'
+import { LANDING_PAGE_PATH } from 'config'
 import { HttpHeader, isHtmxEnabled } from 'lib/htmx'
 import { toLikePattern } from 'lib/sql'
 import type { ProductType } from "db"
 import { getDB, tables } from "db"
 import type { PageType } from './page'
 import { newPage, getPageHeaders, getQueryString } from './page'
-import { ElysiaSettings, LANDING_PAGE_PATH } from 'config'
+
 import { authRedirect } from '../auth'
 import { BaseHtml } from '../helper/basePage'
 import { Body } from '../helper/body'
@@ -148,7 +149,7 @@ export async function gotoProductList(headers: HTTPHeaders, lang: string, preloa
  * Elysia controllers
  */
 
-export const productListController = new Elysia(ElysiaSettings)
+export const productListController = new Elysia()
     .use(html())
     .use(authRedirect) // redirects or sets authUser and csrfToken
     .get(

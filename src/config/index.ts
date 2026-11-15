@@ -25,7 +25,7 @@ export const ElysiaSettings = {
     sameSite: "lax", // not all browsers use lax as default
     httpOnly: true,
     // secrets: used for signing cookies. TODO: change the secret in build/deploy step
-    secrets: ["Ik zag twee beren"],
+    secrets: ["Ik zag twee beren, en nog eens twee beren"],
     sign: true,
     path: "/",
   }
